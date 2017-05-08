@@ -1,0 +1,13 @@
+1.实例化数据库类的时候，需要有表名 __table__=...  ，并要有一个或以上的主键
+
+
+2.
+basedir=os.path.abspath(os.path.dirname(__file__))
+ubasedir= basedir.decode('gbk')
+
+#sqlite3不支持中文路径，若路径有中文，要转换成unicode编码
+
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']=\
+        'sqlite:///'+os.path.join(ubasedir,'data.sqlite')
+注意SQLALCHEMY_DATABASE_URI，是URI而不是URL，若写成URL，则在创建数据库时会无法生成sqlite文件

@@ -1,0 +1,28 @@
+修饰器函数，是将自己内部的函数返回出来的函数
+
+下面分析一个复杂的修饰器
+@makebold  
+@makeitalic  
+def say():  
+   return "Hello"
+
+它的实现方法是
+def makebold(fn):  
+    def wrapped():  
+        return "<b>" + fn() + "</b>"  
+    return wrapped  
+   
+def makeitalic(fn):  
+    def wrapped():  
+        return "<i>" + fn() + "</i>"  
+    return wrapped  
+  
+@makebold  
+@makeitalic  
+def hello():  
+    return "hello world"  
+   
+print hello() ## 返回 <b><i>hello world</i></b>  
+
+
+ 

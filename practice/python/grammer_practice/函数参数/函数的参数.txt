@@ -1,0 +1,17 @@
+使用关键字参数 如 def func(name,**arg) 
+传入参数时，关键字参数要用 xx=...的形式而不是{'xx':...}
+传入后的最终结果虽然是字典，但是传入参数时用字典会报错
+
+
+当在传入很多参数并决定用\进行换行时
+如：
+app.config.update(\
+    MAIL_SERVER='smtp.qq.com',\ 
+    MAIL_PORT=465,\
+    MAIL_USE_SSL= True,
+    MAIL_USERNAME='chaoran724949515@qq.com',\
+    MAIL_PASSWORD='bdypdxioblwpbbeg')
+
+在‘\’的后面不要加空格，也不要加注释，否则都会报错
+
+python中如不明确指明，传给函数的参数，除了基础类型，都是以引用的形式传递的(例如：类对象，string，list，map，set等默认传的是引用)

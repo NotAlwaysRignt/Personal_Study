@@ -1,0 +1,3 @@
+sudo apt-get install python-pip  即可安装pip
+
+用sudo apt install在本系统不行，不知道为什么

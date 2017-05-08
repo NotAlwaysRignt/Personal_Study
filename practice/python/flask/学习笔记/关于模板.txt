@@ -1,0 +1,23 @@
+1.
+如果 {% imports "bootstrap/wtf.html" %}一句中提示找不到wtf.html，那么问题可能是
+没有在base.html中写{% extends "bootstrap/wtf.html"  %}
+
+2.
+templates文件夹要放在有app=Flask(__name__)的py文件的目录下，假设名为hello.py，则templates文件夹要和hello.py
+放在同一层目录
+
+3.如果使用了{% imports "bootstrap/wtf.html" %}和{% extends "bootstrap/wtf.html"  %}但仍告诉你说
+TemplateNotFound: bootstrap/wtf.html，那原因很可能是没有bootstrap=Bootstrap(app)  bootstrap是要激活的
+
+4.模板的html里可以用中文，但是在LoginForm里的属性，如果要用中文，记得将其转码
+class LoginForm(Form):
+例：
+    username=StringField(u'用户名昵',validators=[Required(),Length(1,15)])
+    password=PasswordField(u'密码',validators=[Required()])
+在中文字符前都加u，否则用浏览器浏览时会报错，而且会告诉你是模板错误，这让你很难找到错误原因是LoginForm
+
+5.如果你的html文件用了{% extends "base.html" %}那么里面所有的内容都应放在extends的文件中的对应模块内，比如
+<h1>您好！</h1>应放在{%block page_content%}{%endblock%}之中（如果bese.html内或base.html extends的文件有这个模块)
+(在Myblog这个例子里base.html 还extends了bootstrap/base.html）
+否则一旦你前面用了{% extends "base.html" %},如果不把html写进这些模块内，在render_template时是不会显示在界面上
+而你的服务台告诉你响应了200消息，这让你很难排查

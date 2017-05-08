@@ -1,0 +1,26 @@
+@app.route('/user/<user>')
+def index3(user):
+    return '<h1>Hello,%s</h1>' %user
+
+当使用变量<user>时，index(user)中的参数user别忘加了，否则会报错
+
+
+
+
+  name=StringField("What's your Name?",validators=[Required()])
+  remember_me=BooleanField('Keep me logged in')
+  submit=SubmitField('Submit')
+
+  name,remenber_me,submit的顺序决定在浏览器中显示的先后顺序,上面的例子中显示的先后顺序为
+   name,remenber_me,submit
+
+
+
+
+将Flask第三方拓展和flask app联系起来的方法：
+	方法一：直接在实例化第三方类时传给虚构函数
+	例：   
+		app=Flask(__name__)
+		bootstrap=Bootstrap(app)
+
+	方法二：在第三方拓展的类实例化以后将app其传入其init_app中（init_app是第三方拓展已经实现好了的函数，传入即可）

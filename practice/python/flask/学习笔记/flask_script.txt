@@ -1,0 +1,47 @@
+1.关于Manager
+from flask_script import Manager
+
+from myapp import app  #app=Flask(__name__)
+
+manager = Manager(app)
+
+@manager.command		#有了这段代码就可以在命令行里使用指令了
+def hello():
+    print "hello"
+
+if __name__ == "__main__":
+    manager.run()
+
+启动程序时，便可以用python manage.py hello启动程序
+结果：       > hello
+
+如果不用修饰器要把一个类加到manager的命令中
+则要
+from flask_script import Command
+
+class Hello(Command):			#创建的类要继承Command
+    "prints hello world"
+
+    def run(self):			#名字一定得叫run
+        print "hello world"
+
+manager.add_command('hello', Hello())
+由此也可以看出，Manager中的add_command方法是用一个命令来启动一个方法或类
+python manage.py hello
+结果： hello world
+启动时，会执行这个类，且会默认执行类中的名为run的方法，如果没有名为run的方法，则会报错
+
+2.flask中的Shell
+例：
+from flask.ext.script import Shell
+def make_shell_context():
+	return dict(app=app, db=db, User=User, Role=Role)
+manager.add_command("shell", Shell(make_context=make_shell_context))
+
+Shell()中有个make_context参数，这个参数的作用就是在启动的 shell 中添加默认的变量，这样
+启动 shell 之后就可以直接像访问默认函数/变量一样直接什么都不用 import 就 db.User.query.all()
+如果你不加这个 make_context 参数的话，你需要在交互式命令行中这样做：
+
+from application.app import db
+db.User.query.all()
+在python的交互式命令行中如果都要这样手打代码的话是很麻烦的

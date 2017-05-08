@@ -1,0 +1,38 @@
+下载压缩包Gzipped source tarball
+解压缩
+
+进入python目录
+3步骤 
+./configure
+make
+make install
+
+可能遇到的问题
+1.
+zlib not avalable
+到zlib官网下载zlib
+同样./configure
+make
+make install
+然后 sudo gedit /etc/ld.so.conf.d/zlib.conf
+往里面写如下内容
+/data/progam/zlib/lib
+保存后退出
+注意progam也可能时program，具体情况cd到具体目录下用ls查看即可知道
+
+2.
+在交互式命令行里方向键用不了了，按方向键出来的是字符
+解决方法
+搜索下usr/bin下的包  
+cd /usr
+cd bin  
+ls
+
+发现没有readline文件
+安装
+apt-get install libreadline6-dev  
+
+然后回到python目录，重新下载一次
+./configure
+make
+make install

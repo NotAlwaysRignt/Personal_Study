@@ -1,0 +1,40 @@
+调用当前文件夹的dll,如有一个test.dll,内有两个导出函数foo1和foo2
+ctypes.cdll.LoadLibrary("test.dll")
+#如果dll和py文件在同一个文件夹下,那么久可以不用使用完整路径
+
+注意,如果提示Win32 ERROR,很可能你的dll输出的进制与python版本不同,比如python是x64的,而用VS编译生成的是x32的,
+就会调用不了,
+报错WindowsError: [Error 193] %1 不是有效的 Win32
+解决办法:
+VS中右键 项目->属性 右上方点击 "配置管理器" 选择"活动平台解决方法","新建","键入或选择新平台"
+然后下拉框有个"x64",改为x64,
+然后在"活动平台解决方法"使用x64
+
+注意,生成的x64的dll文件不在debug目录下,而在一个x64的目录中的dubug目录下
+
+调用foo1
+test = ctypes.cdll.LoadLibrary("test.dll")
+myfoo1 = test.foo1
+#myfoo1便是拿到的foo1,可在python 中调用
+
+如果foo1的参数类型为(char*,int)
+直接 myfoo1("...",3)即可
+当然也可以 myfoo1(c_char_p("..."),c_int(3))
+
+如果没特别设定,调用dll中函数时返回类型都是int,如果foo1返回的是char*
+则在调用foo1前有
+myfoo1.restype = c_char_p
+data = myfoo1(...)
+data会是python的str类型
+
+如果要拿到int*类型的返回值,比如一个int数组,python中并没有c_int_p
+这时要这样设置
+myfoo1.restype = POINTER(c_int)
+这样
+data = myfoo1(...)
+返回类型会是<class '__main__.LP_c_long'>
+你可以data[1] data[0]这样调用
+
+传入参数:如果要传入一个int*的参数,且它是长度为30
+则可以 para = (c_int * 30)()
+myfoo1(para)
