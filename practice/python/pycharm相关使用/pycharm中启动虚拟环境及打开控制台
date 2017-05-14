@@ -1,6 +1,3 @@
-在pycharm中安装vim插件
-File >Settings >Plugins >Install jetBrains plugin...>搜索“ideavim”，安装
-安装完重启即可
 
 pycharm启动虚拟环境
 File >Settings >Project:(当前项目名) >Project Interpreter
