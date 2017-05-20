@@ -20,3 +20,8 @@ b 移动到上一个单词
 按键pagedown 下一页
 按键pageup 上一页
 
+在插入模式下:
+shift + 左 上一个单词(同一行),shift + 右 下一个单词(同一行)
+shift + 上 到该页的顶部位置 (相当于普通模式的pageup)
+shift + 下 到该页的底部位置 (相当于普通模式的pagedown)
+
