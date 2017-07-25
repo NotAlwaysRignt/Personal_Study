@@ -11,3 +11,23 @@ app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']=\
         'sqlite:///'+os.path.join(ubasedir,'data.sqlite')
 注意SQLALCHEMY_DATABASE_URI，是URI而不是URL，若写成URL，则在创建数据库时会无法生成sqlite文件
+
+3.
+SQLALCHEMY_COMMIT_ON_TEARDOWN 选项因为不安全已经在最新版被移除了
+
+4.
+使用mysql时,若用python3 版本,在安装flask-sqlalchemy 并配置好后可能会报错:
+ModuleNotFoundError: No module named 'MySQLdb'
+
+原因是python3 不支持 mysqldb
+取而代之连接mysql 使用的是pymysql  ,因此要先 pip install pymysql
+之后在使用flask-sqlachemy时,配置要有所调整:
+格式为
+dialect+driver://username:password@host:port/database
+
+例子:
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://MrRan:密码@localhost/MyBlog"
+
+pymysql即是driver
+MrRan是mysql的用户名,":"后跟密码,
+MyBlog是使用"CREATE DATABASE MyBlog;" 创建的数据库的名字

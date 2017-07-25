@@ -1,9 +1,9 @@
 在使用from ...import...时
-from的对象必须与当前的py文件在一个文件夹中
+from的对象必须与当前的py文件在一个文件夹中(不能是同一个文件夹的不同子文件夹下)
 
   如在hello.py文件中写 from TryModule import Test
-  则hello.py与TryModule在同一个文件夹
-  若hello.py在Hello文件夹，而Hello文件夹和TryModule在同一个文件夹中，那么直接写from TryModule import Test
+  则hello.py与TryModule.py在同一个文件夹
+  若hello.py在Hello文件夹，而Hello文件夹和TryModule.py在同一个文件夹中，那么直接写from TryModule import Test
   会报错
 
 from TryModule import Test as T，相当与给Test起了个别名T，使用这句话后，假若Test.py中有HelloWorld函数
@@ -11,15 +11,19 @@ from TryModule import Test as T，相当与给Test起了个别名T，使用这句话后，假若Test
 
 有种用法是from . import xxx 和 from .xx import xxx
 这两种用法建议不要用，因为可能会无法使用
+
 若文件夹package中有__init__.py 和a.py，a.py要从__init__.py中导入内容，比如类实例
 则可以用
 import sys 
 sys.path.append('..')	#时路径也包括了上一层目录
 import package  #import package即使import了 package里的__init__.py
-要使用 from ..A import a，即从上一级目录中导入模块
+
+
+要从上一级目录中导入模块
 则要先加
 import sys 
 sys.path.append('..')，这样才可以用..A
+
 
 下面是各种情形下import的用法
 （1）主程序与模块程序在同一目录下:

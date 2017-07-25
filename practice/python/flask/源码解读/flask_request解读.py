@@ -1,12 +1,14 @@
 #coding:utf-8
 request 与上下文环境context密切相关,若不了解context,先看文档"flas_context解读"
 
-先上结论,request是LocalProxy的实例当使用request的成员时,比如使用request.form或
+    先上结论,request是LocalProxy的实例,当使用request的成员时,比如使用request.form或
 request.args等,因为LocalProxy的__getattr__方法被重写,所以,最终__getattr__最终返回的是
-ctx.request,ctx时RequestContext类的实例,它是一个上下文环境,而ctx.request中的request是
-flask中Request类的实例,它包含了解析HTTP报头等许多方法,所以访问request.form,其实就是访问
-ctx.request.form  因为每个请求到来是,ctx通过出入栈会自动被更新为当前的上下文环境(详见文档)
-,因此request其实也就是对应当前客户端的request
+ctx.request,(ctx在调用request的时候已经存在栈中,原因见文档flask_context解读)
+
+ctx是RequestContext类的实例,它是一个上下文环境,而ctx.request中的request是
+flask中Request类的实例(wrappers.py文件中),它包含了解析HTTP报头等许多方法,所以访问
+request.form,其实就是访问ctx.request.form  因为每个请求到来时,ctx通过出入栈会自动
+被更新为当前的上下文环境(详见文档),因此request其实也就是对应当前客户端的request
 
 
 request = LocalProxy(partial(_lookup_req_object, 'request'))
@@ -27,7 +29,7 @@ class LocalStack(object):
                 return None  
                 
 top拿到的是_local.stack[-1]即[]的最后一个元素(栈顶)(_local.stack是[])
-而_local.stack[-1]存储的是ctx,
+而_local.stack[-1]存储的是ctx (为什么是ctx见),
 所以 top=ctx
 
 接着

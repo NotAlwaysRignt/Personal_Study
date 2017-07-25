@@ -1,8 +1,9 @@
 虚拟环境的搭建
 
-python 3.5以上的版本在安装虚拟环境时都不需要virtualenv 
+python 3.5以上的版本在安装虚拟环境时不需要virtualenv也可以创建虚拟环境
+但使用virtualen和python3自带的创建venv的方法会有不同的效果 
 
-使用自带的命令即可
+1.使用自带的命令
 创建一个目录名为venv
 在这个目录下打开终端： 键入 python3 -m venv 文件路径
 如：python3 -m venv ~/文档/python_flask
@@ -10,6 +11,18 @@ python 3.5以上的版本在安装虚拟环境时都不需要virtualenv
 进入 bin 
 输入source activate 
 回车即进入虚拟环境
+
+2.先安装virtualenv
+pip3 install virtualenv
+virtualenv安装完毕后,进入到一个目录中,执行
+virtualenv --no-site-packages venv
+则会在该目录下创建一个venv文件夹
+这个venv文件夹下 会有bin include lib pip-selfcheck.json四个文件夹
+进入 bin  ,输入source activate  回车即可进入虚拟环境
+与方法1不同的是,这样创建的venv中会有activate_this.py文件,该文件也是用于启动虚拟环境,
+是使用apache等服务器时需要的,而方法1不会生成activate_this.py文件
+
+
 
 flask的安装
 打开虚拟环境 python3.6已经自带了pip，不需要额外安装，有的python版本需要另外安装pip

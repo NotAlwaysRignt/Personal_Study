@@ -1,0 +1,5 @@
+    nginx会将整个请求头都放在一个buffer里面，这个buffer的大小通过配置项
+client_header_buffer_size来设置，如果用户的请求头太大，这个buffer装不下，那nginx就会重新
+分配一个新的更大的buffer来装请求头，这个大buffer可以通过large_client_header_buffers来设置
+
+如果请求行大于一个buffer的大小，就会返回414错误，如果一个请求头大小大于一个buffer大小，就会返回400错误。在了解了这些参数的值，以及nginx实际的做法之后，在应用场景，我们就需要根据实际的需求来调整这些参数，来优化我们的程序了

@@ -1,0 +1,26 @@
+show databases; 
+可以查看当前数据库  (s不要漏)
+
+例:
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
++--------------------+
+
+创建数据库
+create database 数据库名;
+
+删除数据库
+drop database 数据库名;
+
+使用数据库
+use 数据库名;
+显示
+Database changed
+则执行成功
+

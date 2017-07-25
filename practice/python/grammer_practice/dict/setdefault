@@ -1,0 +1,28 @@
+python里字典有个方法叫setdefault,
+用法为 setdefault(键名,键值)
+可以为其增添键值对,如果键名已经存在,setdefault的键值不会覆盖原来已有的键值,而是被放弃
+
+函数的返回值:
+如果传入参数的键名已经存在,则返回这个键名对应的原有的键值,而传入setdefault的参数键值被放弃
+如果传入参数的键名不存在,则返回这个新创建的键值对的键值,我们还可以对这个返回值做操作
+
+>>> a= {}
+>>> a.setdefault(None,[])
+[]
+>>> a
+{None: []}
+>>> a.setdefault(None,[]).append('abc')
+>>> a
+{None: ['abc']}
+>>> a.setdefault('a',[]).append('abc')
+>>> a
+{None: ['abc'], 'a': ['abc']}
+>>> a.setdefault(None,[])  
+['abc']
+>>> a         #因为None这个键名已经存在,所以[]这个键值不会被创建,也无法覆盖原来的值
+{None: ['abc'], 'a': ['abc']}
+>>> a.setdefault(None,'hello')    
+['abc']
+>>> a         #因为None这个键名已经存在,所以'hello'这个键值不会被创建
+{None: ['abc'], 'a': ['abc']}
+

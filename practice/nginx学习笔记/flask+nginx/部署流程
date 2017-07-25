@@ -1,0 +1,160 @@
+ubuntu16下配置 nginx + uwsgi +flask
+
+1.前置动作:
+
+apt-get install wsgi
+给系统安装 wsgi
+
+sudo apt-get upgrade
+把系统上的package更新下
+
+安装
+virtualenv  注意版本,我的是python3版本的
+
+安装nginx
+sudo apt-get install nginx
+
+2.创建一个简单的flask实例做测试:
+我们在/var文件中建立一个www文件夹(有时系统已经有这个文件夹了)  sudo mkdir /var/www
+
+然后再在www文件夹下创建一个存放我们app的文件夹,自定义命名为demoapp 
+sudo mkdir /var/www/demoapp
+
+因为我们用root权限创建了它.为了方便操作,修改它的权限
+sudo chown -R thinker /var/www/demoapp/
+这样以后不用sudo 也可以操作了
+注意: thinker是我的用户名,打开终端可以看到当前用户名,如果看不见,则在终端输入 whoami
+(如果这样修改不了权限,可采用 sudo chown -R thinker:thinker /var/www/demoapp/)
+:前的是用户组,一般打开终端看见thinker@thinker就知道用户组和用户名,如果看不见按,
+查看用户名后可以用 groups thinker 查看 thinker所属组
+
+接下来我们便在
+/var/www/demoapp/下创建一个测试程序 hello.py,内容如下:
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+这个程序暂时不能运行,我们还没有创建虚拟环境,有没有安装flask.
+创建好文件夹,python文件也有了,下面我们来部署nginx和uwsgi
+
+3.部署nginx
+安装好nginx后
+sudo /etc/init.d/nginx start  启动nginx
+访问 localhost.com ,如果显示 Welcome to nginx 的界面,说明启动成功
+
+设置nginx的配置文件
+先删除nginx默认配置文件    sudo rm /etc/nginx/sites-enabled/default
+自己创建一个配置文件demoapp_nginx.conf,这个文件的位置,根据官方的文档,应链接到
+/etc/nginx/conf.d/   中
+内容如下:
+
+server {
+    listen      80;
+    server_name localhost;
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    location / { try_files $uri @yourapplication; }
+    location @yourapplication {
+        include uwsgi_params;
+        uwsgi_pass unix:/var/www/demoapp/demoapp_uwsgi.sock;
+    }
+}
+
+
+注意其中 uwsgi_pass unix:/var/www/demoapp/demoapp_uwsgi.sock; 一句
+这句表明,nginx要和uwsgi通信,中间需要 demoapp_uwsgi.sock 文件
+此时我们还没有部署uwsgi,也就没有这个文件,这时我们
+
+将刚建立的配置文件使用符号链接到Nginx配置文件文件夹中
+sudo ln -s /var/www/demoapp/demoapp_nginx.conf /etc/nginx/conf.d/
+
+这时重启nginx  sudo /etc/init.d/nginx restart
+访问localhost,会出现502 bad gateway ,原因上面已经提及,没有demoapp_uwsgi.sock 文件
+
+4.部署uwsgi
+首先记得给 系统装 wsgi, apt-get install wsgi
+
+这时创建虚拟环境:
+virtualenv venv
+然后启动虚拟环境 source venv/bin/activate
+记得安装上uwsgi!    pip install uwsgi
+装上flask         pip install flask
+
+#启动虚拟环境,安装uwsgi最好一次性完成,否则可能会出错
+
+
+创建一个新的uWSGI配置文件/var/www/demoapp/demoapp_uwsgi.ini
+内容如下:
+
+[uwsgi]
+#application's base folder
+base = /var/www/demoapp
+
+#python module to import   
+app = hello
+module = %(app)
+
+home = %(base)/venv
+pythonpath = %(base)
+
+#socket file's location
+socket = /var/www/demoapp/%n.sock
+
+#permissions for the socket file
+chmod-socket    = 666
+
+#the variable that holds a flask application inside the module imported at line #6
+callable = app
+
+#location of log files
+logto = /var/log/uwsgi/%n.log
+
+
+分析其中几个语句
+app = hello
+module = %(app) 指向 hello.py 文件
+这两句也可以写成:wsgi-file = hello.py
+
+callable = app  这个 app是在hello.py中的变量名, 指的是hello.py文件内的Flask实例
+这一句获得了flask实例,就可以用app() 来调用其 __call__方法了
+
+logto = /var/log/uwsgi/%n.log
+将日志记录到 /var/log/uwsgi/ 的 demoapp_uwsgi.log 文件中
+%n即"当前文件夹名字_uwsgi"
+
+socket = /var/www/demoapp/%n.sock 是uwsgi 和nginx通信的中介
+启动uwsgi  uwsgi --ini /var/www/demoapp/demoapp_uwsgi.init
+然后访问localhost
+出现 hello world! 访问成功!
+重启nginx  sudo /etc/init.d/nginx restart
+nginx便和 uwsgi flask 结合起来了.
+
+注意 要在访问页面时出现 hello world! 只要部署uwsgi成功就可以,nginx不管启动与否都不会
+影响这个结果,但启动 nginx 后 与uwsgi结合可以大大提高其运行效率
+
+
+
+可能出现的问题:
+1.uwsgi --ini /var/www/demoapp/demoapp_uwsgi.init时失败,在
+demoapp_uwsgi.log中看见错误提示:
+
+Fatal Python error: Py_Initialize: Unable to get the locale encoding
+ModuleNotFoundError: No module named 'encodings'
+
+解决办法,重新安装venv
+rm -rf venv
+virtualenv -p /usr/bin/python3 venv    #直接 virtualenv venv 也行
+source venv/bin/activate
+pip install flask
+pip install uwsgi
+
+2.#sudo apt-get install uwsgi-ugin-python3 不确定是否需要安装
+
+参考文章:
+http://www.cnblogs.com/Ray-liang/p/4173923.html
+http://www.oschina.net/translate/serving-flask-with-nginx-on-ubuntu

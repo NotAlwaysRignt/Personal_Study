@@ -1,0 +1,4 @@
+向表中插入数据
+INSERT INTO 表的名字(列名a,列名b,列名c) VALUES(值1,值2,值3);
+例子:
+INSERT INTO employee(id, name, phone) VALUES (011354,'Tom',123456);

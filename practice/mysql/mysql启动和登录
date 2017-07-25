@@ -1,0 +1,10 @@
+sudo service mysql start
+启动 mysql 数据库
+只有登录后 才会有 
+mysql> 供命令输入 
+
+以root 用户登录
+mysql -u  root -p
+
+然后输入密码即可
+
