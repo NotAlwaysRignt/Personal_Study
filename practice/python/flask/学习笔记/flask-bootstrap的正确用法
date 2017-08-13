@@ -1,0 +1,39 @@
+使用flask-bootstrap,如果要使用其自带的模板渲染功能
+首先开头应有
+{% extends "bootstrap/base.html" %}
+
+在使用这个base.html的各个模块时,一定要参照文档,才不会出错,下面截取的是官方文档的说明
+
+Block name 	  Outer Block 	      Purpose
+
+doc 	  	                 Outermost block.
+html 	        doc 	     Contains the complete content of the <html> tag.
+html_attribs 	doc 	     Attributes for the HTML tag.
+head 	        doc 	     Contains the complete content of the <head> tag.
+body 	        doc 	     Contains the complete content of the <body> tag.
+body_attribs 	body 	     Attributes for the Body Tag.
+title 	        head 	     Contains the complete content of the <title> tag.
+styles 	        head 	     Contains all CSS style <link> tags inside head.
+metas 	        head 	     Contains all <meta> tags inside head.
+navbar 	        body 	     An empty block directly above content.
+content 	    body 	     Convenience block inside the body. Put stuff here.
+scripts 	    body 	     Contains all <script> tags at the end of the body.
+
+注意事项:
+{% %} "{"和"%"之间不可以有空格,否则渲染会出错
+
+使用模块时要注意其Outer Block是什么,比如要使用metas时应放在head内部才会起作用
+{%block head%} {%blockmetas%}{%endblock%}  {%endblock%}
+
+styles和scripts模板的使用:
+scripts模块的"s"不能漏,否则不能正确渲染
+同时根据说明,如果有{%block body%} {%endblock%} 则{%block scripts%} (或{% block styles %})
+{%endblock%}应放在其内部
+此外,如果没有用scripts和styles这两个块,那么网页会默认启用jquery和bootstrap的CSS和Javascript
+但如果要加入自己写的js或CSS,则默认不启用bootstrap和query,要让其启动
+应该写上
+{%block scripts%}
+{{super()}}
+{%endblock%}
+
+使用<meta>标签时要要置于专门的 metas模块内

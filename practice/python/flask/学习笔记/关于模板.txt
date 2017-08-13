@@ -21,3 +21,14 @@ class LoginForm(Form):
 (在Myblog这个例子里base.html 还extends了bootstrap/base.html）
 否则一旦你前面用了{% extends "base.html" %},如果不把html写进这些模块内，在render_template时是不会显示在界面上
 而你的服务台告诉你响应了200消息，这让你很难排查
+
+6.如果在模板中使用了"include" 时,注意路径
+比如文件结构
+--templates
+index.html
+    --blog
+        a.html
+        b.html    
+如在a.html中使用了{% include "b.html" %},则在渲染时
+默认搜索路径是在templates文件夹中,而不是在a的同级目录中(即不在blog中)
+正确的使用方式{% include "blog/b.html" %}

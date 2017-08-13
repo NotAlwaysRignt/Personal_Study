@@ -4,10 +4,11 @@ python 3.5以上的版本在安装虚拟环境时不需要virtualenv也可以创
 但使用virtualen和python3自带的创建venv的方法会有不同的效果 
 
 1.使用自带的命令
-创建一个目录名为venv
+创建一个目录名为myvenv
 在这个目录下打开终端： 键入 python3 -m venv 文件路径
-如：python3 -m venv ~/文档/python_flask
-这样，在这个文件夹下就会有bin lib lib64 pyvenv.cfg include四个文件夹
+如：python3 -m venv ~/文档/python_flask/myvenv
+(注意 跟在 -m 后面的venv表示的是虚拟环境,而不是文件夹名称)
+这样，在myevnv文件夹下就会有bin lib lib64 pyvenv.cfg include四个文件夹
 进入 bin 
 输入source activate 
 回车即进入虚拟环境

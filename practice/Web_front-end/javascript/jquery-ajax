@@ -1,0 +1,2 @@
+jquery.get(url,data,function(){})这个是ajax的方法
+ajax发送的get请求是不会导致页面进行跳转的
