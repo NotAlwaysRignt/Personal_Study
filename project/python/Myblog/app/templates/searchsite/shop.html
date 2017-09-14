@@ -1,0 +1,86 @@
+{% extends "bootstrap/base.html" %}
+{% include "_navbar.html" %}
+{% block title %}
+去哪儿
+{% endblock %} 
+{% block head %}
+
+    {% block styles %}
+    {{ super() }}
+    <style type="text/css">
+    .shop_img{height:90px;width:120px}
+    .star{height:12px;width:68px}
+    </style>
+    {% endblock %}
+
+{% endblock %}
+
+{% block content %}
+
+{% include "searchsite/_search_form.html"%}
+
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+
+    </div>
+</div>
+
+<div class="row">
+<div class="col-xs-12 col-md-7 col-md-offset-3">
+{% if shops["shop_info"]%}
+
+<h1>大众点评<a href="{{shops["official_url"]}}"><small>官网查看完整结果</small></a></h1>
+{% include "searchsite/_shop_info.html" %}
+{% else %}
+<h1>抱歉，未能在大众点评网搜索到相关结果...</h1>
+{% endif %}
+
+</div>
+</div>
+
+<!--模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">用户评论(大众点评)</h3>
+      </div>
+      <div class="modal-body" id="comments">
+      
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+{% block scripts%}
+{{ super() }}
+<script>
+$(document).ready(function() {
+  $('#sendpost').click(function(){
+    search_site = $("#search_input").val();
+    if(search_site)
+    {     
+      $("#formid").submit();
+    }
+  });
+  
+  $('.comment').click(function(event){
+    $('#comments').html("<h2>Loading...</h2>");
+    url = $(event.target).attr("link");
+    if(url){     
+        $.get("{{url_for('searchsite.comment')}}",data={"comment_url":url},function(data,status){
+            $('#comments').html(data); //不用text(),因为text会对"<",">"转义
+        });
+    }
+    else{
+        alert("未能在大众点评网搜索到相关结果");
+    }
+  }); 
+       
+});
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% block navbar %}
+<nav class="navbar navbar-default">
+<div class="container-fluid">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      </button>
+      <a class="navbar-brand" href="/" class="nav_title">首页</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav">
+          <li class="dropdown">
+          <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">博客<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            <li><a href="{{ url_for('main.index',blogtype="programme")}}">闲话编程</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{{url_for('main.index',blogtype="life")}}">生活遐想</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{{url_for('main.index',blogtype="science")}}">趣味科普</a></li>
+            </ul>
+          </li>
+
+          <li class="dropdown">
+          <a href="#" class="navbar-brand" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">趣味项目<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            <li><a href="{{url_for('searchsite.deault_index')}}">去哪儿</a></li>
+            <!--分割线<li role="separator" class="divider"></li>-->
+            </ul>
+          </li>
+      </ul>
+       <ul class="nav navbar-nav navbar-right">
+           {% if current_user.is_authenticated %}
+           <li><a href="{{url_for('blog.write_blog')}}">写博客</a></li>
+           <li><a href="{{url_for('main.logout')}}" role="button">登出</a></li>
+           {% else %}
+           <li data-toggle="modal" data-target="#loginModal">
+               <a role="button">登录</a>
+           </li>
+           {% endif %}
+       </ul>
+    </div>
+</div>
+</nav>
+
+{% if not current_user.is_authenticated %}
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">登录界面</h4>
+      </div>
+      <div class="modal-body">
+          <h2 class="text-center">暂时不停供游客登录</h2>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-default btn-xs" role="button" href="{{url_for('main.login')}}">管理员登录</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

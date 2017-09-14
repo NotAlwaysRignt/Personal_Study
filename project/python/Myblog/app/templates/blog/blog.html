@@ -1,0 +1,63 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% include "_navbar.html" %}
+
+{% block head %}
+{%block styles%}
+{{super()}}
+<style>
+    .panel-body{background:#FFFFCC;}
+    p{font-size:16px}
+</style>
+{% endblock %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col-xs-1 col-md-2">
+</div>
+
+<div class="col-xs-10 col-md-9 ">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="text-center">{{post.title}}</h1>
+            <p class="text-right">发布时间:{{post.origin_timestamp}}</p>
+        </div>
+         <div class="panel-body">
+            {{post.content |safe }}
+         </div>
+
+    </div>
+</div>
+    {% if current_user.is_authenticated %}
+    <div class="row">
+        <div class="col-xs-2 col-md-2 col-xs-offset-10  col-md-offset-10">
+            <button type="button"  class="btn btn-warning" id="edit">修改</button>
+            <button type="button" class="btn btn-danger" id="delete">删除</button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script>
+$(document).ready(function(){
+    $("#delete").click(function(){
+        if(confirm("你确定删除吗?"))
+        {
+            window.location="{{url_for('blog.delete_blog',id=post.id)}}";
+        }
+    });
+    $("#edit").click(function(){
+        if(confirm("要修改这篇文章吗?"))
+        {
+            window.location="{{url_for('blog.edit_blog',id=post.id)}}";
+        }
+    });
+});
+</script>
+{% endblock %}
+

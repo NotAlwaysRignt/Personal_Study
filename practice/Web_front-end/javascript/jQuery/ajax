@@ -1,7 +1,18 @@
 提交表单数据时,借助ajax可以避免更新页面
 
 借助jQuery使用ajax的几个方法
-一.$.getJSON
+推荐 $.get(),$.post()  封装了底层的ajax方法 $.ajax，简单易用，详细见文档
+
+异步GET：
+$(selector).get(url,data,success(response,status,xhr),dataType)
+
+异步POST：
+jQuery.post(url,data,success(data, textStatus, jqXHR),dataType)
+
+url，请求的网址，data，附带在URL上的数据，success，请求成功后的回调函数
+
+
+二.$.getJSON
 
 例子
 function test(data){
@@ -24,7 +35,7 @@ $.getJSON发起的是GET请求,本例中:
 重新发起ajax请求
 
 
-二 $.ajax
+三 $.ajax （底层的ajax，较复杂）
 
 $.ajax比起$.getJSON的一个优势是它既可以发送GET请求也可以发送POST请求
 

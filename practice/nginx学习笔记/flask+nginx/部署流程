@@ -1,5 +1,5 @@
 ubuntu16下配置 nginx + uwsgi +flask
-
+(要注意,安装完nginx后,nginx的配置会影响uwsgi,如果想要单独测试uwsgi,则应该先安装uwsgi,安装nginx完毕后再安装nginx)
 1.前置动作:
 
 apt-get install wsgi
@@ -125,10 +125,10 @@ callable = app  这个 app是在hello.py中的变量名, 指的是hello.py文件
 
 logto = /var/log/uwsgi/%n.log
 将日志记录到 /var/log/uwsgi/ 的 demoapp_uwsgi.log 文件中
-%n即"当前文件夹名字_uwsgi"
+%n即"当前文件夹名字uwsgi"
 
 socket = /var/www/demoapp/%n.sock 是uwsgi 和nginx通信的中介
-启动uwsgi  uwsgi --ini /var/www/demoapp/demoapp_uwsgi.init
+启动uwsgi  uwsgi --ini /var/www/demoapp/demoapp_uwsgi.ini    (注意启动时要在终端打开虚拟环境)
 然后访问localhost
 出现 hello world! 访问成功!
 重启nginx  sudo /etc/init.d/nginx restart

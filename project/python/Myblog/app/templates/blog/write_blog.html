@@ -1,0 +1,101 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% block styles %}
+{{super()}}
+<link href="{{ url_for('static',filename='css/summernote.css') }}" rel="stylesheet">
+<style>
+  p{font-size:16px;}
+</style>
+{% endblock %}
+
+{% endblock %}
+
+{% block content %}
+{% include "_navbar.html" %}
+<br>
+
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8 ">
+    {% if post %}
+      <form id="formid" method="POST" action={{ url_for("blog.edit_blog",id=post.id)}} enctype="multipart/form-data">
+      {{ form.csrf_token }}
+      {{ form.title(id="post_title", placeholder="文章标题(不多于32个字符)", class="form-control", value=post.title)}}
+      {{form.title_img()}}
+      <p class="help-block">文章预览展示图片</p>
+      {{ form.blog_type() }}
+      <p class="help-block">文章简介</p>
+      {{ form.profile(id="profile", placeholder="文章简介(可选,128字以内)",class="form-control",value = post.profile)}}
+      {{ form.post(type="hidden",id="hidden_post")}}
+      </form>
+    {% else %}
+      <form id="formid" method="POST" action={{ url_for("blog.write_blog")}} enctype="multipart/form-data">
+      {{ form.csrf_token }}
+      {{ form.title(id="post_title", placeholder="文章标题(不多于32个字符)", class="form-control")}}
+      {{ form.title_img() }}
+      <p class="help-block">文章预览展示图片</p>
+      {{ form.blog_type() }}
+      <p class="help-block">文章简介</p>
+      {{ form.profile(id="profile", placeholder="文章简介(可选,128字以内)",class="form-control")}}
+      {{ form.post(type="hidden",id="hidden_post")}}
+      </form>
+    {% endif %}
+
+  </div>
+</div>
+<br><br><br>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8 ">
+    {%if post %}
+      <div id="summernote">{{ post.content|safe }}</div>
+    {% else %}
+      <div id="summernote"></div>
+    {% endif %}
+    <button id="sendpost" type="button" class="btn btn-info">提交</button>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{super()}}
+ <script src="{{ url_for('static',filename='js/summernote.min.js') }}"></script>
+  <script>
+  {% if post %}
+        $(document).ready(function() {
+          $('#summernote').summernote('code');
+          $("button[data-original-title='Video']").attr({"disabled":"disabled"});
+
+          $('#sendpost').click(function(){
+            if($("#post_title").val())
+            {
+              $("#sendpost").attr("disabled","disabled");
+              var content = $('#summernote').summernote('code');
+              $("#hidden_post").val(content);
+              $("#formid").submit();
+            }
+          });
+      });
+  {% else %}
+      $(document).ready(function() {
+          $('#summernote').summernote('code');
+
+          $("button[data-original-title='Video']").attr({"disabled":"disabled"});
+
+          $('#sendpost').click(function(){
+            if($("#post_title").val() && $('#profile').val().length<128)
+            {
+              $("#sendpost").attr("disabled","disabled");
+              var content = $('#summernote').summernote('code');
+              $("#hidden_post").val(content);
+              $("#formid").submit();
+            }
+          });
+      });
+  {% endif %}
+</script>
+{% endblock %}

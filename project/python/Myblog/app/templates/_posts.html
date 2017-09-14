@@ -1,0 +1,30 @@
+{% for post in posts %}
+<div class="row">
+
+    <div class="panel panel-info">
+        <div class="panel-heading">最近编辑时间：{{post.latest_timestamp}}</div>
+
+        <div class="panel-body">
+            <div class="col-xs-6 col-md-4">
+                <a href="{{url_for('blog.show_blog', id=post.id)}}">
+                <img src="{%if post.title_img%}{{post.title_img}}{% else %}{{url_for('static',filename='img/life.jpg')}}{%endif%}"
+                      class="img-responsive"><!--建议高度:100-->
+                </a>
+            </div>
+            <div class="col-xs-6 col-md-8">
+
+                    <div class="row">
+                        <a href="{{ url_for('blog.show_blog',id=post.id)}}"><h3>{{post.title}}</h3></a>
+                        <p class="navbar-text">{{ post.profile }}</p>
+                    </div>
+
+                    {% if  current_user.is_authenticated %}
+                    <div class="row">
+                        <a href="{{url_for('blog.edit_blog',id=post.id)}}"><p class="text-right">修改</p></a>
+                    </div>
+                    {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

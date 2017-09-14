@@ -6,6 +6,7 @@ migrations文件夹内有一个versions文件夹,这里面存放的是各个版�
 可能出现的错误及解决方法:
 1.
 python manage.py db migrate 出现失败的情况,可以删除versions中指向最新版本的py文件,然后再试
+(谨慎使用这种方法,手动删除版本可能会给后续数据库更新带来问题)
 
 2.
 如果因为误删versions内的py文件,导致数据库在使用 python manage.py db migrate 时失败,
@@ -41,3 +42,11 @@ class Alembic(db.Model):
 >>> for v in versions:
 ...     db.session.delete(v)
 >>> db.session.commit()
+
+3.alembic.util.exc.CommandError: Target database is not up to date.
+很可能是数据库版本与Alembic中不一致所导致,
+比如 versions中存有一个文件 946a35e29054_.py ,
+而通过shell命令中 a = Alembic.query.all(),  发现 a = []
+解决办法, 根据文件名将版本号添加进Alembic表中
+a = Alembic()
+a.version_num = 0x946a35e29054    (注意文件名后面有个下划线不要加,并且0x不要漏)

@@ -1,0 +1,10 @@
+{% autoescape false %}
+{% for comment in comments%}
+<div class="panel panel-default">
+  <div class="panel-heading"><h3>{{comment["username"]}}</h3> <img class="star" src="{{url_for('static',filename='img/searchsite/'+comment['user_star']+'.png')}}"></div>
+  <div class="panel-body">
+    {{comment["comment"]}}
+  </div>
+</div>
+{% endfor %}
+{% endautoescape %}

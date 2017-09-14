@@ -14,13 +14,18 @@ CREATE USER 'pig'@'%' IDENTIFIED BY '123456';
 
 
 2.给用户授权(以root登录时使用)
-GRANT privileges ON databasename.tablename TO 'username'@'host'
+GRANT privileges ON databasename.tablename TO 'username'@'host' 
 
 授权完毕后最好刷新一下:  flush privileges;
 
 privileges - 用户的操作权限,如SELECT , INSERT , UPDATE 等,如果要授予所的权限则使用ALL.
 databasename - 数据库名
 tablename-表名
+
+如果出现错误: Your password does not satisfy the current policy requirements
+则先 set global validate_password_policy = 0; (降低密码安全级别要求)
+然后在设置权限时语句后要追加 IDENTIFIED BY '用户的密码'
+
 如果要授予该用户对所有数据库和表的相应操作权限则可用*表示, 如*.*
 例子:
 GRANT SELECT, INSERT ON test.user TO 'pig'@'%';

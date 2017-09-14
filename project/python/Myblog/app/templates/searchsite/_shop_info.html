@@ -1,0 +1,28 @@
+{% for shop in shops["shop_info"] %}
+<div class="row">
+    <div class="panel panel-warning">
+        <div class="panel-heading">{{shop["shop_name"]}}</div>
+
+        <div class="panel-body">
+            <div class="col-xs-6 col-md-4">
+                <img src="{{shop['img']}}" class="shop_img img-responsive">
+            </div>
+            <div class="col-xs-6 col-md-8">
+                    <div class="row">
+                    <img class="star" src="{{url_for('static',filename='img/searchsite/'+shop['star']+'.png')}}">
+                    </div>                    
+                    <div class="row">
+                        <p>{{shop["shop_type"]}} 人均:{{shop["money"]}}</p>
+                        <p>地址:{{shop["address"]}}</p>
+                        <p class="text-right">
+                            <a type="button" class="btn btn-warning btn-sm" href="{{shop['shop_url']}}">官网查看</a>
+                            <button class="btn btn-success btn-sm comment" link="{{shop['shop_url']+'/review_more'}}" data-toggle="modal" data-target="#myModal">用户评价</button>
+                            <a type="button" class="btn btn-info btn-sm" href="{{url_for('searchsite.map',cityid=cityid,address=shop['address'])}}">到这里去</a>
+                        </p>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

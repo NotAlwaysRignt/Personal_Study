@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+{% include "_navbar.html" %}
+{% block title %}
+去哪儿
+{% endblock %} 
+
+
+
+{% block content %}
+{% include "searchsite/_search_form.html"%}
+
+{% endblock %} 
+
+{% block scripts%}
+{{ super() }}
+<script>
+$(document).ready(function() {
+  $('#sendpost').click(function(){
+    search_site = $("#search_input").val();
+    if(search_site)
+    {     
+      $("#formid").submit();
+    }
+  });
+});
+</script>
+{% endblock %}
