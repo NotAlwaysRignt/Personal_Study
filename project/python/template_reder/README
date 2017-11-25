@@ -1,0 +1,122 @@
+这是一个简化的 html 模板渲染器
+1.支持 变量的渲染 {{ value }}
+2.支持逻辑控制语句 if for 
+{% if condition %} {% endif %}
+{% for item in items %} {% endfor %}
+3.支持过滤器 {{ value|safe }}
+
+example：
+text = r"""
+{%for user in uers %}
+    {{user.name|upper|add_prefix}}!
+    {% if user.phone %}
+        the phone number is: {{ user.phone }}
+    {% endif %}
+{%endfor%}
+"""
+def add_prefix(string): # 使字符串的第一个字母大写
+    string = 'The username is ' + string 
+    return string
+
+class User:
+    def __init__(self,name,phone = ""):
+        self.name = name
+        self.phone = phone
+
+t = Template()
+print(t.render_template(text,uers =[User("jack","123456"),User("bob"),User("Lily","789456")],upper = str.upper,add_prefix = add_prefix))
+
+结果：
+    The username is JACK!
+    
+        the phone number is: 123456
+    
+
+    The username is BOB!
+    
+
+    The username is LILY!
+    
+        the phone number is: 789456
+
+这个模板渲染器的功能类似于python 中jinjia2模板渲染器的简化版，构造模板渲染器有不同的思路，像这种遵循
+python语法的渲染器，我们可以借助python内置的 exec 函数，这个函数可以将遵循python语法规则的字符串作为
+python代码运行，我们可以通过正则表达式将字符串拆分存到列表里，特定部分先转换为python代码运行生成字符串
+再合并，详情可见 /practice/python/项目源码解读/模板渲染器 中的源码解读
+
+在Template.py中，我们并不借助 exec 函数，观察字符串的形式，它有for 循环，有if条件控制嵌入在字符串中
+同时我们在for 循环中还可以嵌套if 和for，解决这种一层一层的嵌套解析，我们可以借助数据结构 中的栈来解决这个
+问题，下面简述 Temlate.py 中渲染器的思路
+
+首先我们用正则表达式将字符串进行切割，{%...%} {{ }} {# #} 类型的字符串就被提取出来了，接着我们可以用
+startswith 函数，看是否以 {% {# {{ 开头，如果是，就进行特定的处理，如果不是，那它就是普通的字符串，这样
+我们就区分出了模板中的语句和普通字符串了
+
+我们将字符串动态渲染的部分作为render_template函数的参数传入，借助python的函数中多参数的功能可以将传入
+的参数存放在一个字典context 中，我们在字符串中提取出要渲染的变量,就可以用 getattr (context,变量名)
+来获取了，具体实现见源代码
+
+我们将python的 [] 封装为一个栈，除了压栈出栈，我们还可以拿到栈顶的字符串
+这个栈用来存储我们封装好的一个类 TagLayer，它用来表示当前我们正在处理哪个逻辑块，逻辑块分三种
+一种是'global',一种是'for',还有一种是'if'，它存储在type中，
+我们一开始处理字符串时会把 type = 'global' 的 TagLayer 压入栈中，之后如果读到控制语句比如for，我们就把
+type 为 for 的 TagLayer 压入栈，这期间往下读的字符串全部存储在着一个TageLayer中，等读到 {% endfor %}
+时我们将 这个TagLayer出栈，取出它的字符串({%for%}{%endfor%}之间的)进行处理，我们可以当下进行循环生成
+字符串，最后把它追加到栈顶的字符串中，在某些条件下我们还不对这个字符串进行解析，而是原封不动地将所有字符
+(包括{%for%},{%endfor%})放回栈顶，
+TagLayer还有if state 元素，当我们读到控制语句 if 时会进行判断(如果这个if并没有处在其它控制语句内部)，
+如果为 False，那么 TagLayer 的 if_state 会被置为 False，这样下面读到的所有字符串都不需要被添加进来
+知道读到 endif，这个 Taglayer出栈
+
+一个需要注意的情况是条件控制语句的嵌套，假如{% for B in A %}里面 嵌套着 {% for C in B %}
+我们读到 {% for B in A %} 时会生成一个 TagLayer (记为t1)入栈，之后读到 {% for C in B %} 又会生
+成一个TagLayer入栈(记为t2)，这时因为 {% for B in A %} 还没开始被解析，所以我们也无法解析 
+{% for C in B %}我们在读到{% for C in B %}对应的{% endfor %}时t2出栈，并把t2的字符追加到t1中
+(即"{% for C in B %}...{% endfor %}")部分全部追加到{% for B in A %}，等我们读到 {% for B in A %}
+对应的{% endfor %}时，我们将 t1出栈，然后t1中的字符串用正则表达式进行切割，解析，这时 
+{% for C in B %}会再次生成 TagLayer入栈被解析，然后追加回栈顶字符串中。
+
+下面是 TagLayer 中 (between_for_tags, if_state) 在不同情况下的逻辑：
+
+(True,True or False):
+
+{# #}pass
+
+{{...}}整个字符串压入
+
+{%for ...%} 整个字符串压入
+{%if ...%} 整个字符串压入
+{% endif %} TagLayer 出栈，并将整个字符串追加到栈顶
+{% endfor%} TagLayer (设为t)出栈，出栈后再判断栈顶 between_for_tags ，如果为 True，
+            包括{% endfor %}整个出栈的TagLayer中的字符串追加到栈顶， 如果为 False，开始解析这个
+            for 循环语句，将解析后的字符串追加到栈顶 
+
+普通字符串  直接追加到栈顶
+
+(between_for_tags =  False, if_state = False):
+
+{# #}pass
+
+{{...}} pass
+
+{%for ...%} TagLayer(type = "for",between_for_tags= False, if_state = False)入栈
+{%if ...%}  TagLayer(type = "if",between_for_tags= False, if_state = False)入栈
+{% endif %} 栈顶出栈，不用将出栈元素中的字符串再追加到栈顶
+{% endfor%} 栈顶出栈，不用将出栈元素中的字符串再追加到栈顶
+
+普通字符串 pass
+
+(False,True):
+
+{# #}pass
+
+{{...}} 解析它
+
+{%for ...%} 压入栈
+{%if ...%}  当下即可判断，并生成 TagLayer 实例压入栈中("if",if判断结果,between_for_tags = False)
+{% endif %} 栈顶出栈，将出栈的元素中存储的字符串追加到栈顶
+{% endfor%} 不会有这种情况，如果有endfor，则前面必然读到了{%for...%}，那么 between_for_tags必
+            为True
+
+普通字符串 追加到栈顶
+

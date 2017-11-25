@@ -1,0 +1,28 @@
+字典的update可以将一个字典并入当前字典，或者将列表里的每一个二元tuple转换为键值对加入当前字典
+例子：
+>>> a = {1:'a'}
+>>> b = {2:'b',3:'c'}
+>>> c = [(4,'d'), (5,'e'),(6,'f')]
+>>> a.update(b)
+>>> a
+{1: 'a', 2: 'b', 3: 'c'}
+>>> a.update(c)
+>>> a
+{1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f'}
+
+popitem把最新添加进的键值对弹出，弹出的类型是一个tuple,形式为(key,key_value)
+接下面的例子：
+>>> a.popitem()
+(6, 'f')
+>>> type(a.popitem())
+<class 'tuple'>
+
+当字典为空时，会抛处KeyError异常
+a= {}
+>>> try:
+...     a.popitem()
+... except KeyError:
+...     print('sorry,the dict is empty')
+... 
+sorry,the dict is empty
+

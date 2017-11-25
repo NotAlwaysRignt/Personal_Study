@@ -1,0 +1,8 @@
+这是一个简化的 html 模板渲染器
+1.支持 变量的渲染 {{ value }}
+2.支持逻辑控制语句 if for 
+{% if condition %} {% endif %}
+{% for item in items %} {% endfor %}
+3.支持过滤器 {{ value|safe }}
+
+shiyanlou_sample.py为实验楼提供的代码

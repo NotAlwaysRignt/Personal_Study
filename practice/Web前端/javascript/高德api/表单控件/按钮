@@ -1,0 +1,34 @@
+按钮，要让按钮显示在地图中，请将被一个按钮添加到 <div class="button-group">内部
+
+
+实例来源： "参考示例">"信息窗体">"带检索功能的信息窗体"
+<div class="button-group">
+    <input type="button" class="button" value="信息窗体1" onclick="infowindow1.open(map,lnglat)"/>
+    <input type="button" class="button" value="信息窗体2" onclick="infowindow2.open(map,lnglat)"/>
+    <input type="button" class="button" value="信息窗体3" onclick="infowindow3.open(map,lnglat)"/>
+</div>
+<!--infowindow1、2、3均为javascpit中的对象-->
+
+...
+
+var content='<div class="info-title">高德地图</div><div class="info-content">' +
+            '<img src="http://webapi.amap.com/images/amap.jpg">' +
+            '高德是中国领先的数字地图内容、导航和位置服务解决方案提供商。<br/>' +
+            '<a target="_blank" href = "http://mobile.amap.com/">点击下载高德地图</a></div>';
+    var  infowindow1 = new AMap.AdvancedInfoWindow({
+        content: content,
+        offset: new AMap.Pixel(0, -30)
+    });
+    var  infowindow2 = new AMap.AdvancedInfoWindow({
+        content: content,
+        asOrigin: false,
+        asDestination: false,
+        offset: new AMap.Pixel(0, -30)
+    });
+    var  infowindow3 = new AMap.AdvancedInfoWindow({
+        content: content,
+        placeSearch: false,
+        asDestination: false,
+        offset: new AMap.Pixel(0, -30)
+    });
+</script>
