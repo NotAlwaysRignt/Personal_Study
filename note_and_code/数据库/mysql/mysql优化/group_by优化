@@ -1,0 +1,10 @@
+group by 使用时尽量让 group by 在一个表内进行
+如
+SELECT actor.first_name,COUNT(*) FROM film_actor inner JOIN actor USING(actor_id) GROUP BY film_actor.actor_id;
+
+它会先把 actor内的 first_name 根据 actor_id 和 film_actor联系起来,形成一张临时表,然后再用
+group by 进行 count(*) 的操作,根据explain 可以看出
+
+要解决临时表的问题,应让 group by 在一个表内执行
+
+SELECT actor.first_name c.cnt FROM actor JOIN (SELECT actor_id,COUNT(*) AS cnt FROM film_actor) AS c USING (actor_id);

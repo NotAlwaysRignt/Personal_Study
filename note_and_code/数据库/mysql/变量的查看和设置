@@ -1,0 +1,47 @@
+变量的查看:
+1. show variables like"..."   (需要"",""和like间有无空格均可)
+例:
+mysql> show variables like "slow_query_log";
++----------------+-------+
+| Variable_name  | Value |
++----------------+-------+
+| slow_query_log | OFF   |
++----------------+-------+
+1 row in set (0.04 sec)
+
+查看会话可以用通配符,最常用的就是"%",%和正则表达式的".*"差不多,表示任意个字符
+mysql> show variables like "%query_log%";
++------------------------------+---------------------------------+
+| Variable_name                | Value                           |
++------------------------------+---------------------------------+
+| binlog_rows_query_log_events | OFF                             |
+| slow_query_log               | OFF                             |
+| slow_query_log_file          | /var/lib/mysql/thinker-slow.log |
++------------------------------+---------------------------------+
+
+mysql> show variables like "%query_log%fi%";
++---------------------+---------------------------------+
+| Variable_name       | Value                           |
++---------------------+---------------------------------+
+| slow_query_log_file | /var/lib/mysql/thinker-slow.log |
++---------------------+---------------------------------+
+
+
+
+2.select @@...    (不用"")
+例:
+select @@slow_query_log;
++------------------+
+| @@slow_query_log |
++------------------+
+|                0 |
++------------------+
+1 row in set (0.00 sec)
+
+
+变量的设置
+全局变量的设置
+SET GLOBAL var_name = value; 
+
+会话变量的设置
+SET SESSION var_name = value;
