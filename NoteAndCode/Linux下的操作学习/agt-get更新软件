@@ -1,0 +1,12 @@
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+
+两者的效果一样
+可更新系统中所有安装了的软件
+
+upgrade:系统将现有的Package升级,如果有相依性的问题,而此相依性需要安装其它新的
+Package或影响到其它Package的相依性时,此Package就不会被升级,会保留下来. 
+ 
+dist-upgrade:可以聪明的解决相依性的问题,如果有相依性问题,需要安装/移除新的Package,
+就会试着去安装/移除它. 
+(所以通常这个会被认为是有点风险的升级)  

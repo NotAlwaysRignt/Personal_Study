@@ -1,0 +1,38 @@
+
+//第一次 迭代 method
+Annotation in Method 'public static void com.thinker.Myannotation.AnnotationExample.genericsTest() throws java.io.FileNotFoundException': @com.thinker.Myannotation.MethodInfo(author=Pankaj, revision=10, comments=Main method, date=Nov 17 2012)
+
+
+Annotation in Method 'public static void com.thinker.Myannotation.AnnotationExample.oldMethod()': @java.lang.Deprecated()
+
+
+Annotation in Method 'public static void com.thinker.Myannotation.AnnotationExample.oldMethod()': @com.thinker.Myannotation.MethodInfo(author=Pankaj, revision=1, comments=deprecated method, date=Nov 17 2012)
+
+
+Method with revision no 1 = public static void com.thinker.Myannotation.AnnotationExample.oldMethod()
+
+
+// 第二次迭代method
+Annotation in Method 'public java.lang.String com.thinker.Myannotation.AnnotationExample.toString()': @com.thinker.Myannotation.MethodInfo(author=Pankaj, revision=1, comments=Main method, date=Nov 17 2012)
+
+
+Method with revision no 1 = public java.lang.String com.thinker.Myannotation.AnnotationExample.toString()
+
+
+
+for (迭代 AnnotationExample 类的所有method(方法): toString, oldMethod, genericsTest)
+{
+    if(这个方法被Target 修饰)
+    {
+        for(迭代这个method 的所有注解)
+        {
+            打印 Annotation in Method 方法名和注解 其实就是对这个方法的所有注解进行遍历
+        }
+        if revision == 1
+        {
+            打印 Method with revision no 1
+        }
+        
+    }
+
+}

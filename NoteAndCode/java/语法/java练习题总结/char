@@ -1,0 +1,1 @@
+java的 char存储的unicode码，不仅可以存储ascII码，汉字也可以。

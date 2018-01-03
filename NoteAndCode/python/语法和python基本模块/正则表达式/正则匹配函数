@@ -1,0 +1,10 @@
+1. research()和 match() 的比较
+match（）函数只检测RE是不是在string的开始位置匹配，
+search()会扫描整个string查找匹配,并返回搜索到的第一个结果
+也就是说match（）只有在0位置匹配成功的话才有返回
+例如：
+print(re.match(‘super’, ‘superstition’).span())   会返回(0, 5)
+而print(re.match(‘super’, ‘insuperable’))   则返回None
+
+2.research() 和 findall() 的比较
+research()只返回第一个匹配结果,而findall()会把所有找到的结果放在一个列表里返回

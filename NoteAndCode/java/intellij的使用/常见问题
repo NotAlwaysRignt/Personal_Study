@@ -1,0 +1,5 @@
+1.对src下的文件夹右键对准 "new"时 没有出现 java class ,package等文件类型
+
+要在使得对src的文件夹下右键点new 时出现 java class ,package等文件类型,应将 src 设为代码根目录
+对 src 文件夹右键, 在 Mark Directory as 的选项中选择 Sources Root,这样 IDEA就知道了 src是存放
+代码的根目录

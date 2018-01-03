@@ -1,0 +1,61 @@
+查询数据库中现有的表
+show tables;
+
+
+创建表:
+
+CREATE TABLE 表的名字
+(
+列名a 数据类型(数据长度),
+列名b 数据类型(数据长度)，
+列名c 数据类型(数据长度)
+);
+例子:
+CREATE TABLE employee (id int(4),name char(10));
+
+
+下面我们为表创建列时增加约束
+方式1:写在数据类型的后面
+例一
+设置主键:
+CREATE TABLE table2 
+(
+id int PRIMARY KEY
+);
+例二
+CREATE TABLE Persons
+(
+Id_P int NOT NULL,
+LastName varchar(255) NOT NULL,
+FirstName varchar(255),
+Address varchar(255),
+City varchar(255) DEFAULT 'Sandnes'
+);
+
+方式二,使用CONSTRAINT 关键字
+
+CREATE TABLE table2
+(
+id int,
+CONSTRAINT myid PRIMARY KEY (id)
+);
+CONSTRAINT 后跟的那个myid是可以自己再定义的名字,KEY后面的(id)是列名
+
+复合主键
+CREATE TABLE table3 
+(
+id int ,
+name char(10),
+CONSTRAINT mykey PRIMARY KEY(id,name) 
+);
+
+
+
+约束的种类有
+    NOT NULL
+    UNIQUE
+    PRIMARY KEY
+    FOREIGN KEY
+    CHECK
+    DEFAULT
+

@@ -1,0 +1,68 @@
+1.实例化数据库类的时候，需要有表名 __table__=...  ，并要有一个或以上的主键
+
+2.
+basedir=os.path.abspath(os.path.dirname(__file__))
+ubasedir= basedir.decode('gbk')
+
+#sqlite3不支持中文路径，若路径有中文，要转换成unicode编码
+
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']=\
+        'sqlite:///'+os.path.join(ubasedir,'data.sqlite')
+注意SQLALCHEMY_DATABASE_URI，是URI而不是URL，若写成URL，则在创建数据库时会无法生成sqlite文件
+
+3.
+SQLALCHEMY_COMMIT_ON_TEARDOWN 选项因为不安全已经在最新版被移除了
+
+4.
+使用mysql时,若用python3 版本,在安装flask-sqlalchemy 并配置好后可能会报错:
+ModuleNotFoundError: No module named 'MySQLdb'
+
+原因是python3 不支持 mysqldb
+取而代之连接mysql 使用的是pymysql  ,因此要先 pip install pymysql
+之后在使用flask-sqlachemy时,配置要有所调整:
+格式为
+dialect+driver://username:password@host:port/database
+
+例子:
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://MrRan:密码@localhost/MyBlog"
+
+pymysql即是driver
+MrRan是mysql的用户名,":"后跟密码,
+MyBlog是使用"CREATE DATABASE MyBlog;" 创建的数据库的名字
+
+5.复杂的查询操作
+
+class Post(db.Model):
+    ...
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
+
+class Author(db.Model):
+    ...
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.Unicode(32), unique=True)
+    posts = db.relationship('Post', backref="author", lazy='dynamic')
+
+已知 Author 表中有一个行,其user_name为 "Mr Ran",
+Post 表的外键是 Author 的主键 id
+现在要在Post中找到 "Mr Ran"的文章
+
+看下面的一个语句
+pagination = Post.query.filter_by(\
+            author_id=Author.query.filter_by(username="Mr Ran").first().id)\
+            .order_by(Post.latest_timestamp.desc())\
+            .paginate(1,5)
+            
+注意语句的逻辑:
+Author.query.filter_by(username="Mr Ran").first().id 查找到"Mr Ran"的id
+(注意 "first()", ".id"这些都不要漏了)
+然后Post.query.filter_by(author_id=查找到的"Mr Ran"的id) 查找到对应的文章
+接着用 order_by进行排序处理,
+使用以上两个函数后返回的不是最终结果,最后调用 paginate()方法,返回一个所需的Pagination对象
+或者我们要直接获得所有结果, 则在最后使用all()方法 
+注意顺序为Post.query.filter_by().order_by.all(), all()方法应该放在最后使用
+
+            
+            
+
+

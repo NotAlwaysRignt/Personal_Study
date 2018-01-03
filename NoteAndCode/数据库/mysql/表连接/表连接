@@ -1,0 +1,54 @@
+连接方式
+内连接  外连接(左连接,右连接,全连接) 
+
+内连接
+SELECT column_name(s)
+FROM table_name1
+INNER JOIN table_name2 
+ON table_name1.column_name=table_name2.column_name
+
+
+左连接
+LEFT JOIN 关键字会从左表 (table_name1) 那里返回所有的行，即使在右表 (table_name2) 
+中没有匹配的行:
+
+SELECT column_name(s)
+FROM table_name1
+LEFT JOIN table_name2 
+ON table_name1.column_name=table_name2.column_name
+
+
+
+
+右连接
+RIGHT JOIN 关键字会右表 (table_name2) 那里返回所有的行，即使在左表 (table_name1) 
+中没有匹配的行
+
+SELECT column_name(s)
+FROM table_name1
+RIGHT JOIN table_name2 
+ON table_name1.column_name=table_name2.column_name
+
+
+
+
+全连接
+只要其中某个表存在匹配，FULL JOIN 关键字就会返回行。
+
+SELECT column_name(s)
+FROM table_name1
+FULL JOIN table_name2 
+ON table_name1.column_name=table_name2.column_name
+
+
+在表的连接中,可能会出现其中一个表中的一行对应另一个表的多行的情况
+
+比如
+左表中的一行 name = 'Tom' id = 2,以id =2 做连接条件,可以在另一个表的lesson列中
+找到多个匹配的行,则显示如下
+
+name  id   id   lesson
+Tom   2    2    Chinese
+Tom   2    2    Math
+Tom   2    2    English
+

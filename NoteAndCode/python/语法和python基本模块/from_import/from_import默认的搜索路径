@@ -1,0 +1,31 @@
+python3 的导入方式为绝对导入
+
+当选定 编译的文件(即在终端中输入 python ...所指的文件),其搜索范围只有当前文件夹下
+的所有py 文件及其 包(即内部有__init__.py),注意包中的 __init__.py中 若也包含 import 语句
+同样搜索范围是上述的范围 ,即搜索范围有且仅有两层文件夹
+
+如果在导入过程中还涉及其它文件夹,则要 用 from ..? import ? 或 from .? import ?的格式
+即用"."来标明当前py文件所在目录和要导入的py文件所在的目录的关系
+
+
+
+例如有如下结构的文件
+|--doc
+   __init__.py    
+   |--package
+       __init__.py
+b.py   
+c.py
+
+doc是一个文件夹与 c.py b.py 在同一级目录下
+
+
+b.py在(doc的)__init__.py的上一级目录,doc的__init__.py中有语句 from b import XXX
+如果直接编译 (doc的)__init__.py,会报错.若无法找到 a.py(因为不在同一级目录)
+若在 c.py中 from doc import XXX, 并编译 c.py 则会通过编译,也就是说,这时 doc 的__init__.py
+中 from b import XXX也被成功编译
+
+如果 在(doc的) __init__.py中有 from package import XXX
+那么 如果在终端输入 python c.py 则会报错,
+因为(package的) __init__.py 已经在第三层目录了,超过了搜索的范围,
+正确的做法应该是from .package import XXX

@@ -1,0 +1,52 @@
+数据库迁移
+python manage.py db init 会在manage.py文件夹生成一个migrations文件夹,里面存放的是数据库迁移的各种信息,一般情况下这个文件夹内的数据不可以随意删除
+
+migrations文件夹内有一个versions文件夹,这里面存放的是各个版本的数据库信息,不可以随意删除里面的文件
+
+可能出现的错误及解决方法:
+1.
+python manage.py db migrate 出现失败的情况,可以删除versions中指向最新版本的py文件,然后再试
+(谨慎使用这种方法,手动删除版本可能会给后续数据库更新带来问题)
+
+2.
+如果因为误删versions内的py文件,导致数据库在使用 python manage.py db migrate 时失败,
+出现如下信息:
+Can't locate revision identified by '6b06293b7686'
+
+也就是说数据库找不到之前的版本了,而之前的版本已经被删除无法恢复,我们删除 migrations文件夹后
+重新 python manage.py init 仍然报这样的错误,这时因为我们使用数据库迁移命令后,会在我们的数据库
+中创建 alembic_version 表,里面存放的就是各个版本号,在我们使用 python manage.py db migrate 
+时会去检索之前的版本号,如果出现异常情况就会报错.如果我们删除之前的版本,则应该把数据库中对应的信息
+也删除.
+
+解决方法
+a. 进入 mysql,找到 alembic_version 表,清空里面的信息
+b. 利用python操作数据库删除  alembic_version 里的信息
+如:利用 flask-sqlalchemy
+
+class Alembic(db.Model):
+    __tablename__ = 'alembic_version'
+    version_num = db.Column(db.String(32), primary_key=True, nullable=False)
+
+
+    @staticmethod
+    def clear_db_versions_record():
+        for db_version in Alembic.query.all():
+            print (db_version.version_num)
+            db.session.delete(db_version)
+        db.session.commit()
+
+利用flask-scripts进入 shell界面,调用clear_db_versions_record()即可
+或者在shell界面 手动操作数据库删除消息:
+>>> versions = db_version in Alembic.query.all()
+>>> for v in versions:
+...     db.session.delete(v)
+>>> db.session.commit()
+
+3.alembic.util.exc.CommandError: Target database is not up to date.
+很可能是数据库版本与Alembic中不一致所导致,
+比如 versions中存有一个文件 946a35e29054_.py ,
+而通过shell命令中 a = Alembic.query.all(),  发现 a = []
+解决办法, 根据文件名将版本号添加进Alembic表中
+a = Alembic()
+a.version_num = 0x946a35e29054    (注意文件名后面有个下划线不要加,并且0x不要漏)

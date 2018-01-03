@@ -1,0 +1,2 @@
+ tar -xzf Python-2.7.9.tgz 
+这里 tar表示解压缩，-x 表示从档案文件中释放文件，z 表示用 gzip 解压（用于 xx.tgz 以及 xx.tar.gz 格式的压缩包），f 后面是压缩文件名。

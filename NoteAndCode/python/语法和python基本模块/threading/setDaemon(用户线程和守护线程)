@@ -1,0 +1,48 @@
+引用java的概念
+用户线程:
+主线程结束后还会继续运行直到结束的是用户线程
+主线程运行结束后该线程是否执行完都会被强制结束的是守护线程
+
+python中对于一个线程对象t 
+t.setDaemon(True)使得该线程为守护线程,如果不设置,则默认该线程是用户线程
+
+例子:
+from threading import Thread
+from time import sleep
+def func():
+    sleep(3)
+    print('hello')
+    
+if __name__=="__main__":
+    t = Thread(target=func)
+    t.setDaemon(True)
+    t.start()
+    print("world!")
+    exit()
+运行结果:
+world!
+
+因为还没来得及等sleep()延时结束,程序就运行到了exit(),于是 被强制结束
+
+若改为
+if __name__=="__main__":
+    t = Thread(target=func)
+    t.start()
+    print("world!")
+    exit()
+则运行结果:
+world!
+hello
+即便主线程退出,也会等到所有的用户线程退出才结束
+
+若改为
+if __name__=="__main__":
+    t = Thread(target=func)
+    t.start()
+    t.join()
+    print("world!")
+    exit()
+结果为:
+hello
+world!
+运行到t.join()时,如果t启动的线程未运行完,则会阻塞,直到t启动的线程运行完才往下运行

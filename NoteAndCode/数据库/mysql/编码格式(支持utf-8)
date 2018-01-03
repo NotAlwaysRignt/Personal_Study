@@ -1,0 +1,91 @@
+mysql中,有时默认编码并不支持utf-8,这可能会导致不能存储中文,
+可用如下语句检查
+mysql> show variables like '%character%';
+
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8                       |
+| character_set_connection | utf8                       |
+| character_set_database   | latin1                     |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8                       |
+| character_set_server     | latin1                     |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+8 rows in set (0.01 sec)
+
+character_set_database 和 character_set_server 并不是utf-8
+在写入中文时就会导致错误
+
+通常情况下mysql的配置文件为 etc/mysql/my.cnf
+在mysql5.5以上的版本,要修改字符编码,先
+只要在配置文件的[mysqld] 下添加以下两句话即可
+character-set-server = utf8
+collation-server = utf8_general_ci
+
+打开etc/mysql/my.cnf,发现除了注释,就只有
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mysql.conf.d/
+说明具体的配置信息是在上述两个文件夹中
+找到有描述[mysqld] 的配置文件,发现在mysql.conf.d/mysqld.cnf 中
+
+在下方添加 两句话:
+character-set-server = utf8
+collation-server = utf8_general_ci
+保存并退出,这样就修改了
+
+重启mysql:   sudo service mysql restart  然后登录mysql
+查询字符编码格式:
+
+mysql> show variables like "%character%";
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8                       |
+| character_set_connection | utf8                       |
+| character_set_database   | utf8                       |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8                       |
+| character_set_server     | utf8                       |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+
+发现已经都改成了utf8了,但是这个时候还不能确保我们能往数据库中写入中文,因为这是用户的配置
+但是数据库和用户配置不一定一致
+选择我们要的数据库
+use MyBlog;
+
+mysql> show variables like "%character%";                                       +--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8                       |
+| character_set_connection | utf8                       |
+| character_set_database   | latin1                     |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8                       |
+| character_set_server     | utf8                       |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+8 rows in set (0.00 sec)
+
+
+果然,这里还并没有完全支持utf-8
+修改单个数据库字符编码的做法
+alter database 数据库名 character set utf8;
+这里
+alter database MyBlog character set utf8;
+再
+show variables like "%character%";
+会发现更改成功
+
+
+如果在重启mysql时出现错误:
+Job for mysql.service failed because the control process exited with error code. 
+See "systemctl status mysql.service" and "journalctl -xe" for details.
+
+此时很可能是配置文件有问题
+

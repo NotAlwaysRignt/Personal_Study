@@ -1,0 +1,46 @@
+1.
+int  epoll_create(int size);
+创建一个epoll的文件描述符，参数size告诉内核这个监听的数目共有多大。
+
+2.
+int  epoll_ctl(int epfd, int op, int fd, structepoll_event *event);
+
+epoll的事件注册函数。
+
+参数epfd是epoll_create返回值。
+
+参数op为
+
+   EPOLL_CTL_ADD 注册新的fd到epfd中
+
+   EPOLL_CTL_MOD 修改已经注册的fd的监听事件
+
+   EPOLL_CTL_DEL 从epfd中删除一个fd
+
+参数fd是需要监听文件描述符。
+
+参数event是告诉内核需要监听什么事件。event->events的不同的值表示对应的文件描述符的不同事件：
+
+   EPOLLIN  可以读（包括对端Socket正常关闭）
+
+   EPOLLOUT 可以写
+
+   EPOLLPRI有紧急的数据可读（有带外数据OOB到来，TCP中的URG包）
+
+   EPOLLERR该文件描述符发生错误
+
+   EPOLLHUP该文件描述符被挂断
+
+   EPOLLET     将epoll设置为边缘触发（Edge Triggered）模式。
+
+   EPOLLONESHOT只监听一次事件，监听完之后，如果还想监听需要再次把该文件描述符加入到epoll队列中
+   
+   
+3. int  epoll_wait(int epfd, struct epoll_event* events, int maxevents. int timeout);
+等待事件的产生。
+
+参数events用来从内核得到事件的集合
+
+参数maxevents告之内核这个events有多大（maxevents不能大于size）
+
+参数timeout是超时时间（毫秒）

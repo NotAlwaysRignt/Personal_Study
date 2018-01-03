@@ -1,0 +1,27 @@
+一个类中的static代码块的内容在类被JVM加载时执行(注意类的加载是JVM的操作,与类的实例化含义不同)
+对于static 代码块中的变量,在类被加载执行过后就被销毁了
+class A{
+    static{ int a; } //a不能被A的main函数使用
+}
+
+例:
+class Test{  
+    static{  
+        System.out.println("static语句块执行");  
+    }  
+}  
+
+public class StaticBlockTest{  
+    public static void main(String args[]){  
+        try{  
+                    Class.forName("Test");     
+                    Class.forName("Test");   
+        }catch(ClassNotFoundException e){  
+            e.printStackTrace();  
+        }           
+    }     
+}  
+
+虽然使用了两次 Class.forName("Test");  但只会打印一次 "static语句块执行"
+因为第一次使用 Class.forName("Test"); 时类被加载,打印 "static语句块执行",
+之后再调用 Class.forName("Test"); 时,类已经被加载过,就不会打印了,不过new了多少次对象

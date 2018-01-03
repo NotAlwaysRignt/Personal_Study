@@ -1,0 +1,22 @@
+在html中 使用 {{ url_for("func") }} 时,注意func是视图函数的名字,而不是视图函数对应的url
+
+即
+@app.route("/abc")
+def func():
+    pass
+    
+{{url_for()}}的参数指的是func不是abc
+
+另外如果使用{{ url_for(".func") }}
+如果"."前没有加任何参数,则默认为使用render_template()的蓝本
+
+如
+@main.route("/abc")
+def func():
+    return render_template("abc.html")
+    
+假如 abc.html中使用了{{ url_for(".hello") }}
+则表示 main.hello,即指向的是 main蓝本中注册的视图函数 hello
+
+如果在这个html中要表示 auth 蓝本中注册的视图函数 (当前html由 main蓝本使用render_template渲染)
+则应写成{{ url_for("auth.func") }}

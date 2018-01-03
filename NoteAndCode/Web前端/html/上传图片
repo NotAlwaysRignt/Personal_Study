@@ -1,0 +1,9 @@
+html支持文件上传,上传图片的方式为
+<form method="POST" action="/" enctype="multipart/form-data">
+<input type="file" name="title" />
+</form>
+
+注意form 一定要有enctype="multipart/form-data"属性
+input 要有type="file"属性
+
+(使用flask-wtf也有上传图片的表单组件)

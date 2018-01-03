@@ -1,0 +1,28 @@
+模拟鼠标和按键消息
+keybd_event(tmp->cmdContent.key,0,0,0)
+keybd_event(tmp->cmdContent.key,0,KEYEVENTF_KEYUP,0)
+mouse_event(MOUSEEVENT_LEFTDOWN,x,y,0)
+mouse_event(MOUSEEVENT_LEFTUP,x,y,0)
+
+list<> mylist
+My_list.clear()
+My_list.push_back(tmp)
+list<>::interator iter=mylist.begin()//用迭代器迭代链表   迭代器指向list结构的指针，*iter指向list中的内容，本例中list<pInfo>
+												  //因为pInfo是指针，所以*iter是指针，是pInfo
+for(;iter!=My_list.end();iter++)
+
+parent_handle=FindWindow(NULL,L"按键精灵");//获得主窗口句柄
+moux=FindWindowEx(parent_handle,NULL,NULL,L"x坐标");//获得子窗口句柄
+
+
+ 无法解析的外部符号 _WinMain@16，该符号在函数 ___tmainCRTStartup 中被引用
+1>F:\资料\我的代码\C ++\C++\按键精灵\Debug\按键精灵.exe : fatal error LNK1120: 1 个无法解析的外部命令
+
+出现这种错误是因为没有设置入口函数，即main函数，由报错信息时没有win32格式的main函数(因为我们创建了一个win32项目)
+
+SetCursorPos((*iter)->Info_content.mousecontent.x,(*iter)->Info_content.mousecontent.y);可使鼠标移动到特定的点
+MSDN中GetCursorPos的参数时一个指针，但不要直接用野指针作为参数，而应是给变量的地址
+拓展：SetCursor可以设置鼠标的形状
+BOOL GetCursorPos(  LPPOINT lpPoint );可以得到鼠标的坐标，值会赋在lpPoint上
+
+
