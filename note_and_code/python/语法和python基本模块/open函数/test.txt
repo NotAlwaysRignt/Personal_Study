@@ -1,9 +1,0 @@
-mark Bob
-mark Jane
-mark David
-
-star Nancy
-
-Lily
-
-markSam 

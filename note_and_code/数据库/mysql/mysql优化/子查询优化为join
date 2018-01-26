@@ -1,5 +1,0 @@
-一般子查询通常(使用了 IN )优化为表连接(JOIN)的方式
-但注意使用JOIN时 要小心一对多,即使用条件 
-SELECT title FROM film ON film.col1 = table2.col2; 时
-如果某个 col1 与 table2中 多个 col2相等
-则会返回多个重复的TITLE, 这显然不是我们想要的,这时要用 DISTINCT 去除重复

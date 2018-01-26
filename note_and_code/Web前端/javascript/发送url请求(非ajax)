@@ -1,9 +1,0 @@
-发送get请求可以用两个函数
-window.location.href('网址')"
-window.open('网址')
-
-window.open()实现的是另外打开一个页面并进行访问
-window.location.href()实现的是当前页面的跳转
-需要注意的是:
-window.location.href()在有些浏览器并不支持,因此推荐的做法是
-window.location="网址"  (注意是"="赋值的形式,而不是用括号)

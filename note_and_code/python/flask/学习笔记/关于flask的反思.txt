@@ -1,1 +1,0 @@
-如果没有给app.config[SECRET_KEY]赋值，则会在wtf中出问题而报错（为了防止CSRF而设置的密钥）

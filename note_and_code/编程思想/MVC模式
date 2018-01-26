@@ -1,7 +1,0 @@
-MVC全名是Model View Controller，是模型(model)－视图(view)－控制器(controller)的缩写
-MVC 使用业务逻辑(Controller)、数据(Model)、界面显示(View)分离的方法组织代码
-
-比如网络应用中，以Servlet 为例,
-JavaBean 是Model层,它负责与数据库交互,从数据库存取数据
-Sevlet　是Controller层，它负责服务器后台的业务逻辑，接收请求和发送响应，通过JavaBean向数据库存取数据
-JSP 是View层,它负责向用户渲染展示内容

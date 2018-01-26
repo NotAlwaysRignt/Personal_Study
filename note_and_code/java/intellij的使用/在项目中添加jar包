@@ -1,1 +1,0 @@
-要向项目导入jar包，一种是到 Maven 仓库中下载，然后在配置导入，intellij 有更快捷的方法，点击 File，点击Project Structure，点击Library栏，点击"+"既可以进行添加，在搜索框中输入自己想要的jar包，intellij会从互联网中搜索并给出结果，选择所需的jar包即可

@@ -1,9 +1,0 @@
-linux下的截图比较好的软件有 shutter, HotShots, KSnapshot, ScreenCloud等
-
-ubuntu下
-HotShots的安装用法:
-    sudo add-apt-repository ppa:ubuntuhandbook1/apps     
-    sudo apt-get update
-    sudo apt-get install hotshots
-    
-终端下输入 hotshots ,即可启动截图工具

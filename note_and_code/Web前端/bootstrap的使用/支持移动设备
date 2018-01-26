@@ -1,8 +1,0 @@
-Bootstrap 是移动设备优先的。针对移动设备的样式融合进了框架的每个角落，而不是增加一个额外的文件
-
-为了确保适当的绘制和触屏缩放，需要在 <head> 之中添加 viewport 元数据标签。
-Copy
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-详细见官网文档

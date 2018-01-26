@@ -1,8 +1,0 @@
-where on having 三个mysql关键字都可以进行条件的判断,某种场合下它们是可以等效使用的,但有的时候不能
-对于left join, right join 连接的表要进行不同表的字段比较,就只能用 on 而用不了where, 且根据规范
-对于多表间字段比较也通常用on
-
-再如:
-WHERE语句在GROUP BY语句之前；SQL会在分组之前计算WHERE语句。  
-
-HAVING语句在GROUP BY语句之后；SQL会在分组之后计算HAVING语句。

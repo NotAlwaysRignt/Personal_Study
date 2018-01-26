@@ -1,8 +1,14 @@
 Servlet 是j2EE 的规范,狭义的Servlet是指Java语言实现的一个接口(interface)，广义的Servlet是指任何
 实现了这个Servlet接口的类，一般情况下，人们将Servlet理解为后者。
 
-Servlet 本身(不是指我们实现后的Servlet类)是不能直接跑起来的,因为它只是接口和抽象类,而且Servlet自身
-并没有实现网络通信(socket信息收发,HTTP编码解码)的功能,因此它需要被Servlet 容器加载,比如 Tomcat.
-Servlet的接口是一种规范,我们根据Servlet 的接口去实现自己的类, Tomcat根据接口的名字就能够使用我们自定义
-的实现了Servlet接口的类了. 而Tomcat 自身封装了 socket,HTTP编码解码等功能,这样就把我们的业务逻辑给整合
-到网络服务器中了.
+
+Servlet没做什么:
+Socket通信,HTTP协议解析并不是 Servlet 完成的,它由WEB服务器完成,比如Tomcat
+
+
+Servlet 本身(不是指我们实现后的Servlet类)是不能直接跑起来的,因为它只是接口和抽象类,
+以 Tomcat 为例, 当客户端发送请求后,Tomcat (它完成了对socket的封装) 接收到消息并进行解析(Tomcat也实现了HTTP解析),通过URL与
+web.xml中<url-pattern> 标签的匹配,找到响应的servlet类,然后用java 的反射机制去加载并并实例化这个
+servlet类,只要我们的servlet类遵循了Servlet规范, 实现了 service,doGet,doPost等方法,Tomcat不会
+管我们如何具体实现这些方法,而是直接根据这些名字调用这些方法这样便执行了我们自己编写的业务逻辑,把
+我们自己编写的Servlet 和 WEB服务器(比如这里的Tomcat)结合到了一起
