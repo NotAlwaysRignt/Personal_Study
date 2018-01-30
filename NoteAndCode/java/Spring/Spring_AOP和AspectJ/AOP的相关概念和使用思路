@@ -1,0 +1,20 @@
+AOP 的目标 即是拦截下一个指定的方法(函数),然后在这个方法之前,或之后执行我们插入的方法(函数),
+我们要插入的方法就像一个切片一样可以任意插入和抽出,而被拦截的函数则不需要做任何的改动
+
+下面是几个常用的术语:
+join point 连接点  被拦截的一个 method
+
+pointcut 切点,根据官网的定义,pointcut 可以理解为用于描述 join point 的表达式,它描述了哪些join point
+         才是需要被拦截的
+
+Advice 通知,在被拦截的 method 之前或之后要执行的 method, 即是我们要插入的函数, Advice 总是和 
+      pointcut 成对组合在一起,只有确定了 Advice 和 poincut ,我们才知道要拦截哪些 joinpoint
+
+weaving 织入 把切面（aspect）应用到目标函数的过程
+
+AOP proxy 面向切面编程代理,它本质是在代码运行时的创建的一个对象,假如我们定义 Advise 在被拦截的函数之前
+运行那么 Spring 最终把我们的 Advice 和 被拦截的函数 都作为参数传入这个 proxy 对象中, 由 proxy 来控制
+Advice 和 被拦截函数的先后执行
+
+    SpringAOP 中,既有基于注解的使用,也有基于 XML 文件配置的使用,多数情况下,我们选择使用注解的方式,这种
+方式更加便捷

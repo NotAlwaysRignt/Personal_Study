@@ -1,0 +1,11 @@
+    AspectJ 是 Java 的扩展,它有自己的语言,Java编译器并不能对 AspectJ 语言进行编译,因此使用 AspectJ时
+需要安装 AspectJ 自己的编译器.
+    AspectJ 与 Java 几乎是无缝结合的,但他们是两种不同的语言,面向切面的实现是在编译期完成的,也就是说,
+假设我们要在执行函数A前,先执行函数B,如果我们使用 AspectJ 对 A 进行拦截,并织入 B,那么当编译完成后,
+B 就已经插入到 A 的前面,而不是在运行时通过一些逻辑处理把 B 放到 A 前. 
+    而 Spring AOP 中,面向切片的实现并没有依赖其它的编译器,而是使用纯 Java 实现的,它实现 AOP 主要有两种
+方式,Java JDK的动态代理(Proxy，底层通过反射实现)或者CGLIB的动态代理(底层通过继承实现), 切面将会在运行
+时被织入, Spring AOP 和 AspectJ 的本质区别
+    Spring AOP 在 AOP 的概念上和 AspectJ 是相同的,例如 pointcut,advise,在使用注解进行AOP编程时,
+两者几乎一样,但本质不同,Spring AOP 是用 Java 的反射技术实现对注解的读取,而 AspectJ 则是使用它独有的
+编译器来编译这些注解
