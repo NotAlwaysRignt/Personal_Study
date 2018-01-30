@@ -11,6 +11,8 @@ Class对象是什么:
 方法获得的 Class 对象都是相同的
 
 看看Class对象的使用例子:
+```java
+ 
 import java.lang.reflect.Method;
 public class MyDAO
 {
@@ -28,6 +30,8 @@ public class MyDAO
         }
     }
 }
+
+'''
 
 结果:
 MyDAO
