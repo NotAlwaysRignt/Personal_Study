@@ -1,5 +1,3 @@
-```java
-
 类的实例化需要 三个阶段 类的加载,链接,初始化
 
 加载是指虚拟机加载 .class文件 并创建对应的Class对象 (注意是Class类的对象,而不是这个类的对象),读入JVM
@@ -14,7 +12,7 @@ Class对象是什么:
 方法获得的 Class 对象都是相同的
 
 看看Class对象的使用例子:
-
+```java
  
 import java.lang.reflect.Method;
 public class MyDAO
@@ -34,6 +32,7 @@ public class MyDAO
     }
 }
 
+```
 结果:
 MyDAO
 ************
@@ -52,4 +51,3 @@ Class对象的获取:
 每个类都有一个Class 对象,要获得 Class 对象,则可以用
 this.getClass().getClassLoader().loadClass() 获得
 
-```
