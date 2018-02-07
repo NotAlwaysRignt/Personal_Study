@@ -1,0 +1,12 @@
+1.在终端中执行下列指令：
+
+cat /etc/issue
+
+可以查看当前正在运行的 Ubuntu 的版本号。
+
+
+2.使用 lsb_release 命令也可以查看 Ubuntu 的版本号，与方法一相比，内容更为详细。
+
+在终端中执行下列指令：
+
+sudo lsb_release -a

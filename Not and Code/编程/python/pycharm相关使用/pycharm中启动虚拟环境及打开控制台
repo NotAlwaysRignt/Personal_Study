@@ -1,0 +1,17 @@
+
+pycharm启动虚拟环境
+File >Settings >Project:(当前项目名) >Project Interpreter
+如果下拉框找不到虚拟环境，就点旁边的设置 Add Local 
+/home/... 找到虚拟环境 我的虚拟环境文件夹为venv
+找到venv，再进入bin
+里面有个可执行文件，我的bin里有python python3 python3.6三个可执行为文件
+选中python3.6,这时就会弹出这个虚拟环境的内容，里面有flask flask-script等我在
+虚拟环境安装好的包，说明是正确的，点击确定即可
+
+pycharm启动控制台
+直接debug的时候会弹出调试信息，但如果时用了flask-scrpit的Mangager，需要我们打开
+终端运行，才能像shell一样操作
+点击pycharm左下方的小图标，有终端的选项，点击运行即可
+然后就可以执行ls cd 等操作，进入想要文件夹里执行python XX.py
+而且当打开终端时如果配置了虚拟环境那虚拟环境会启动，
+不用再跑到虚拟环境里去source activate了 

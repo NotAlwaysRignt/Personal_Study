@@ -1,0 +1,27 @@
+
+不建议用root用户来管理mysql,先登录root,自己创建一个用户
+
+mysql -u root -p
+
+mysql> CREATE USER 'username'@'host' IDENTIFIED BY 'password';
+
+username替换成用户名,password替换自己的密码,
+host 用'localhost'替换,意为只允许本机登录,不允许外网连接,如果要用外网连接可用通配符%,详细见文档
+
+设置密码时,如果不需要设置太复杂的密码,先执行
+mysql> set global validate_password_policy = 0;
+时密码的安全级别要求降到最低(只有长度要求,但长度必须在8位以上)
+
+
+假设我创建的用户名为A,接下来我要为A专门创建一个供它操作的数据库,数据库名为MyDatabase;
+
+mysql> CREATE DATABASE MyDatabase;
+
+这时候用户A是没有操作MyDatabase的权限的,通过下面语句为其拓展权限,
+这里我给用户A提供操作MyDatabase的所有权限
+GRANT privileges ON databasename.tablename TO 'username'@'host';
+
+即 GRANT ALL on MyDatabase.* TO 'A'@'localhost' IDENTIFIED BY 'A的密码';
+若出现错误:Your password does not satisfy the current policy requirements
+mysql> set global validate_password_policy = 0;
+在重新设置权限即可

@@ -1,0 +1,2 @@
+CentOS 中安装git
+yum -y install git

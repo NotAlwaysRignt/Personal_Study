@@ -1,0 +1,45 @@
+explain 解释了mysql是如何执行sql语句的,使用方法很简单,在sql语句前添加 explain 就行了.
+
+示例
+explain select film_id from film order by film_id limit 1000,5;
+
++----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref  | rows | filtered | Extra       |
++----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | film  | NULL       | index | NULL          | PRIMARY | 2       | NULL | 1000 |   100.00 | Using index |
++----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+
+上面的结果在shell中显得很难看,因为列太多了,可以在语句结尾 \G,使一行显示一个结果:
+
+explain select film_id from film order by film_id limit 1000,5 \G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: film
+   partitions: NULL
+         type: index
+possible_keys: NULL
+          key: PRIMARY
+      key_len: 2
+          ref: NULL
+         rows: 1000
+     filtered: 100.00
+        Extra: Using index
+1 row in set, 1 warning (0.00 sec)
+
+
+下面解释结果中几个值得关注的行
+table 表示 查询的表
+type 表示连接使用了何种类型,它包括 system,const, eq_req, ref, range, index, all
+    效率从高到低排列为 system > const > eq_ref > ref > range > index > all
+    system: 表中只有一条数据，const 连接的特殊类型
+    const: 主键或唯一索引的等值比较，由于表中至多有一条符合的数据，所以速度很快
+    ALL: 全表扫描
+possible_keys: 可能使用的索引，为空说明这个语句没有可用的索引
+key: 实际使用的索引
+key_len :所使用索引中最长的索引长度,不失精度情况下长度越短越好
+rows: 扫描到的行数
+Extra: 种类很多,有两个需要重点关注
+    Using filesort 表示 MySQL 需要遍历所有符合条件的行然后按照排序的 key 来使得最终的查询结果是有序的。
+    Using temporary 表示 MySQL 需要创建一个临时表来存储结果，通常发生在查询包含不同列的 GROUP BY 和 ORDER BY 子句。
+    当看到上述两个时要考虑优化sql

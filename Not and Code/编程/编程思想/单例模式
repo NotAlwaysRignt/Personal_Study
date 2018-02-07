@@ -1,0 +1,38 @@
+含义: 一个类在程序运行时始终只有一个实例化对象.
+
+实现方法:
+将类的实例过程(new) 在类的内部实现(这个实例对象应设为静态的),将设为构造函数私有(类外部就无法对这个实例化了),并向外部提供一个getinstance接口,将这个类的实例返回.
+即三要素:1.私有的构造函数 2.成员中包含一个指向自己的实例的静态引用 3.以自己的实例为返回值的public函数
+
+单例模式分两种,饿汉模式和懒汉模式
+饿汉模式 是指在类被加载时就进行实例化操作,即程序一开始运行时我们在内存中就载入好这个类的实例.
+懒汉模式 是指当我们调用类的getinstance方法时才对类进行实例.
+
+eg:饿汉模式
+
+public Singleton{
+    
+    private static Singleton singleton = new Singleton(); //私有静态,此类被载入程序时就会实例化
+    private Singleton() {} //私有的构造函数
+    
+    public static Singleton getInstance(){
+        retun singleton;  //将自己的实例返回
+    }
+}
+
+eg: 懒汉模式
+
+public Singleton{
+    
+    private static Singleton singleton;  //此类被载入程序时还不会实例化,singleton为null
+    private Singleton() {} //私有的构造函数
+    
+    public static Singleton getInstance(){
+        
+        if(singleton == null){
+            singleton = new Singleton(); //在第一次调用 getInstance 方法时会实例化该类
+        }
+        retun singleton;  //将自己的实例返回
+    }
+}
+

@@ -1,0 +1,18 @@
+<button type="button">按钮1</button>
+<button type="submit">按钮2</button>
+都是按钮
+区别在于如果要在点击"按钮1"后要求浏览器作出反应,则需要用另外为其写javascript
+比如使用jquery的函数,或者在标签内添加 onclick="调用的js函数"的属性
+当点击按钮2时,只要有type="submit",如果按钮在表单<form>内,那么它就会发起请求
+假设
+<form action="/go">
+    ....
+    <button type="submit">按钮2</button>
+</form>
+则会向/go发起GET请求,提交表单内的数据
+如果
+<form action="/go" method="post">
+    ....
+    <button type="submit">按钮2</button>
+</form>
+则会向/go发起POST请求,提交表单内的数据

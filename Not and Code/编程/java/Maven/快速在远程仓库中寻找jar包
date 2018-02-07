@@ -1,0 +1,1 @@
+要添加一个jar包,就要在pom.xml中添加<dependency> 标签,自己手写是非常麻烦的,正确的方法是搜索 maven repository,进入maven repository的官网,在那里我们可以快速地搜索到我们需要的jar包,选择需要的版本,里面已经写好了这个jar包对应的 <dependency>,<groupId>,<artifactId>,<version>标签内容,我们直接copy下来粘贴到pom.xml即可

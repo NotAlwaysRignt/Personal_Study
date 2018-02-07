@@ -1,0 +1,9 @@
+默认情况下 render_template会启动转义，如果要将其禁止，有如下方法
+1.在变量上加 "|safe"
+{{ content|safe }}
+
+2.在 {% autoescape %} 块内的内容不会被转义
+{% autoescape false %}
+    <h3>不会被转义</h3>
+    <h3>{{ will_not_be_escaped }} </h3>
+{% endautoescape %}

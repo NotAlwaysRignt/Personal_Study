@@ -1,0 +1,12 @@
+origin 是自定义远程仓库的名字,在创建远程仓库后第一次更新远程仓库时,使用
+git push -u origin master     
+推送master分支的所有内容,以后则用
+git push origin master
+
+
+每次本地提交(commit)后，只要有必要，就可以使用命令
+git push origin master   推送最新修改
+
+git push 的详细说明
+
+首先介绍 upstream 的概念

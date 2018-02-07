@@ -1,0 +1,16 @@
+首先理解面向切面的概念
+切点 pointcut,被拦截的目标函数
+通知 advice 在被拦截的 method 之前或之后要执行的 method, 即是我们要插入的函数
+切面 切点和通知组成的单元
+
+在 Spring AOP 的注解中
+我们用一个类来描述一个切面,一个作为切面的类需要被 @Aspect 注解
+
+@Aspect  
+public class AspectStyle {  
+  
+    @Before("execution(* com.sxit..*.*(..))")  
+    public void before(){  
+        System.out.println("方法执行前执行.....");  
+    }  
+}

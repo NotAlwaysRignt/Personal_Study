@@ -1,0 +1,154 @@
+git init test
+
+一开始 .git/objects/ 目录下没有任何文件 (有两个名为 pack 和 info 的空目录)
+
+我们存入文本 'test content' , -w 表示存储数据对象, --stdin 表示从终端读取 'test content'
+$ echo 'test content' | git hash-object -w --stdin  
+d670460b4b4aece5915caf5c68d12f560a9fe3e4
+
+结果: 在 objects 下创建了一个 d6 文件夹,d6 文件夹下
+$ find .git/objects -type f
+.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4
+分析: git 会根据文件 'test content' 得到一个 40 位的哈希值,前两位(d6),用来做子目录的名称,后38位
+目录下作为文件的名字
+
+我们使用以下命令可以读取回'test content',注意-p 后跟的是40位的哈希值(目录名+文件名)
+$ git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
+test content
+
+我们继续创建文件并为其存入为git对象
+
+$ echo 'version 1' > test.txt
+$ git hash-object -w test.txt
+83baae61804e65cc73a7201a7252750c76066a30
+
+$ echo 'version 2' > test.txt
+$ git hash-object -w test.txt
+1f7a7a472abf3dd9643fd615f6da379c4acb3e3a
+
+最终 test.txt 文件的内容为 'version2', 原来'version1' 的test 文件将被取代,但已经被记录下来
+
+现在 objects/ 目录下有三个对象了:
+$ find .git/objects -type f
+.git/objects/1f/7a7a472abf3dd9643fd615f6da379c4acb3e3a
+.git/objects/83/baae61804e65cc73a7201a7252750c76066a30
+.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4
+
+我们使用 git cat-file -p + 40位哈希值的方式就可以把他们分别读下来
+$ git cat-file -p 83baae61804e65cc73a7201a7252750c76066a30 > test.txt
+通过上面一步后,打开当前目录下 test.txt ,其文件内容已经变回了 'version 1',我们可用linux 的cat命令查看
+$ cat test.txt
+version 1
+
+当我们每修改一次文件,并为文件创建一个对象时,我们创建的是 blob 类型的对象
+git cat-file -t +40位哈希值  可以查看其类型: 
+$ git cat-file -t 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a
+blob
+
+
+树对象:
+通过上面的操作可以知道,我们可以通过哈希值获取文件的内容,但是原来的文件名却找不到了,比如 test.txt,
+我们只有用 git cat-file -p 哈希值 > 文件名 才能恢复原来的文件名和文件值,但我们不可能去记住以前所有
+文件的文件名,树对象,不但可以解决这些冲突问题,还可以把这些 blob 文件组织起来
+
+下面我们要创建一个树对象, 要创建树对象,首先要把文件写入暂存区
+把 含有 'version 1' 的 test.txt 加入到暂存区中
+
+$ git update-index --add --cacheinfo 100644 83baae61804e65cc73a7201a7252750c76066a30 test.txt
+底层命令 update-index 创建了一个暂存区,因为 test.txt之前并不在这个暂存区中,用 --add 命令可以将其加入
+因为我们添加的实际是 83/baae61804e65cc73a7201a7252750c76066a30,这个文件并不在当前目录下,而是在git
+的数据库中,所以我们要使用 --cacheinfo 10064是这个文件的类型,100644，表明这是一个普通文件。 
+其他选择包括：100755，表示一个可执行文件；120000，表示一个符号链接,与UNIX 操作系统的文件类型相同,但git
+只提供以上三种文件类型选择用于数据对象,其它类型则用于目录和子模块
+此外我们还要写上文件名'test.txt',由此我们也可知道,之所以树对象保存了文件名,是因为我们在向缓存区添加
+数据对象时就需要附带上文件名信息
+
+现在我们写入一个树对象
+$ git write-tree
+结果:
+d8329fc1cc938780ffdd9f94e0d364e0ea74f579
+以上是树对象的哈希值,当我们添加树对象时,这树对象就会指向当前缓冲区中所有的对象,我们可以读取这个树对象里面
+的内容:
+$ git cat-file -p d8329fc1cc938780ffdd9f94e0d364e0ea74f579
+100644 blob 83baae61804e65cc73a7201a7252750c76066a30      test.txt
+
+我们可以看它的类型
+$ git cat-file -t d8329fc1cc938780ffdd9f94e0d364e0ea74f579
+tree
+
+接下来,我们先创建一个 new.txt 文件,并和内容为 'version 2' 的 test.txt 都添加到缓存区中
+$ echo 'new file' > new.txt
+$ git update-index --cacheinfo 100644 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a test.txt
+$ git update-index --add new.txt
+现在暂存区中已经有 new.txt 和 test.txt 了
+$ git write-tree
+0155eb4229851634a0f03eb265b69f5a2d56f341
+
+    通过调用 read-tree 命令，可以把树对象读入暂存区。 本例中，可以通过对 read-tree 指定 --prefix 选
+项，将一个已有的树对象作为子树读入暂存区
+
+$ git read-tree --prefix=bak d8329fc1cc938780ffdd9f94e0d364e0ea74f579
+把先前的树对象 (里面指向的是内容为'version 1' 的test.txt 的 blob)
+
+$ git read-tree --prefix=bak d8329fc1cc938780ffdd9f94e0d364e0ea74f579
+$ git write-tree
+3c4e9cd789d88d8d89c1073707c3585e41b0e614
+
+$ git cat-file -p 3c4e9cd789d88d8d89c1073707c3585e41b0e614
+040000 tree d8329fc1cc938780ffdd9f94e0d364e0ea74f579      bak
+100644 blob fa49b077972391ad58037050f2a75f74e3671e92      new.txt
+100644 blob 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a      test.txt
+
+git write-tree 只会根据暂存区内部的对象创建一个 tree, 我们之前创建的tree对象
+0155eb4229851634a0f03eb265b69f5a2d56f341 并不在暂存区中,所以我们通过新创建的 tree 对象
+3c4e9cd789d88d8d89c1073707c3585e41b0e614 并不能找到 0155eb4229851634a0f03eb265b69f5a2d56f341
+
+此时数据结构见图片 data-model2.png
+
+到目前为之,我们创建了三个树对象 'version 1' 的 test.txt 创建了一个,不妨称为 tree1
+'version 2' 的 test.txt 和 new.txt 创建了一个,设为 tree2
+把 tree1 和 'version 2' 的 test.txt 和 new.txt 创建了一个, 称为 tree3
+
+可以通过调用 commit-tree 命令创建一个提交对象，为此需要指定一个树对象的 SHA-1 值，以及该提交的父提交
+对象（如果有的话）。 我们从之前创建的第一个树对象(tree1)开始：
+
+echo 'first commit' | git commit-tree d8329f 
+'first commit'是我们的注释, git commit-tree 后并不需要40位哈希值,用5位即可,只要能帮我们锁定唯一的树
+对象,位数不同返回的哈希值会不同,但是结果是一样的
+$ echo 'first commit' | git commit-tree d83293c42dd12585135c2f48183b2c5cf95e3754ff5d7
+结果:
+3c42dd12585135c2f48183b2c5cf95e3754ff5d7
+
+提交第二个和第三个树对象, -p 后跟父对象,即上一个对象
+echo 'second commit' | git commit-tree 0155eb -p 3c42dd
+c715aec847971c0617f21c96630feef2dca21f8f
+
+
+echo 'third commit'  | git commit-tree 3c4e9c -p c715aec
+d467f0b401293715286952d593ce8bb3493e50ac
+
+现在,我们第三次提交后返回的哈希值使用 git log 命令,这里为了隐私安全我把QQ号给除去,改成'我的QQ号'
+commit d467f0b401293715286952d593ce8bb3493e50ac
+Author: NotalwayRingh <'我的QQ号'@qq.com>
+Date:   Fri Feb 2 21:38:17 2018 +0800
+
+    third commit
+
+ bak/test.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c715aec847971c0617f21c96630feef2dca21f8f
+Author: NotalwayRingh <'我的QQ号'@qq.com>
+Date:   Fri Feb 2 21:36:30 2018 +0800
+
+    second commit
+
+ new.txt  | 1 +
+ test.txt | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+commit 3c42dd12585135c2f48183b2c5cf95e3754ff5d7
+Author: NotalwayRingh <'我的QQ号'@qq.com>
+Date:   Fri Feb 2 21:34:18 2018 +0800
+
+这和我们使用 git add , git commit 后得到的结果是一样的

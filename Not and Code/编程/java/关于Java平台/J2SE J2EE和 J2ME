@@ -1,0 +1,25 @@
+官方将Java分为三个体系：
+
+    JavaSE（J2SE）（Java2 Platform Standard Edition，java平台标准版）
+    JavaEE(J2EE)(Java 2 Platform,Enterprise Edition，java平台企业版)
+    JavaME(J2ME)(Java 2 Platform Micro Edition，java平台微型版)。
+   
+    J2EE  即 JavaEE (2英文为two,其实想表达的意思是to)
+    J2SE 即JavaSE 
+    
+    
+具体说明:
+首先明确Java SE 是java 最核心的部分,EE,ME都是根据JAVA SE写出来的.一般 JAVA SE 一般就是指 JDK,
+官网的有一句话JDK (Java SE Development Kit).
+    JDK包括了java的开发工具以及JRE,首先说说JRE,它包括了JVM 以及一些基础的类库(比如socket这些),只要有
+JRE,我们就能运行编译好的java程序
+    但是JRE是没有包括java编译器的,也就是说JRE是不能用来做java开发的,为此JDK诞生了,它不仅包含了JRE,还
+包括java代码的编译器,以及相关java开发的所用到的工具,比如java程序调试和分析的工具等.
+    由上面的分析可以看出,我们可以把 JAVA SE 看成是 JAVA 最底层的封装,当然它不止类库,还包括java编译器
+JVM等,(J2SE包含java编译器,自然也就包含了java语言的规范),一切 JAVA 的开发都必须基于它进行
+    
+J2EE 是一种规范,注意是规范不是具体的实现,它规定了一些接口(也会包括一些抽象类),比如Servlet,我们在做开发
+时只要去实现这些接口,写好的类就能用到很多大型的框架上.
+
+J2ME主要用于移动设备开发,目前已经很少用,逐渐被android取代
+

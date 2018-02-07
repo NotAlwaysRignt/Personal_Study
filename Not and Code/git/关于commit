@@ -1,0 +1,23 @@
+git commit -m "The_first_commit" 时出现：
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: unable to auto-detect email address (got 'thinker@thinker.(none)')
+
+
+按照它的提示，应该在电脑中设置who i am
+于是 ：
+git config --global user.email "我的邮箱（最好和github是同一个吧）"
+git config --global user.name "我的名字（最好也跟github的一样吧）"
+
+这样就解决了
+
+

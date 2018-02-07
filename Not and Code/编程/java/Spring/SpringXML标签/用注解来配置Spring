@@ -1,0 +1,22 @@
+    Spring 装配 Bean 的本质就是使用 java 的反射技术,既然是反射技术,那么当然可以既使用XML文件读取字符串
+也可以使用注解的形式来配置
+
+1. @Component
+被此注解标注的类将被 Spring 容器自动识别，自动生成 Bean 定义。即：
+
+packeage com.shiyanlou.spring;
+
+@Component("shiyanlou")
+public class shiyanlou{
+
+}
+
+与在XML中配置以下效果相同
+<bean id="shiyanlou" class="com.shiyanlou.spring.shiyanlou">
+
+除此之外，Spring 有三个与 @Component 等效的注解：
+
+    @Controller:对应表现层的 Bean，也就是 Action 。
+    @Service:对应的是业务层 Bean 。
+    @Repository:对应数据访问层 Bean 。
+

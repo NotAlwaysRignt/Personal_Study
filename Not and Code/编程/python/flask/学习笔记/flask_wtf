@@ -1,0 +1,32 @@
+1.利用 flask_wtf 启动  CSRF保护：
+
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect()
+csrf.init_app(app)
+
+在启动 CSRF 后，所有的POST 请求 (表单的提交，ajax)，都必须有一个名为csrf_token的值
+否则POST请求会返回400,在开发者工具中查看Response，会得到提示 missiong csrf token
+
+因此为了获得csrf_token，凡是接收POST方法的路由函数，都要生成一个表单对象，如果我们不需要任何按钮或文本框
+则可以用下面的方法获得csrf
+
+from flask_wtf import FlaskForm
+class Form(FlaskForm):
+    pass
+    
+这样，我们 在视图函数中 form = Form，并把这个form对象传到 render_template函数中
+
+在提交表单时，必须在<form>标签下加上
+{{ form.csrf_token }}
+
+对于ajax，假如我们发送的是json格式的数据，则这个json对象中必须有名为"csrf_token"的key
+例(jquery的post方法)：
+首先在html中任意一个地方，添加 {{ form.csrf_token }}，它会被渲染成
+<input id="csrf_token" name="csrf_token" value="csrf值" type="hidden">
+
+jquery中，$('#csrf_token').val()将获取id为csrf_token的标签的value
+因此在JavaScript中，我们可以这样写
+$.post("url",
+      {name:Bob, csrf_token:$('#csrf_token').val()},  
+      function(data,status){    
+      });

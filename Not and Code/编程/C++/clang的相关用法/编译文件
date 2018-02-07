@@ -1,0 +1,27 @@
+clang++ -std=c++11 -stdlib=libc++ -Werror -Weverything hello.cpp
+
+
+    -std=c++11：使用 C++11 新特性；
+    -stdlib=libc++：指定使用 clang 的标准库头文件 /usr/include/c++/v1/；
+    -Werror：将所有编译警告视为编译错误；
+    -Weverything：打开所有编译警告选项。在 GCC 中，无法通过单个选项打开所有编译警告，必须繁琐的同时指定 -Wall、-Wextra、以及大量分散的其他选项，为此clang增加了-Weverything。
+
+
+编译C文件 
+clang hello.c
+默认生成a.out
+执行a.out
+./a.out
+
+若不想要以a.out命名，想自定义命名为hello.out
+clang -o hello.out hello.c
+生成可执行文件 hello.out
+
+编译C++文件 类似
+clang++ hello.cpp
+默认生成a.out
+执行a.out
+./a.out
+若不想要以a.out命名，想自定义命名为hello.out
+clang++ -o hello.out hello.cpp
+生成可执行文件 hello.out

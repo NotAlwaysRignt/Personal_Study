@@ -1,0 +1,17 @@
+1.nginx和uwsgi的关系
+
+nginx相当于是服务器，负责接收请求
+
+uwsgi是服务器和服务端应用程序的通信协议，规定了怎么把请求转发给应用程序和返回
+
+2个基本概念：
+服务器(接收请求)，应用程序(处理请求并返回)
+
+通信过程：
+客户端发送一个http请求，被nginx服务器接收，nginx服务器将请求转发给uwsgi,uwsgi将请求转发给实现uwsgi协议的应用程序(flask,gunicorn等等)
+
+
+WSGI,是python的一种通信协议
+uwsgi是一种线路协议而不是通信协议，在此常用于在uWSGI服务器与其他网络服务器的数据通信
+这里我们部署时用的是nginx + uWSGI(注意不是uwsgi) + flask
+uWSGI是实现了uwsgi和WSGI两种协议的Web服务器

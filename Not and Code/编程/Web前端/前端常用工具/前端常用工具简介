@@ -1,0 +1,23 @@
+Vue.js ,AngularJS 都是 javascript 框架(类比 jquery),即对 javascipt 代码的封装, 下载好相应的js 
+文件,在 html 用<script>标签引用就可以使用它们了
+
+Node.js,简单地说提供了 javascript 在服务器端运行的环境,比如安装好 Node.js 后我们可以在终端上打印 
+Hello World 了,也就是说 javascript 不再只是能在浏览器上跑. 安装好 Node.js,那么这样 js 也能做一些后端
+的工作而不只是用于前端了
+
+NPM 是随同NodeJS一起安装的包管理工具,它的功能有:
+    允许用户从NPM服务器下载别人编写的第三方包到本地使用。
+    允许用户从NPM服务器下载并安装别人编写的命令行程序到本地使用。
+    允许用户将自己编写的包或命令行程序上传到NPM服务器供别人使用。
+我们可以类比 ubuuntu上的 apt-get,有了 NPM,我们就可以很方便地安装很多前端开发工具了
+
+.vue 文件,单组件文件, 我们可以把逻辑上属于同一个模块的 html css js 的内容 用特定的语法 写入 .vue 文件,
+然后 可以用 Webpack 或 Browserify 把里面的内容进行转换 就能生成 html,css 和 js文件了,之所以要使
+用.vue文件是为了模块化管理 html css js,或图片等资源,比如有一些 HTML js 和 CSS一同构成的模块 常常需要
+反复使用,如果我们只是从 html文件 css文件 和 js文件里把代码都 copy 出来然后再组织是很不方便的.借助.vue文
+件和特殊的语法去描述并生成这些模块,可以大大简化开发
+
+Webpack,模块打包器,可以简单理解为我们按照它提供的语法规则编写文件,编译后就可以快速地生成 js css html 等
+文件,比如我们可以把同一个模块下的 js html css 的内容写在同一个文件里,然后编译生成 js css html 文件.
+借助 Webpack ,这样我们就可以模块化地管理 html js 和 css了.比如有些 js 和 css 常常被重复使用,用 
+Webpack 快速地将它们组织到一起,而不需要 copy 代码然后再重新组织

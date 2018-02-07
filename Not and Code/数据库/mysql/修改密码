@@ -1,0 +1,16 @@
+根据文档,
+当刚刚完成mysql的安装时,mysql已经创建了一个root用户,我们要获取它的临时密码
+grep 'temporary password' /var/log/mysqld.log
+
+然后根据显示的临时密码("is generated for root@localhost:  js:bYs....",开头是js,前面两个空格不用输入) 
+ mysql -u root -p   #登录mysql
+ 
+输入密码
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '新的密码!';   #修改密码
+
+注意,最新版的mysql 密码有要求(在文档的设置密码处有说明),默认安全强度为中(数值为1),
+中等强度的密码要求 密码长度,大小写字母,数字,特殊字符
+
+如果我们的密码只想有数字和字母
+set global validate_password_policy = 0;
+可设置强度为最低,只有长度要求

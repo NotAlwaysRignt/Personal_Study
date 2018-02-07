@@ -1,0 +1,16 @@
+<img src="文件路径">可以显示图片
+比如 test.html中有<img src="./pic.png">,用浏览器打开test.html
+可以显示与test.html 在同一目录下的 pic.png图片 (注意 "."和"/不能漏")
+
+除此之外,
+src中可以直接嵌入图片的base64编码,即相当于把整个图片转换编码,然后将整张图片的信息写到src中
+现代浏览器很多已经支持从src中解码出图片
+
+例子:
+<img src="src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA......">
+iVB0...就是将二进制的图片转换过来的base64编码
+
+使用base64的弊端:
+1.有些IE浏览器没有解析base64编码的功能
+2.转换为base64编码后图片比原来要更大
+3.使用外链图片,图片可以在页面渲染完成后继续加载,不会造成阻塞

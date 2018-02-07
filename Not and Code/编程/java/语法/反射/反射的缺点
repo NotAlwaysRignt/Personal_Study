@@ -1,0 +1,9 @@
+反射最大的缺点就是性能的损失
+https://stackoverflow.com/questions/1392351/java-reflection-why-is-it-so-slow
+上面提到的原因有以下几个:
+1. 编译器不能对装载类的过程做优化
+2. 因为运行要去扫描特定的类,因此有对文件做扫描,匹配操作的开销
+3. 参数还需要另外再处理,还有要做好异常处理等
+(Arguments need to be dressed up via boxing/unboxing, packing into arrays, Exceptions 
+wrapped in InvocationTargetExceptions and re-thrown etc.)
+ 
