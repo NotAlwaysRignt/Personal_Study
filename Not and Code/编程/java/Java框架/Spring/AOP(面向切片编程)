@@ -1,0 +1,22 @@
+    面向切片，首先要明白什么是切片。简单地说，我们把每一个函数(method)称为一个切片。在面向切片编程中，
+我们实现了一个拦截器，使我们可以拦截指定的method，使method执行前或者执行后添加一些额外的method。
+
+
+在SpringAOP中我们可以用各种方式去拦截特定的类或特定的方法(可以根据方法的参数类型,方法的名称等等规则)
+然后在拦截到的方法 之前之后或执行期间 插入我们自己设定的方法.这样就不必把这些方法在代码中写到一块去
+
+
+    比如原来的代码只是调用了funcA，现在我们要添加新的功能呢个funcB和funcC，并希望在每次调用funcA时都
+会去先调用funcB，在funcA执行完毕后再调用funcCSpring的AOP使得我们不需要把funcB和funcC写到原来的代
+码中，而可以用另外的java文件写好funcB和funcC后，用配置的方式，将funcB和funcC嵌入原来的代码中
+
+在Spring的AOP中，Advices 便是这样一个拦截器，它支持了
+    Before advice - method 执行前通知
+    After returning advice - method 返回一个结果后通知
+    After throwing advice - method 抛出异常后通知
+    Around advice - 环绕通知，结合了以上三种
+
+Advices 并不能拦截指定的方法，而会把所有的方法都拦截下来，于是Spring又实现了PointCut，
+PointCut可以根据 method 的名字或者正则表达式去拦截一个 method 。
+在用配置文件和代码实现Advices和PointCut时，Spring又用一个Advisor类把 Adivices和 PointCut封装起来，
+使得Adivices和 PointCut构成一个独立的单元.

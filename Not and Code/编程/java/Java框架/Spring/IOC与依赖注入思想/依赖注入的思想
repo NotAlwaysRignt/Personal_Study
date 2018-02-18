@@ -1,0 +1,51 @@
+传统应用程序都是由我们在类内部主动创建依赖对象，而在依赖注入思想中，我们把主类依赖的类作为参数传递给主类，
+而不是在主类内部 new出依赖的类，这样一旦依赖的类被修改，只要依赖类的接口功能不变，主类就不必被修改
+
+在依赖注入思想中
+类与类的关系变成了接口与接口的关系,假设类B实现了接口BI,
+那么我们要描述比如 A 中 有个成员变量 B, 我们在写代码时应该是 A 里面有个 BI 类型的成员变量,然后再提供
+BI成员变量的set方法,我们在实例化A后,再 new 一个B的对象,然后通过set方法把B对象注入到A中,这样假如有一天
+我们想要修改B为C,只要让C去实现BI接口,然后用set方法将C注入到A中即可,这样对象与对象间的耦合就变得很低
+在spring 的 IOC 中,对象的组装与注入Spring 的IOC 会帮我们自动完成,只要我们编写好相应的 xml 文件
+
+
+举例：
+传统应用程序都是由我们在类内部主动创建依赖对象,比如汽车Car类，里面要存放一个 车轮Wheel类的实例
+假设车轮有一个尺寸属性 int size
+
+我们这样写： 
+class Car{
+    private Wheel wheel;
+    Car(int size) {this.wheel = new Wheel(size)}
+}
+
+
+class Wheel{
+    private int size;
+    Wheel(int size){this.size = size;}
+}
+
+假设这个时候我们要改需求，要给wheel 添加一个属性 weight
+那么我们就要修改 Wheel
+class Wheel{
+    private int size;
+    private int weight;
+    Wheel(int size, int weight){
+        this.size = size; 
+        this.weight = weight;
+    }
+}
+
+但事实是除了Wheel，Car也要改，这里只是两个类，假设有上千个类是这样的关联关系，改变最底层的一个类剩下的类
+全部都要改动，这样的代码显然是难以维护的。要让代码变得容易维护，就要让不同的类尽可能相互独立，这就是一个
+去耦合的过程。
+
+我们不让Wheel在 Car中创建，而是创建后用参数的方式传递，比如下面这样
+
+class Car{
+    private Wheel wheel;
+    Car(Wheel wheel) {this.wheel = wheel}
+}
+
+这样的话，不过wheel再添加多少个属性，Car也不需要作相应的改动，只要将wheel作参数传入即可
+这是通过构造函数的方式传递参数，还有另外两种方法：Setter传递和接口传递。思路是一样的。

@@ -1,0 +1,13 @@
+只需要两个 dependency ,一个是 spring-core ,一个是 spring-context
+
+  <!-- Spring deploy -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>4.0.9.RELEASE</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>4.0.9.RELEASE</version>
+    </dependency>
