@@ -3,7 +3,7 @@
 官网
 https://github.com/zhuzhuyule/HexoEditor
 
-在 github 上搜索 HexoEditor ,找到官方项目所在地点,进入 release 版本,找到符合自己操作系统的版本下载后解压
+在 github 上搜索 HexoEditor (另一款 Moeditor 功能差不多),找到官方项目所在地点,进入 release 版本,找到符合自己操作系统的版本下载后解压
 解压后目录中有一个名为 HexoEditor 的可执行文件,双击运行即可
 
 ## 软件介绍
