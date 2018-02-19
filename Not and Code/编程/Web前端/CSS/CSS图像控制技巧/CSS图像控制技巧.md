@@ -40,12 +40,15 @@ height:auto;
 /*高度占屏幕百分之40,宽度会自动调整*/
 width:auto;
 height:40%;
-
 ```
 如果高和宽都设置了具体的值,那随之浏览器大小的变化将导致图片变形  
 #### 图像固定
-```background-attachment:fixed ```  
-背景将被固定,不管滑轮怎么滚动,背景始终在浏览器上固定显示,有时这会是一个不错的视觉效果,只要在另一个模块上设置了其它的背景颜色或图片,那么固定的图片滚动到其它模块
+ background-attachment: fixed;  
+背景将被固定,不管滑轮怎么滚动,背景始终在浏览器上固定显示,有时这会是一个不错的视觉效果,只要在另一个模块上设置了其它的背景颜色或图片,那么固定的图片滚动到其它模块  
+#### 图像居中
+background-position: center center;  (background-position其它设置请看文档)
+background-position 必须在  background-attachment: fixed;  时才能正常工作  
+如果图像过大导致在浏览器界面不能全部显示时,图像会将中间(水平正中,垂直正中)部分显示在浏览器上,这在进行响应式开发时会是一个有用的技巧  
 ###  背景透明度  
 background: transparent;  
 transparent 意味透明,
@@ -53,7 +56,7 @@ transparent 意味透明,
 ##### 使用rgba控制透明度,使背景色与图像结合  
 调节背景色透明度并与图片相配合有时可以达到美化图片的效果:
 如下图:  
-![](main.png)
+![](img/main.png)  
 现在我们在其中一个模块(导航栏下面部分)设置
 ```CSS
 #banner {
@@ -63,4 +66,4 @@ transparent 意味透明,
 }
 ```
 效果如下:  
-![](main2.png)
+![](img/main2.png)
