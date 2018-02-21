@@ -20,14 +20,15 @@ theme 属性指的是主题,不同主题最终渲染效果不同.上例中"unite
 在官网之所以能渲染成功,是因为官网服务器保存了相应的CSS  
 因此我们要去下载相应的CSS,**引入CSS时不需要把CSS文件保存在特定路径下,只要能够引入 strapdown.js就能工作**)  
 我们还需要引入的CSS有  
-strapdown.css  
-bootstrap-responsive.min.css  
-slate.min.css(这个与选择的主体有关,比如主题是united,则需要引入united.min.css)  
+* slate.min.css(这个与选择的主体有关,比如主题* 是united,则需要引入united.min.css)  
+* strapdown.css  
+* bootstrap-responsive.min.css(strapdown使用的是bootstrap2版本,我们可以添加bootstrap4,不会冲突)  
+**要注意的是,用link引入上面三个CSS文件时顺序也要和上面保持一致!否则在用小屏幕时会显示出错**
 
 　　那么我们怎么知道要引入这些CSS以及去哪里找到这些 CSS 呢?  
 　　创建一个 HTML 文件,我们可以先引用网络上的 strapdown.js ,来完成一个简单的markdown渲染示例.  
 　　在浏览器上打开这个HTML文件,如果我们的markdown内容能够被正常渲染,说明**strapdown.js 成功引入并正常工作.  
-　　接下来我们使用浏览器的开发者工具,观察HTML文档里的 link标签,就可以知道有哪些CSS文件被引入了,并可以通过其src属性找到CSS文件的网址,直接在浏览器中输入网址找到这些css文件,另存为我们的本地文件**  
+　　接下来我们使用浏览器的开发者工具,观察HTML文档里的 link标签(还要注意它们引入的顺序),就可以知道有哪些CSS文件被引入了,并可以通过其src属性找到CSS文件的网址,直接在浏览器中输入网址找到这些css文件,另存为我们的本地文件**  
 我们可以选择官网的示例保存到本地的HTML文件中,打开看能否正常工作
 ```HTML
 <!DOCTYPE html>
