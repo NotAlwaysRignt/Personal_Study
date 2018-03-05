@@ -1,6 +1,12 @@
 首先要注意,如果安装了vim 插件,为了防止与VIM 插件的快捷键的冲突,应该打开settings,在 Vim Emulation
 (在搜索栏输入 vim) 可以修改 某些快捷键到底应属于 IDE的功能 还是 按照VIM的功能
 
+快捷键: Tab
+作用: 自动补全,补全效果与文件类型以及安装插件相关,举几个例子:
+      java 文件 "sout" + Tab =  System.out.println();
+      HTML 文件中 h1[attr="hello"]{Head} + Tab = <h1 attr="hello">Head</h1>
+
+
 快捷键：Alt + Enter  
 作用: 与光标所在的位置有关,功能多且强大,常用有以下几种  
       如果对着"类型",则会出现类型提示,选择后自动 import  
