@@ -1,3 +1,4 @@
 dd 删除当前光标所在一整行
+daw 删除光标所在的一个单词 可记忆为"delete a word"
 d+ t +字符,从光标处开始删除直到该字符,比如对于 Helloworld,光标在h处,输入 dtw  则会删除Hello
 SHIFT +v 或 Ctrl+v 或 用v 选中区域,然后按下d,则选中区域处所有内容删除
