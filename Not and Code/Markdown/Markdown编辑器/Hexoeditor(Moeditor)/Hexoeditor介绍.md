@@ -1,4 +1,4 @@
-# HexoEditor (Markdown编辑器)
+# HexoEditor (Markdown编辑器,另一款几乎功能一样的是Moeditor,功能较少,较稳定,但已长期停更)
 ## HexoEditor 安装
 官网
 https://github.com/zhuzhuyule/HexoEditor
