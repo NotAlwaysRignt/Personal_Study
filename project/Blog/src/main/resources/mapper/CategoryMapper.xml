@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chao.dao.CategoryMapper"> <!--指向接口-->
+
+
+    <resultMap id="CategoryMap" type="cn.chao.entity.Category">
+    <id property="id" column="id" javaType="int"></id>
+        <result property="name" column="name" javaType="String"></result>
+        <result property="description" column="description" javaType="String"></result>
+    </resultMap>
+
+
+
+    <insert id="insertCategory" parameterType="cn.chao.BlogFileProcessor.BlogFileModel.CategoryFile" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Category
+        (name) VALUES(#{name})
+    </insert>
+
+    <select id="selectCategory" resultMap="CategoryMap">
+        SELECT *
+        FROM Category;
+    </select>
+
+
+
+    <delete id="deleteCategory" parameterType="cn.chao.entity.Category">
+        DELETE FROM Image WHERE category_id = #{id};
+        DELETE FROM Article WHERE category_id = #{id};
+        DELETE FROM Series WHERE category_id = #{id};
+        DELETE FROM Category WHERE id = #{id};
+    </delete>
+
+</mapper>

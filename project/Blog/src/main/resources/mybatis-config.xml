@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!--使用jdbc 的 GeneratedKeys获取数据库自增主键-->
+        <setting name="useGeneratedKeys" value="true"/>
+
+        <!--使用标签替换别名,默认:True-->
+        <setting name="useColumnLabel" value="true"/>
+
+        <!--开启自动驼峰命名规则（camel case）映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/Blog?useSSL=false&amp;allowMultiQueries=true&amp;characterEncoding=utf-8&amp;autoReconnect=true"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="mapper/CategoryMapper.xml"/>
+        <mapper resource="mapper/ImageMapper.xml"/>
+        <mapper resource="mapper/SeriesMapper.xml"/>
+        <mapper resource="mapper/ArticleMapper.xml"/>
+    </mappers>
+
+</configuration>

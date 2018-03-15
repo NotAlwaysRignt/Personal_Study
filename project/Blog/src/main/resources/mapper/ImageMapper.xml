@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chao.dao.ImageMapper"> <!--指向接口-->
+
+    <resultMap id="ImageMap" type="cn.chao.entity.Image">
+        <id property="id" column="id" javaType="int"></id>
+        <result property="path" column="path" javaType="String"></result>
+        <result property="series_id" column="series_id" javaType="int"></result>
+        <result property="category_id" column="category_id" javaType="int"></result>
+    </resultMap>
+
+
+
+    <insert id="insertImage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Image
+        (path,category_id,series_id)
+        VALUES(#{arg0},#{arg1},#{arg2})
+    </insert>
+
+    <select id="selectImage" resultMap="ImageMap">
+        SELECT *
+        FROM Image
+        WHERE id!=-1
+        <if test="arg0 != -1">
+            AND category_id = #{arg0}
+        </if>
+
+        <if test="arg1 != -1">
+            AND series_id = #{arg1}
+        </if>
+    </select>
+    
+    <delete id="deleteImage" parameterType="int">
+        DELETE FROM Image WHERE id = #{id};
+    </delete>
+
+</mapper>

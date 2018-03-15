@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chao.dao.SeriesMapper"> <!--指向接口-->
+
+
+<resultMap id="SeriesMap" type="cn.chao.entity.Series">
+    <id property="id" column="id" javaType="int"></id>
+    <result property="name" column="name" javaType="String"></result>
+    <result property="description" column="description" javaType="String"></result>
+    <result property="rank" column="rank" javaType="int"></result>
+    <result property="category_id" column="category_id" javaType="int"></result>
+    <result property="datetime" column="datetime" javaType="java.sql.Timestamp"></result>
+</resultMap>
+
+
+
+<insert id="insertSeries" parameterType="cn.chao.BlogFileProcessor.BlogFileModel.SeriesFile" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO Series
+    (name,description,rank,category_id)
+    VALUES(#{name},#{description},#{rank},#{category_id})
+</insert>
+
+<select id="selectSeries" parameterType="int" resultMap="SeriesMap">
+    SELECT *
+    FROM Series
+    WHERE category_id = #{category_id};
+</select>
+
+
+<delete id="deleteSeries" parameterType="int">
+    DELETE FROM Image WHERE series_id = #{id};
+    DELETE FROM Article WHERE series_id = #{id};
+    DELETE FROM Series WHERE id = #{id};
+</delete>
+
+</mapper>
+

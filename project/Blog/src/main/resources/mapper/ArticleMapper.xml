@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chao.dao.ArticleMapper"> <!--指向接口-->
+
+    <resultMap id="ArticleMap" type="cn.chao.entity.Article">
+        <id property="id" column="id" javaType="int"></id>
+        <result property="title" column="title" javaType="String"></result>
+        <result property="content" column="content"></result>
+        <result property="rank" column="rank" javaType="int"></result>
+        <result property="category_id" column="category_id" javaType="int"></result>
+        <result property="series_id" column="series_id"></result>
+        <result property="datetime" column="datetime" javaType="java.sql.Timestamp"></result>
+        <result property="timestamp" column="timestamp" javaType="long"></result>
+    </resultMap>
+
+
+
+    <insert id="insertArticle" parameterType="cn.chao.BlogFileProcessor.BlogFileModel.ArticleFile" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Article
+        (title,content,category_id,series_id,datetime,timestamp)
+        VALUES(#{title},#{content},#{category_id},#{series_id},#{datetime},#{timestamp})
+    </insert>
+
+    <select id="selectArticle" parameterType="int" resultMap="ArticleMap">
+        SELECT *
+        FROM Article
+        WHERE series_id = #{series_id};
+    </select>
+
+
+    <select id="selectLatestArticleWithoutContent" resultMap="ArticleMap">
+        SELECT id,title,datetime,rank,series_id
+        FROM Article
+        <if test="arg0!=null">
+            WHERE series_id = #{arg0}
+        </if>
+        <if test="(arg1!=null) and (arg1 &gt;0)">
+        ORDER BY datetime
+        limit 0,#{arg1}
+        </if>;
+    </select>
+
+    <select id="selectArticleById" resultMap="ArticleMap">
+        SELECT *
+        FROM Article
+        WHERE id = #{arg0}
+    </select>
+
+    <select id="selectArticleByRankWithoutContent" resultMap="ArticleMap">
+        SELECT id,title,datetime,rank,series_id
+        FROM Article
+        WHERE series_id = #{arg0}
+        ORDER BY rank
+        <if test="(arg1!=null) and (arg1 &gt;0)">
+            limit 0,#{arg1}
+        </if>;
+    </select>
+
+
+    <update id="updateArticle" parameterType="cn.chao.BlogFileProcessor.BlogFileModel.ArticleFile">
+        UPDATE Article
+        SET title=#{title},content=#{content},rank=#{rank},datetime=#{datetime},
+            timestamp=#{timestamp},category_id=#{category_id},series_id=#{series_id}
+            WHERE id = #{id}
+    </update>
+
+    <delete id="deleteArticle" parameterType="int">
+        DELETE FROM Article WHERE id = #{id};
+    </delete>
+
+</mapper>
