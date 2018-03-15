@@ -1,0 +1,18 @@
+## 配置文件位置  
+Springboot 默认会到 resources 目录下名为 application.properties 的文件读取配置信息
+比如我们可以修改端口号
+server.port=6000
+
+## 修改静态资源位置
+spingboot 默认配置如下:  
+spring.mvc.static-path-pattern=/**  
+spring.resources.static-locations=file:${web.image_path},classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/  
+
+网站发起访问时,比如访问css文件时,就会自动到resources下的static目录找,找不到会到resourses/public下找   
+
+## 修改路径(添加路径),注意!路径不要使用中文!!  
+以下是在原有路径上添加/home/thinker/code/java/Blog/static  
+
+web.image_path=/home/thinker/code/java/Blog/static  
+spring.mvc.static-path-pattern=/**  
+spring.resources.static-locations=file:${web.image_path},classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/

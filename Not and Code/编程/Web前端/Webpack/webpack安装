@@ -1,0 +1,36 @@
+webpack 安装分为本地安装和全局安装
+官网推荐本地安装,也就是为每个独立的项目都安装一个webpack
+
+
+### 安装webpack
+先创建一个项目,如demo
+进入(cd)目录, 初始化 
+npm init -y  (-y表示采用默认配置)
+这时目录下会生成 package.json文件,存储项目的相关配置信息.  
+
+接下来安装 webpack
+npm install webpack --sav-dev  (--sav-dev表示会把变化存储到 package.json中)  
+
+### 运行webpack  
+install webpack 后会创建一个node_modules目录, webpack就在 node_modules/.bin/中(官网已经告知)  
+我们在根目录(node_modules所在的目录)使用 node_modules/.bin/webpack 即可使用 webpack 命令  
+最新版 webpack 中,要在命令行调用webpack命令,需要安装 webpack-cli
+npm下使用:  npm install webpack-cli -D  
+假设我们没有安装,直接尝试打包  
+node_modules/.bin/webpack hello.js --output bundle.js ,则会报错:  
+
+
+```bash
+...省略 
+
+The CLI moved into a separate package: webpack-cli.
+Please install 'webpack-cli' in addition to webpack itself to use the CLI.
+-> When using npm: npm install webpack-cli -D
+-> When using yarn: yarn add webpack-cli -D
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+
+...省略
+```  
+
+进行完上述的安装后,就可以使用 node_modules/.bin/webpack 调用webpack了!

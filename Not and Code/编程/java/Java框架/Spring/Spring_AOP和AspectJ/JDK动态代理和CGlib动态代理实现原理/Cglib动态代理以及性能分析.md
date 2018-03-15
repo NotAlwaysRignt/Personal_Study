@@ -13,6 +13,7 @@ JDK 动态代理 和 Cglib 代理 都会构建新的代理类(创建新的代理
 Cglib 核心是使用了 ASM 框架,我们来看看这个 ASM 框架干了什么,会反射更快
 
 //自定义一个 User 类
+```java
 public class User {  
     private int id;  
     private String name;  
@@ -50,7 +51,7 @@ public class ReflectAsmTest {
         System.out.println(name);  
     }  
 }  
-
+```
 结果:
 张三
 
@@ -60,7 +61,7 @@ public class ReflectAsmTest {
 (逻辑上相当于继承了 User),并通过 switch 来选择调用它的方法
 
 反编译 UserMethodAccess.class 文件:
-
+```java
 package com.johhny.ra;  
   
 import com.esotericsoftware.reflectasm.MethodAccess;  
@@ -101,7 +102,7 @@ public class UserMethodAccess extends MethodAccess
         throw new IllegalArgumentException((new StringBuilder("Method not found: ")).append(i).toString());  
     }  
 }  
-
+```
 根据上面的代码可以看到,
 UserMethodAccess 继承了 MethodAccess, 所有 MethodAccess.get() 返回的对象的类型都是 
 MethodAccess 的子类,因此这里我们可以用 MethodAccess 类型的变量接受 UserMethodAccess 类型的对象 

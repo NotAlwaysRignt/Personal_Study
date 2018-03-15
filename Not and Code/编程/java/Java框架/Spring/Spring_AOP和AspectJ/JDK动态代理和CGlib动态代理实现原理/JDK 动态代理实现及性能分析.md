@@ -8,7 +8,7 @@ JDK 动态代理使用的 是 java.lang.reflect.Proxy; 中的 newProxyInstance �
 查看 Spring AOP 的 JDK动态代理 源码部分 ,可以发现它调用了 Proxy.newProxyInstance 方法
 
 首先看看 Proxy.newProxyInstance 即 JDK 动态代理是如何使用的:
-
+```java
 //定义一个接口
 package com.sun.proxy;
 
@@ -29,10 +29,10 @@ public class RealSubject implements Subject{
         System.out.println("GoodBye");
     }
 }
-
-要使用 newProxyInstance, 就必须再另外实现一个 Invocation 接口 的代理类,不妨称为 ProxySubject 类
+```
+要使用 newProxyInstance, 就必须再另外实现一个 Invocation 接口 的代理类,不妨称为 ProxySubject 类  
 并且必须重写 InvocationHandler 的 invoke 方法
-
+```java
 package com.sun.proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -51,9 +51,9 @@ public class ProxySubject implements InvocationHandler{
         return object;
     }
 }
-
+```
 现在我们可以使用 newProxyInstance 了,创建一个 Test类
-
+```java
 package com.sun.proxy;
 import java.lang.reflect.Proxy;
 
@@ -70,7 +70,7 @@ public class Test {
         System.out.println(subject.getClass().getName());
     }
 }
-
+```
 结果如下:
 调用前
 Hello
@@ -98,7 +98,7 @@ com.sun.proxy.$Proxy0
 在 Test类的 main 方法的第一句加上:
 System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles","true");
 我们就可以获取代理类的.class文件(本例中将获得 $Proxy0.class 文件),反编译查看代理类的代码:
-
+```java
 $Proxy0.class 文件:
 
 package com.sun.proxy;
@@ -183,7 +183,7 @@ public final class $Proxy0 extends Proxy implements Subject {
         }
     }
 }
-
+```
 查看源码 m1 m2 m3 m0 均使用了反射,其中 m3 m4 就是我们的  sayHello 和 sayGoodBye 方法 
 
 现在再来看 newProxyInstance 内部的大致过程,里面还有大量的安全验证(有些类不允许被设置代理)等细节我们将

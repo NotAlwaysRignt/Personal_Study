@@ -26,6 +26,7 @@ def __call__(self, environ, start_response): # 根据WSGI协议，middleware必�
 ,即调用了其__call__方法
 
 envrion参数定义在run_wsgi函数中 
+```python
 self.environ = environ = self.make_environ()
 
 def make_environ(self):
@@ -52,13 +53,14 @@ def make_environ(self):
     }
     ...
     return environ
-
+```
 envrion是一个字典,上面存储了之前通过解析客户端请求获得而获得的各种信息
 比如 请求的方法self.command(GET,POST...),用户端口等等
 
 再看 start_response ,这个参数是一个函数,其功能就是返回响应给用户
 
-同样定义在werkzeug的serving.py中
+同样定义在werkzeug的serving.py中  
+```python
 def start_response(status, response_headers, exc_info=None):
     if exc_info:
         try:
@@ -69,12 +71,13 @@ def start_response(status, response_headers, exc_info=None):
     elif headers_set:
         raise AssertionError('Headers already set')
     headers_set[:] = [status, response_headers]
-    return write
+    return write  
+```
 这个我们稍后讨论
 
 
 self.wsgi_app(environ, start_response)两个参数的内容,我们来看看wsgi_app这个函数
-    
+```python    
 def wsgi_app(self, environ, start_response):
         ctx = self.request_context(environ)
         error = None
@@ -87,6 +90,7 @@ def wsgi_app(self, environ, start_response):
         #except中遇到return时，就强制转到 finally 中执行，在finally中遇到return时就返回
         finally:
             ...
+```
 我们假设一切都正常运行,忽略 except,finally 部分的内容
 那么wsgi_app主要干了两件事,一是生成上下文环境变量ctx,并将其压入栈(ctx.push())
 (ctx一个RequestContext类的实例,详见request和context源码解读)
@@ -96,6 +100,7 @@ def wsgi_app(self, environ, start_response):
 url到视图函数的思路很简单,Flask采用和大多数框架相同的思路,即建立一个{url:view_function}的映射
 
 我们先看看flask如何解析用户请求中的url
+```python
 def full_dispatch_request(self):
     self.try_trigger_before_first_request_functions()#看有没有注册请求前要调用的函数
     try:
@@ -106,7 +111,7 @@ def full_dispatch_request(self):
     except Exception as e:
         rv = self.handle_user_exception(e)
     return self.finalize_request(rv)  
-
+```
 self.try_trigger_before_first_request_functions()用于看有没有注册请求前要调用的函
 和url映射无关,不想了解可跳过这个函数的讲解
 
@@ -114,7 +119,8 @@ try_trigger_before_first_request_functions()会执行我们自定义的在处理
 这些方法我们可以在Flask的before_first_request()和before_request()中注册
 如果我们没有定义这些函数,那它不会干任何事情
 
-看看try_trigger_before_first_request_functions,实现思路并不难
+看看 try_trigger_before_first_request_functions,实现思路并不难  
+```python
     def try_trigger_before_first_request_functions(self):
         #Flask中,self._got_first_request = False,下面第一次遍历后会被置为True
         #下次再进来就return了
@@ -129,17 +135,18 @@ try_trigger_before_first_request_functions()会执行我们自定义的在处理
                 func()
             self._got_first_request = True
             #置为True,下一次再进入这个函数,就不会再遍历before_first_request_funcs了
-
+```
 
 request_started在signals.py中,这句主要用于信号通信,内部使用了blinker库,这里暂时不展开
-rv = self.preprocess_request() 正如其方法的名字,是做一些预处理,包括注册蓝图等等,暂不展开
-#rv正常情况下为None,但如果我们注册的before_request的处理函数有返回值(一般有返回值
-#的情况是抛出了错误),那么rv不为None,视图函数就不会被执行
+rv = self.preprocess_request() 正如其方法的名字,是做一些预处理,包括注册蓝图等等,暂不展开  
+*rv正常情况下为None,但如果我们注册的before_request的处理函数有返回值(一般有返回值
+的情况是抛出了错误),那么rv不为None,视图函数就不会被执行*  
 
 这里我们看重点
 rv = self.dispatch_request()
 这一步用于调用url请求对应的视图函数,也就是我们在app.route中注册的
 
+```python
 def dispatch_request(self):
     req = _request_ctx_stack.top.request
     if req.routing_exception is not None:
@@ -152,7 +159,7 @@ def dispatch_request(self):
         return self.make_default_options_response()
     # otherwise dispatch to the handler for that endpoint
     return self.view_functions[rule.endpoint](**req.view_args)
-
+```
 _request_ctx_stack.top拿到的是RequestContext类的实例 (详见"flask_context解读")
 req拿到的是 Flask Request类的实例(wrappers.py文件中)
 
@@ -163,7 +170,7 @@ view_args是客户请求的url中的变量
 
 接下来看,rv保存了视图函数返回的结果,即我们要返回给客户端的内容,回忆一下,视图函数返回的结果
 可以是字符串 return "<h1>Hello</h1>",也可以是 return render_template(...)
-
+```python
 self.finalize_request(rv)
 
 def finalize_request(self, rv, from_error_handler=False):
@@ -178,13 +185,13 @@ def finalize_request(self, rv, from_error_handler=False):
                               'error while handling an error')
     return response
 
-
+```
 make_response视图函数的返回值rv转化成一个Response类的实例,它可以处理多种类型的rv
 如果返回值rv本身就是 Response 实例，就直接使用它；如果返回值rv是字符串类型，
 (比如我们视图函数的返回值可以是 "<h1>Hello</h1>",则rv就是这个字符串),就把它作为响应的 
 body，并自动设置状态码和头部信息；如果返回值是 tuple，会尝试用 (response, status, headers) 
 或者 (response, headers) 去解析。
-
+```python
 def make_response(self, rv):
         status = headers = None
         if isinstance(rv, (tuple, list)):#只要rv是个list或tuple,都会是True
@@ -222,7 +229,7 @@ def make_response(self, rv):
         if headers:
             rv.headers.extend(headers)
         return rv
-
+```
 
 response = self.make_response(rv) 中,response 为Response类的实例
 (Response类在 flask 的 wrappers.py中可找到)
@@ -240,7 +247,7 @@ finalize_request的最后一步是 return response
 这个Response类的实例被返回,我们看它最后会被返回到哪:
 在函数full_dispatch_request(self):中
     return self.finalize_request(rv)#
-
+```python
 def wsgi_app(self, environ, start_response):
     ...     
     response = self.full_dispatch_request() 
@@ -249,9 +256,10 @@ def wsgi_app(self, environ, start_response):
     
 def __call__(self, environ, start_response):
     return self.wsgi_app(environ, start_response)
-    
+```   
 调用flask的实例的__call__方法的是(以app.run为例)
 (见app_run()解读)
+```python
 def execute(app):
     application_iter = app(environ, start_response)
     try:
@@ -263,6 +271,6 @@ def execute(app):
         if hasattr(application_iter, 'close'):
             application_iter.close()
         application_iter = None
-        
+```       
 Response类的实例给到了 application_iter 在这里没有把它再返回了,而是以迭代的方式 write(data)
 这里我们也能预见这个动作就是向客户端发送最后的数据,这里就不再展开了

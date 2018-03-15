@@ -12,14 +12,16 @@ request.form,其实就是访问ctx.request.form  因为每个请求到来时,ctx
 
 
 request = LocalProxy(partial(_lookup_req_object, 'request'))
-首先看看_lookup_req_object是个什么东西
+首先看看_lookup_req_object是个什么东西  
+```python
 def _lookup_req_object(name):  
     top = _request_ctx_stack.top  
     if top is None:  
         raise RuntimeError(_request_ctx_err_msg)  
     return getattr(top, name) 
-    
+```   
 _request_ctx_stack.top对应的是什么,来看看(_request_ctx_stack是LocalStack类的对象)
+```python
 class LocalStack(object):
 @property  
         def top(self):  
@@ -27,19 +29,20 @@ class LocalStack(object):
                 return self._local.stack[-1]  
             except (AttributeError, IndexError):  
                 return None  
-                
+```               
 top拿到的是_local.stack[-1]即[]的最后一个元素(栈顶)(_local.stack是[])
 而_local.stack[-1]存储的是ctx (为什么是ctx见),
 所以 top=ctx
 
 接着
 return getattr(top, name)
-#第二个name参数是字符串,比如getattr(c,"value"),等价与执行c.value
-#getattr是python的一个内置函数,此句作用相当于top.name 
+第二个name参数是字符串,比如getattr(c,"value"),等价与执行c.value.  
+getattr是python的一个内置函数,此句作用相当于top.name 
 
 综上所述 _lookup_req_object("request")等价于得到ctx.request
 
 那LocalProxy是干什么的?
+```python
 class LocalProxy(object):
    def __init__(self, local, name=None):                                   
         object.__setattr__(self, '_LocalProxy__local', local) 
@@ -49,12 +52,13 @@ class LocalProxy(object):
             # "local" is a callable that is not an instance of Local or     
             # LocalManager: mark it as a wrapped function.                  
             object.__setattr__(self, '__wrapped__', local)
-            
+```
 requst是LocalProxy对象,在__init__函数中
 request._LocalPoxy_local = _lookup_req_object(name = "request")
 即request._LocalPoxy_local是一个函数
 
-LocalProxy重写了  __getattr__方法
+LocalProxy重写了  __getattr__方法  
+```python
 def __getattr__(self, name):                                            
          if name == '__members__':     
              return dir(self._get_current_object()) 
@@ -70,12 +74,13 @@ def _get_current_object(self):
         except AttributeError:
             raise RuntimeError('no object bound to %s' % self.__name__)
  
-
+```
 问题来了,self.__local是个什么东西,
-看回LocalProxy类的__init__方法
+看回LocalProxy类的__init__方法  
+```python
  def __init__(self, local, name=None):
         object.__setattr__(self, '_LocalProxy__local', local)
-
+```
 object.__setattr__(self, '_LocalProxy__local', local)  等价于self.__local=local
 此处涉及了python私有成员变量的命名规则问题
 类中成员变量加双下划线,如类A中有self.__value变量,外部访问时
@@ -100,21 +105,23 @@ ctx.request  #ctx是RequestContext实例,它是一个上下文环境
 
 接下来继续看看ctx.request是什么东西
 
-看看类RequestContext
+看看类RequestContext  
+```python
 def __init__(self, app, environ, request=None):  
         ...
         if request is None:  
             request = app.request_class(environ) # wsgi_app的environ到了这里
         self.request = request 
         ...
-
+```
 request_class(evrion)根据wsgi里的environ创建出来的
-        
+
+```python        
 #flask app.py
 class Flask(_PackageBoundObject):
     def request_context(self, environ):
         return RequestContext(self, environ)
-    
+```    
 传入RequestContext的第一个参数是self
 我们使用flask时 就是app=Flask(),
 所以RequestContext拿到的第一个参数就是这个app
@@ -123,7 +130,7 @@ request_class是Flask类的方法,
 而eviron也是Flask类中request_context(self, environ)这个符合wsgi规范的函数的参数
 即environ其实是wsgi里面的environ
 
-回到Flask类的代码
+回到Flask类的代码  
 class Flask(_PackageBoundObject):
     request_class = Request
  request被定义成了类的成员变量
@@ -141,6 +148,7 @@ class Request(RequestBase):
 from werkzeug.wrappers import Request as RequestBase, Response as ResponseBase
 
 于是我们找到werkzeug
+```python
 #werkzurg wrappers.py
 class Request(BaseRequest, AcceptMixin, ETagRequestMixin,
               UserAgentMixin, AuthorizationMixin,
@@ -156,7 +164,7 @@ class Request(BaseRequest, AcceptMixin, ETagRequestMixin,
 #这个Request就这么一段,里面没有定义任何方法和变量,
 #这里继承的类功能如上面注释所说明
 #经过辛苦找寻,我们发现form args等参数就在BaseRequest方法中
-这里列出form的部分
+#这里列出form的部分
     @cached_property
     def form(self):
         """省略注释"""
@@ -182,3 +190,4 @@ def _load_form_data(self):
                     
         d = self.__dict__
         d['stream'], d['form'], d['files'] = data
+```

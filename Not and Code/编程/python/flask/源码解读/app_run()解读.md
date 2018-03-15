@@ -10,10 +10,12 @@ srv = make_server(...)#返回BaseWSGIServer实例
 
 在构造了BaseWSGIServer类的实例srv后,调用srv.serve_forever()
 在srv.serve_forever()中,我们追溯到了_handle_request_noblock()这个函数
-这个函数是在一个while循环中被调用的
-ready = selector.select(poll_interval)
+这个函数是在一个while循环中被调用的  
+```python  
+    ready=selector.select(poll_interval)
     if ready:
        self._handle_request_noblock()
+```
 就是说,serve_forever()使socket在不断监听,借助selectors模块完成高效的IO操作
 
 一旦IO完成,就调用_handle_request_noblock(),在_handle_request_noblock()中,
@@ -44,9 +46,11 @@ self.server.app就是flask的实例,在构造 BaseWSGIServer(注意不是 WSGIRe
 的时候就已经在其父类 BaseWSGIServer 的构造函数中完成赋值
 
 而在execute(self.server.app)
+```python
 def execute(app):
-        application_iter = app(environ, start_response)
-        ...
+    application_iter = app(environ, start_response)
+    #...
+```
 就在此处,调用了app这个实例,于是根据python的语法会调用flask的__call__方法
 
 再回顾
@@ -70,6 +74,7 @@ try:
     run_simple(host, port, self, **options)
     
 run_simple在werkzueg的serving.py文件里
+```python
 def run_simple(hostname, port, application, use_reloader=False,
                use_debugger=False, use_evalex=True,
                extra_files=None, reloader_interval=1,
@@ -80,8 +85,9 @@ def run_simple(hostname, port, application, use_reloader=False,
         ...#由app.run()进入到这一步,use_reloder为默认的False
     else:
         inner()
-
-看看这个inner干了什么
+```
+看看这个inner干了什么  
+```python
 def inner():
     try:
             fd = int(os.environ['WERKZEUG_SERVER_FD'])
@@ -99,13 +105,15 @@ def inner():
 make_server函数返回的是:
 return BaseWSGIServer(host, port, app, request_handler,
                               passthrough_errors, ssl_context, fd=fd)
+
+```
 这里host,port等参数采用了默认参数,如下:
 (host=None, port=None, app=None, threaded=False, processes=1,
                 request_handler=None, passthrough_errors=False,
                 ssl_context=None, fd=None)
                 
 也就是说srv是一个BaseWSGIServer类的实例
-
+```python
 class BaseWSGIServer(HTTPServer, object):
     def __init__(self, host, port, app, handler=None,
                      passthrough_errors=False, ssl_context=None, fd=None):
@@ -122,7 +130,7 @@ class BaseWSGIServer(HTTPServer, object):
         except ImportError:#socketserver,http.server是python3的模块
             import socketserver
             from http.server import HTTPServer, BaseHTTPRequestHandler
-    
+```    
 回到srv上,srv是一个BaseWSGIServer类的实例,在生成BaseWSGIServer实例时完成的动作有:
 1.拿到WSGIRequestHandler的地址(handler = WSGIRequestHandler),这个类很重要
 2.HTTPServer.__init__(self, (host, int(port)), handler)
@@ -130,6 +138,7 @@ class BaseWSGIServer(HTTPServer, object):
 
 我们来看看HTTPServer.__init__(...)
 #HTTPServer在http/server.py文件中
+```python
 class HTTPServer(socketserver.TCPServer):
 
     allow_reuse_address = 1    # Seems to make sense in testing environment
@@ -140,7 +149,7 @@ class HTTPServer(socketserver.TCPServer):
         host, port = self.socket.getsockname()[:2]
         self.server_name = socket.getfqdn(host)
         self.server_port = port
-
+```
 显然,HTTPServer.__init__(self, (host, int(port)), handler)并未直接定义在HTTPServer中
 所以应该是调用其父类TCPServer的__init__()方法
 
@@ -148,7 +157,8 @@ class HTTPServer(socketserver.TCPServer):
 看TCPserver干了什么
 #这里server_address是('127.0.0.1',5000),RequestHandlerClass
 class TCPServer(BaseServer):
-#列出几个要用到的全局变量:
+#列出几个要用到的全局变量:  
+```python
 address_family = socket.AF_INET
 socket_type = socket.SOCK_STREAM
 request_queue_size = 5
@@ -180,11 +190,12 @@ def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
 
     def server_activate(self):
         self.socket.listen(self.request_queue_size)#self.request_queue_size是5
-
+```
 回顾,在BaseWSGIServer的__init__函数中,调用HTTPServer.__init__
 便启动了socket,监听app.run()默认指定的127.0.0.1和5000端口
 
 在获得BaseWSGIServer的实例srv后,接下来看
+```python
 srv.serve_forever()
  def serve_forever(self):
         self.shutdown_signal = False
@@ -222,14 +233,13 @@ HTTPServer.serve_forever(self)应该是HTTPServer父类的方法
         finally:
             self.__shutdown_request = False
             self.__is_shut_down.set()
-
+```
 这里我们用到了python的selectors模块,这是一个用于高效IO的模块
 首先看看
 selector.register(self, selectors.EVENT_READ)
 根据官方文档register的介绍:register(fileobj, events, data=None)
 
-    fileobj is the file object to monitor. It may either be 
-an integer file descriptor or an object with a fileno() method.
+>fileobj is the file object to monitor. It may either be an integer file descriptor or an object with a fileno() method.
 
 第一个参数是一个文件描述符,或者是一个有fileno()方法的对象
 (这时我们自定义的fileno()方法返回结果应是一个文件描述符)
@@ -248,7 +258,7 @@ ready = selector.select(poll_interval)#等待读取IO完毕
 
 下面是很重要的函数了,我们的WSGI函数将在这里被调用
 self._handle_request_noblock()
-
+```python
     def _handle_request_noblock(self):
         try:
             request, client_address = self.get_request()
@@ -265,11 +275,12 @@ self._handle_request_noblock()
                 raise
         else:
             self.shutdown_request(request)
-
-忽略异常的情况:
+```
+忽略异常的情况:  
+```python
 def get_request(self):
     return self.socket.accept()
-    
+```
 之前我们的socket只是绑定了端口,并开始监听,读取传来的信息,而accpet则可以分辨并保存不同客户的连接
 客户请求连接时，accept方法建立连接并返回服务器。accept方法返回一个含有两个元素的元组
 (connection,address)。第一个元素connection是新的socket对象，服务器必须通过它与客户通信；
@@ -284,18 +295,18 @@ if self.verify_request(request, client_address)看成if True:即可
 
 
 看看 self.process_request(request, client_address),
-    
+```python    
     def process_request(self, request, client_address):
         self.finish_request(request, client_address)
         self.shutdown_request(request)
-
-接下来是重点了,这里将会用到我们flask的wsgi方法:
-
+```
+**接下来是重点了**,这里将会用到我们flask的wsgi方法:
+```python
     def finish_request(self, request, client_address):
         """Finish one request by instantiating RequestHandlerClass."""
         self.RequestHandlerClass(request, client_address, self)
         #这个self是BaseWSGIServer
-
+```
 看到源码的注释了吧, 通过实例化一个 RequestHandlerClass来完成一个请求
 RequestHandlerClass就是根据WSGI协议的可调用的对象
 回溯一下,RequestHandlerClass是传入的参数,实际就是传入的WSGIRequestHandler类,接下来我们要看
@@ -305,7 +316,7 @@ WSGIRequestHandler在werkzurg的serving.py文件中
 class WSGIRequestHandler(BaseHTTPRequestHandler, object):
     ......看几个我们要关注的方法
     
-首先WSGIRequestHandler中并没有定义__init__方法,所以,传入的request和client_address及self
+首先 WSGIRequestHandler 中并没有定义__init__方法,所以,传入的request和client_address及self
 参数应该是传到了父类BaseHTTPRequestHandler中
 在serving.py我们可以看见
 try:#python2版本
@@ -319,6 +330,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 class StreamRequestHandler(BaseRequestHandler):
 仍没有__init__方法
 再找BaseRequestHandler
+```python
 class BaseRequestHandler:
     def __init__(self, request, client_address, server):
         self.request = request
@@ -329,7 +341,7 @@ class BaseRequestHandler:
             self.handle()
         finally:
             self.finish()
-
+```
 request是前面拿到的一个socket对象,是与指定用户的一个TCP连接
 可以执行request.recv(1024),request.sendall()等方法收发字符串
 client_address包含了连接客户的IP地址等信息,server则是BaseWSGIServer这个类的实例
@@ -337,7 +349,8 @@ client_address包含了连接客户的IP地址等信息,server则是BaseWSGIServ
 
 看看self.setup(),
 BaseRequestHandler的setup方法被StreamRequestHandler的setup方法覆盖
-在StreamRequestHandler中:
+在StreamRequestHandler中:  
+```python
     rbufsize = -1
     wbufsize = 0
     disable_nagle_algorithm = False   
@@ -354,13 +367,14 @@ BaseRequestHandler的setup方法被StreamRequestHandler的setup方法覆盖
             self.wfile = _SocketWriter(self.connection)
         else:
             self.wfile = self.connection.makefile('wb', self.wbufsize)
-        
+```        
 makefile方法:创建一个与该套接字相关连的文件
 这里大概是初始化了TCP传输字符流的相关操作,暂不展开
 
 看看self.handle(),根据python语法会调用最顶层子类的方法,因此
 BaseRequestHandler 的 handle 方法被 WSGIRequestHandler 的 handle 方法覆盖
 找到WSGIRequestHandler的handle方法(werkzeug serving.py)
+```python
     def handle(self):
         """Handles a request ignoring dropped connections."""
         rv = None
@@ -376,9 +390,9 @@ BaseRequestHandler 的 handle 方法被 WSGIRequestHandler 的 handle 方法覆�
             self.initiate_shutdown()
         return rv
 
-
+```
 server.py文件中找到BaseHTTPRequestHandler
-
+```python
     def handle(self):
         """Handle multiple requests if necessary."""
         self.close_connection = True
@@ -386,10 +400,11 @@ server.py文件中找到BaseHTTPRequestHandler
         self.handle_one_request()
         while not self.close_connection:
             self.handle_one_request()
-            
+```           
 注意此处的 handle_one_request 将由 BaseHTTPRequestHandler 的子类
 WSGIRequestHandler 的 handle_one_request覆盖
-在werkzeug的serving.py中找到:
+在werkzeug的serving.py中找到:  
+```python
 class WSGIRequestHandler(BaseHTTPRequestHandler, object):
     def handle_one_request(self):
         """Handle a single HTTP request."""
@@ -398,12 +413,12 @@ class WSGIRequestHandler(BaseHTTPRequestHandler, object):
             self.close_connection = 1
         elif self.parse_request():
             return self.run_wsgi()
-
+```
 这里我们只看 self.parse_request() 和 self.run_wsgi() 部分
 
 parse_request解析一个HTTP请求,即对从TCP中获取的字符流进行切割,解析
 得到方法('GET','POST',...),header等等,实质就是进行字符串的切割操作,若嫌太长可以暂且跳过
-
+```python
     def parse_request(self):
         """根据源码的解释,这个方法用来解析一个请求
         self.raw_requestline是从TCP流中获得的字符串,即一个HTTP请求
@@ -449,11 +464,11 @@ parse_request解析一个HTTP请求,即对从TCP中获取的字符流进行切�
         #省略conntype的错误处理
         expect = self.headers.get('Expect', "")
         #...省略expect的错误处理
-
+```
 重点,终于来了,我们在底层代码中周旋了那么久,即将回到flask!
 看看 self.run_wsgi(),在这个函数内部还定义了非常多的函数,这里我们挑其中几个来讲
 
-
+```python
     def run_wsgi(self):
         if self.headers.get('Expect', '').lower().strip() == '100-continue':
             self.wfile.write(b'HTTP/1.1 100 Continue\r\n\r\n')
@@ -478,7 +493,7 @@ parse_request解析一个HTTP请求,即对从TCP中获取的字符流进行切�
         #在调用 run_wsgi 时会被调用
             execute(self.server.app)
         except ...
-        
+```
 看看execute(self.server.app) 
 execute 函数在 run_wsgi 内部定义,
 第一句
@@ -492,19 +507,20 @@ self.server.app在哪里,先看看WSGIRequestHandler是怎么生成的
 self.RequestHandlerClass(request, client_address, self)
 这个RequestHandlerClass传进来的函数参数的变量名,其实就是WSGIRequestHandler类
 
-
+```python
 class WSGIRequestHandler(BaseHTTPRequestHandler, object):
-      里面没有直接定义__init__方法,于是我们继续寻找其父类:
+      #里面没有直接定义__init__方法,于是我们继续寻找其父类:
 class BaseRequestHandler:
     def __init__(self, request, client_address, server):
         self.request = request
         self.client_address = client_address
         self.server = server
-
+```
 self.server = server,这个server即
 self.RequestHandlerClass(request, client_address, self)中的self
 这个self是BaseServer类,其子类是TCPServer类,而TCPServer的子类是HTTPServer
-看看HTTPServer是怎么被调用的:
+看看HTTPServer是怎么被调用的:  
+```python
 class BaseWSGIServer(HTTPServer, object):
     ...
     def __init__(self, host, port, app, handler=None,
@@ -513,23 +529,24 @@ class BaseWSGIServer(HTTPServer, object):
         HTTPServer.__init__(self, (host, int(port)), handler)
         self.app = app
         ...
-
+```
 所以self.server.app中的self.server其实就是BaseWSGIServer类的实例
 
 而app是什么
-再往上找
+再往上找  
+```python
 def make_server(host=None, port=None, app=None, threaded=False, processes=1,
                 request_handler=None, passthrough_errors=False,
                 ssl_context=None, fd=None):   
     return BaseWSGIServer(host, port, app, request_handler,
                               passthrough_errors, ssl_context, fd=fd)
-
+```
 继续往上找
-在run_simple函数中定义了一个inner(),而inner()中有那么一步:
-srv = make_server(hostname, port, application, threaded,
-                          processes, request_handler,
-                          passthrough_errors, ssl_context,
-                          fd=fd)
+在run_simple函数中定义了一个inner(),而inner()中有那么一步:  
+```python
+srv = make_server(hostname, port, application,
+threaded,processes,request_handler,passthrough_errors, ssl_context,fd=fd)
+```
 这里的application是run_simple 传进去的                              
 def run_simple(hostname, port, application,......)
 
@@ -546,13 +563,15 @@ app是Flask的实例,而Flask中定义了__call__方法,
 因此调用这个实例时会调用Flask的__call__方法
 
 我们还要看看 environ 和 start_response是什么
+```python
     def run_wsgi(self):
         ...
         
         self.environ = environ = self.make_environ()
         ...
         def start_response(status, response_headers, exc_info=None):
-            ...
+            ...  
+```
 environ 和 start_response的定义都能在run_wsgi(self)内部找到,
 这里先不展开(详见flask_wsgi的讲解)
 
