@@ -1,5 +1,0 @@
-删除数据库操作
-DROP DATABASE 数据库名;
-
-删除表操作
-DROP TABLE 表名字;

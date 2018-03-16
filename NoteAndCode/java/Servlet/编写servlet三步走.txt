@@ -1,3 +1,0 @@
-第一步,编写servlet类,另其继承HTTPServlet类
-第二步,重写doGet doPost方法
-第三步,修改web.xml文档,写<servlet>和<servlet-mapping>

@@ -1,8 +1,0 @@
-1.Ctrl+Alt+T打开终端，输入命令检测ntfs-3g是否已经安装：
-locate ntfs-3g
-
-没有安装输入安装命令：sudo apt-get install ntfs-3g
-
-修复挂载错误的相应的分区如提示中的/dev/sda6，
-输入修复命令：sudo ntfsfix /dev/sda6
-想知道要修复的windows上的磁盘属于 sdaX ，在你打开磁盘失败时的提示信息上可以得知

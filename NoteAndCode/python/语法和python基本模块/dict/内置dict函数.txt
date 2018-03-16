@@ -1,7 +1,0 @@
-python内置的dict，简单地说，作用就是生成一个字典
-常用的 
->>>a_dict=dict(one=1,two=2)
->>>a_dict
-{'one':1,'two':2}
-
-dict()传入的参数还有其它形式，详细地可查资料

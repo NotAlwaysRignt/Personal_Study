@@ -1,9 +1,0 @@
-在右上方工具栏(就是有一个 三角形"|>" 启动图标的工具栏)中，点击下拉框，可以找到 Edit Configurations 选项（或者直接用search everywhere找到）
-
-Edit Configurations 可以让我们自定义代码编译，测试，构建等功能(比如编译特定的代码，或测试特定的模块)，加入到下拉框选项中后我们就可以直接按绿色的三角形启动按钮"|>"直接执行，而不用使用命令行到菜单里找选项了
-
-右上方绿色的"+"表示添加一个到下拉项目中，假设我们现在要添加一个maven的 compile 命令，点击 + 号，选择 maven，在Parameters 处有个command line选项，输入 compile， 在Name输入框中我们可以自定义这个操作的名称，比如 Compile，这样工具栏的下拉框里就多了一个 Compile 选项，鼠标点击运行，就相当于使用了 mvn compile。 
-
-另外如果我们想运行Java中的main 方法，进入 Edit Configurations，点击 + ，再点击 Application，在 Configuration栏里 有一个  Before launch 选项栏，默认里面有个build，说明，如果我们添加了这个选项后，当点击启动就相当于使用了 intellij 的 build功能(清理之前的class，重新编译代码和构建target目录)，我们可以修改它的行为，比如只是运行代码，而不要去重新编译
-
-如果要取消这个自定义的功能，点击这个设定好的功能，在 Edit Configurations 中点 “-” 即可

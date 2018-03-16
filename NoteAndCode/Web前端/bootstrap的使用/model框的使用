@@ -1,2 +1,0 @@
-只要在<button> <li>等标签中添加属性 data-toggle="modal" data-target="#myModal"
-这样点击这个标签后就会触发model框,详见官网

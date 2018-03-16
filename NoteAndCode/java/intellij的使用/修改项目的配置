@@ -1,2 +1,0 @@
-Maven中如果要修改当前项目的配置，点击 File，再点击Settings即可
-比如我要修改当前maven项目的配置，比如修改本地仓库的位置或者settings.xml的位置，则 点击 File，再点击Settings，找到Maven栏(可直接在上方的搜索框里输入Maven)，便可以进行设置和更改
