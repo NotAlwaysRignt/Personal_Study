@@ -1,6 +1,14 @@
 where on having 三个mysql关键字都可以进行条件的判断,某种场合下它们是可以等效使用的,但有的时候不能
-对于left join, right join 连接的表要进行不同表的字段比较,就只能用 on 而用不了where, 且根据规范
-对于多表间字段比较也通常用on
+
+ON 的根本目的是作为表连接时的条件,如果不涉及多表连接,不能用 ON
+对于left join ,ON作为连接条件会返回左表中所有选中的字段以及右表中符合 ON 条件的字段,注意是左表的所有字段,如果在右表中找不到符合 ON 条件的字段也会将左表结果全部返回,此时右表以 null 填充,之后再经过 WHERE 筛选.right join反之  
+
+由上面可以看出, ON 是在表连接时起作用,而 WHERE 是在表连接完成后再起筛选作用的,两者完全不同  
+
+full join = right join + left join
+
+
+对于 inner join, ON 的作用则相当于 WHERE(只不过是在连接表时进行筛选),只有两张表均满足 ON 条件才能被返回.
 
 再如:
 WHERE语句在GROUP BY语句之前；SQL会在分组之前计算WHERE语句。  
