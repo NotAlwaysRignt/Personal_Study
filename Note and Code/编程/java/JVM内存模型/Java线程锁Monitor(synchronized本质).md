@@ -66,3 +66,23 @@ public class synchronizerTest {
     }
 }
 ```
+打印结果:  
+```bash
+ 1
+ready to wait
+ 2
+ready to wait
+ 3
+ready to wait
+ 4
+ready to wait
+------线程3获得锁，wait()后的代码继续运行：3
+ 3
+ready to wait
+------线程2获得锁，wait()后的代码继续运行：2
+ 2
+ready to wait
+------线程1获得锁，wait()后的代码继续运行：1
+ 1
+ready to wait
+```
