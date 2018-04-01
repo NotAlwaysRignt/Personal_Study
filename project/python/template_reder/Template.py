@@ -1,5 +1,33 @@
 import re
 
+"""
+core function: render_template(html,**context)
+example:
+
+text = r'''
+{%for user in uers %}
+    {{user.name|upper}}!
+    {% if user.phone %}
+        the phone number is: {{ user.phone }}
+    {% endif %}
+{%endfor%}
+'''
+class User:
+    def __init__(self,name,phone = ""):
+        self.name = name
+        self.phone = phone
+
+# Now you can render the HTML,besides string replacing, you can also add some rules by adding customized fuction
+
+    t = Template()
+    print(t.render_template(text,uers =[User("jack","123456"),User("bob"),User("Lily","789456")],upper = str.upper))
+    
+"""
+
+''' 
+每个 Taglayer 对象作为栈中的一个栈帧,每遇到一个控制语句,如条件语句{% if ...%},循环控制语句{% for ...%},
+我们就将里面的字符串压栈,遇到 {% end... %}语句开始出栈解析,其中 
+'''
 class TagLayer:
     def __init__(self, tag, between_for_tags, if_state):
         self.current_tag = tag
@@ -25,7 +53,7 @@ class TagLayer:
     def append_string(self,s):
         self.string = self.string + s
 
-# a logic Stack
+# a customized Stack
 class Stack:
     element_num = 0
     stack = []
@@ -55,11 +83,10 @@ class Template:
     def __init__(self):
         self.pattern = re.compile("({%.*?%}|{{.*?}}|{#.*?#})",re.S)
         self.stack = Stack()
-        
-
-    def render_template(self,html,**context):
         t = TagLayer('global', False, True)
         self.stack.push(t)
+
+    def render_template(self,html,**context):
         tokens = self._parse_tags(html)
         self._parse_tokens(tokens,context)
         final_html = self.stack.pop().get_string()
@@ -111,6 +138,11 @@ class Template:
         else: # not between_for_tags and if_state is False
             pass
 
+    ''' 
+    对于 if 控制语句,如果它嵌套在 for 控制语句中,我们就没办法对 if 后的变量作判断,只能先设if_state为True
+    并压入栈中,等开始解析for 循环时(解析for循环时,必须从最外层开始解析)再来判断
+    
+    '''
     def _if_tag_parse(self,token,between_for_tags,if_state,context):
         if between_for_tags: 
             t = TagLayer("if",True,True)
@@ -130,7 +162,12 @@ class Template:
             else:
                 t = TagLayer("if",False,False)
                 self.stack.push(t)
-        
+                
+    ''' 
+    对于 for 控制语句,如果它嵌套在 for 控制语句中,我们无法对其进行立刻解析,只能先设between_for_tags
+    为True并压入栈中,等开始解析for 循环时(解析for循环时,必须从最外层开始解析)再来判断
+    
+    '''        
     def _for_tag_parse(self,token,between_for_tags,if_state,context):
         if between_for_tags: 
             t = TagLayer("for",True,if_state)
@@ -144,7 +181,13 @@ class Template:
             else :
                 t = TagLayer("for", True, False)
                 self.stack.push(t)
-        
+
+
+    ''' 
+    遇到end 关键字,我们把当前栈顶字符串出栈,处理后添加到上一层的栈中,如果是当前栈中的字符串还位于 
+    for循环控制语句内(变量不存在),则我们还不可以开始解析,先将未解析的字符串追加到上一个元素的字符串中
+    之后再回来解析它
+    '''        
     def _end_tag_parse(self,token,between_for_tags,if_state,context):
         control_sentence = token[2:-2].strip().split()
         t = self.stack.pop()
@@ -234,38 +277,3 @@ class Template:
                 else:
                     variable = filter_func(str(variable))      
         return str(variable)    
-
-
-#以下代码作为测试用例
-text = r"""
-{%for user in uers %}
-    {{user.name|upper|add_prefix}}!
-    {% if user.phone %}
-        the phone number is: {{ user.phone }}
-    {% endif %}
-{%endfor%}
-"""
-html = """
-<p> for control sentence test</p>
-{% for item in items %}
-the element in this group:
-    {%for element in  item %}
-        {{element}}
-    {% endfor %}
-{% endfor %}
-<p> the result is above</p>
-"""
-
-def add_prefix(string): # 使字符串的第一个字母大写
-    string = 'The username is ' + string 
-    return string
-
-class User:
-    def __init__(self,name,phone = ""):
-        self.name = name
-        self.phone = phone
-
-if __name__ == '__main__':
-    t = Template()
-    print(t.render_template(text,uers =[User("jack","123456"),User("bob"),User("Lily","789456")],upper = str.upper,add_prefix = add_prefix))
-    #print(t.render_template(html,items = [['a','b','c'], [1,2,3], [',','.','?']]))
