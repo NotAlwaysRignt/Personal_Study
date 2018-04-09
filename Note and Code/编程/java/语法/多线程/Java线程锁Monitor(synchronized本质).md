@@ -1,7 +1,7 @@
 参考文章:
 http://blog.csdn.net/zhangzhaokun/article/details/6395557
 
-每个 Java 对象都会有**一个** Monitor锁,这个锁是实现同步的关键所在,对于被sychronized修饰的对象,在**某一个时刻只能有一个线程**拥有Monitor锁  
+每个 Java 对象都会有**一个** Monitor锁(这个锁在Object类中,因为一切对象都继承Object,因此可以确保所有对象都拥有Monitor锁),这个锁是实现同步的关键所在,对于被sychronized修饰的对象,在**某一个时刻只能有一个线程**拥有Monitor锁  
 
 Java会为每个对象维护两个数据结构 Entry Set 和 Wait Set,  示意图如下：
 ![](img/set.png)  
@@ -65,4 +65,24 @@ public class synchronizerTest {
         //说明了等待队列中的对象是随机去抢占锁的,也说明了只有在 Entry set 中的锁才能去抢占锁
     }
 }
+```
+打印结果:  
+```bash
+ 1
+ready to wait
+ 2
+ready to wait
+ 3
+ready to wait
+ 4
+ready to wait
+------线程3获得锁，wait()后的代码继续运行：3
+ 3
+ready to wait
+------线程2获得锁，wait()后的代码继续运行：2
+ 2
+ready to wait
+------线程1获得锁，wait()后的代码继续运行：1
+ 1
+ready to wait
 ```

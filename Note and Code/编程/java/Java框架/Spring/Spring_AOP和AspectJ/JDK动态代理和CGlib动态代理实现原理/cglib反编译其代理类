@@ -1,0 +1,110 @@
+CGLIB是基于继承实现的,其本质是会生成一个代理子类,这个子类继承了我们自定义的父类,并覆盖了其方法,比如父类有个say()方法,生成的子类内部也有一个say()方法,并且会通过 super.say()去调用这个父类方法,而不是使用反射
+
+下面看一个例子
+
+
+我们要拦截的类,RealSubject
+```java
+public class RealSubject {
+    public void say(){
+        System.out.println("Real Subject method");
+    }
+}
+```
+
+我们对其进行拦截,使其在打印"Real Subject method"前后分别打印"before in cglib","after cglib"
+```java
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+public class DemoCglib implements MethodInterceptor {
+
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        System.out.println("before in cglib");
+        Object result = null;
+        try{
+            result = methodProxy.invokeSuper(o,objects);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        finally {
+            System.out.println("after cglib");
+        }
+        return result;
+    }
+}
+```
+然后创建一个 Client 类,借助 cglib 来生成代理类
+```java
+import org.springframework.cglib.core.DebuggingClassWriter;
+import org.springframework.cglib.proxy.Enhancer;
+
+public class Client {
+    public static void main(String[] args){
+        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "/home/thinker/code/java/Algorithm/target/test-classes/cn/chao/spring/cglib/");
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(RealSubject.class);
+        enhancer.setCallback(new DemoCglib());
+        RealSubject subject = (RealSubject) enhancer.create();
+        subject.say();
+    }
+}
+```
+
+Enhancer 的create 方法返回的就是代理类  
+System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "/home/thinker/code/java/Algorithm/target/test-classes/cn/chao/spring/cglib/");  
+使生成的代理类.class文件输出到自己选定的路径,如果没有这句将不会有 class 文件生成  
+"/home/thinker/code/java/Algorithm/target/test-classes/cn/chao/spring/cglib/"  
+下
+编译,然后我们在以上路径中可以找到生成了很多代理类.class文件,其中  
+RealSubject$$EnhancerByCGLIB$$710f589b.class 就是我们 Realsubject 的子类(在"subject.say()"处打断点就可以知道subject的类型)
+
+里面内容很多,我们反编译后可以看见里面有如下方法  
+```java
+    public final void say() {
+        MethodInterceptor var10000 = this.CGLIB$CALLBACK_0;
+        if (this.CGLIB$CALLBACK_0 == null) {
+            CGLIB$BIND_CALLBACKS(this);
+            var10000 = this.CGLIB$CALLBACK_0;
+        }
+
+        if (var10000 != null) {
+            var10000.intercept(this, CGLIB$say$0$Method, CGLIB$emptyArgs, CGLIB$say$0$Proxy);
+        } else {
+            super.say();
+        }
+    }
+```
+在断点中查看RealSubject$$EnhancerByCGLIB$$710f589b属性,可以知道 CGLIB$CALLBACK_0 是 DemoCglib 的实例(通过反射拿到并构建该实例,总之此时 DemoCglib 已被实例化了,而不需要再用反射去获取了)
+
+所以执行的是 var10000.intercept
+而 MethodInterceptor 只是一个接口,我们可以看它的源码
+```java
+import java.lang.reflect.Method;
+
+public interface MethodInterceptor extends Callback {
+    Object intercept(Object var1, Method var2, Object[] var3, MethodProxy var4) throws Throwable;
+}
+```
+
+用 MethodInterceptor接口 去接受 DemoCglib 实例,然后调用其 intercept 方法,自然就是调用了 DemoCglib 实例的 intercept 方法.  
+我们再回来看我们定义的 DemoCglib 里 intercept 的内容
+```
+public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+    System.out.println("before in cglib");
+    Object result = null;
+    try{
+        result = methodProxy.invokeSuper(o,objects);
+    }catch (Exception e){
+        System.out.println(e.getMessage());
+    }
+    finally {
+        System.out.println("after cglib");
+    }
+    return result;
+}
+```
+
+

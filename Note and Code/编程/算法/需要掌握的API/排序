@@ -1,0 +1,14 @@
+Arrays.sort  对一个数组或链表排序
+
+对链表排序还可以用
+Collections.sort
+
+自定义排序
+Collections.sort(list,new Comparator(){
+    @Override
+    public int compare(Type a, Type b){
+        // 当 a>b 时应返回正值,相等时返回0,a<b时返回负值,定义好后 sort 会升序排序
+        //Collections.sort默认使用升序排序,如果想要降序排序,那么只要 a>b 时返回负值即可
+        return 
+    }
+})

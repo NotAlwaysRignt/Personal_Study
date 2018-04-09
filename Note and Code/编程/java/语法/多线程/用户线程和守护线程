@@ -19,3 +19,42 @@ Thread.setDaemon(True) 要在 Thread.start() 前调用,线程才会被设为守�
 启动一个线程调用的方法 thread.start()
 结束一个线程的通常做法,设置一个flag变量或者结合interrupt()方法,
 (注意不要用stop()方法,虽然可行但不建议,也不是通常的做法,判断题要小心)
+
+
+举例:
+public class ThreadTest {
+    public volatile  int i = 1;
+    public static void main(String[] args){
+        ThreadTest m = new ThreadTest();
+        Mythread m2 = m.new Mythread();
+        m2.setDaemon(true);  //如果设为守护线程那么main 函数退出后,守护线程不管有无运行完毕都会退出
+        m2.start();
+        try {
+            //m2.join();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        System.out.println("main end!");
+
+    }
+
+    class Mythread extends Thread{
+        @Override
+        public void run() {
+            try {
+                sleep(3000);
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            System.out.println("Hello World!");
+        }
+    }
+}
+
+结果:
+main end!
+
+如果设为守护线程 (m2.setDaemon(true);) ,那么即使守护线程sleep 还没运行完,随着main函数的退出,守护线程也会被退出
+
+如果没有设为守护线程,默认为用户线程,那么main end 退出后,也会等待线程对象运行完才结束虚拟机运行

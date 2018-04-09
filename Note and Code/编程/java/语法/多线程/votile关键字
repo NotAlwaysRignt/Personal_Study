@@ -1,0 +1,29 @@
+java 中 volatile 是比 synchronized 更轻量级的同步关键字
+被 volatile 修饰的变量,可以避免出现 像i++这种操作在多线程中出现错误 的情况
+另外 被 volatile 关键字修饰的变量在赋值后会添加内存屏障,放置指令重排
+指令重排,举例
+x=1;
+y=2; 
+在编译后可能实际效果是
+y=2;
+x=1;
+
+在某些情况下,指令重排会带来错误,比如:
+// thread 1
+while (!ok);
+do(x);
+ 
+// thread 2
+x = 42;
+ok = 1;
+此段代码中，ok 初始化为 0，线程 1 等待 ok 被设置为 1 后执行 do 函数。假如说，线程 2 对内存的写操作乱序执行(指令重排)，也就是 x 赋值后于 ok 赋值完成，那么 do 函数接受的实参就很可能出乎程序员的意料，不为 42。
+
+这里注意与C/C++中 volatile关键字的区别,C/C++的volatile用于拒绝编译器对该变量做优化,也会设置内存屏障,但不会有同步效果
+
+
+参考文章:
+Java中Volatile关键字详解
+https://www.cnblogs.com/zhengbin/p/5654805.html  
+
+理解 Memory barrier（内存屏障）  
+https://blog.csdn.net/world_hello_100/article/details/50131497  
