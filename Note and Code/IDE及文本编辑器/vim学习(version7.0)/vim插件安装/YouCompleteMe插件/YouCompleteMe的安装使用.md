@@ -160,6 +160,7 @@ cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBclang=ON -DEXTERNAL_LIBCLANG_PATH=/usr
 执行前确保 /usr/local/lib/ 确实有 libclang.so 文件(如果成功安装 clang 就会有),  
 ~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/cpp 中的  
 ~/.vim/bundle/vundle 是在.vimrc中配置时设定的:  
+
 vundle#begin('~/.vim/bundle/vundle/')  
 成功安装 YCM 后, ~/.vim/bundle/vundle/ 下就会有 YouCompleteMe 目录,我们就可以找到 YouCompleteMe/third_party/ycmd/cpp  这个路径
 
