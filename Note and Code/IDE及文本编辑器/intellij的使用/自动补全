@@ -1,0 +1,6 @@
+常用的自动补全字符
+
+sout + Tab = System.out.println();
+
+psvm + Tab =   public static void main(String[] args) {}
+psvm 即 "public static void main"的缩写

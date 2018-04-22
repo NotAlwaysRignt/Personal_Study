@@ -82,7 +82,7 @@ No .ycm_extra_conf.py file ...(省略)
 这个文件在 YouCompleteMe 插件目录里,找到 YouCompleteMe 目录,因为安装 vundle 时我的 .vimrc 设置了  
 call vundle#begin('~/.vim/bundle/vundle/')  ,所以 YouCompleteMe 在 ~/.vim/bundle/vundle/ 下
 
-继续进入目录,.ycm_extra_conf.py 就放在 YouCompleteMe/third_party/ycmd/examples 下,这是个隐藏文件,我们可以用 ls -A 命令查看它,如下图
+继续进入目录,.ycm_extra_conf.py 就放在 YouCompleteMe/third_party/ycmd/examples 下,这是个隐藏文件,我们可以用 ls -A 命令查看它,如下图  
 ![](img/YCM_cpp_conf.png)
 
 找到这个文件后,进入 .vimrc 中设置 ycm_global_ycm_extra_conf 变量:  
@@ -129,7 +129,9 @@ cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBclang=ON -DEXTERNAL_LIBCLANG_PATH=/usr
 ```
 
 执行前确保 /usr/local/lib/ 确实有 libclang.so 文件(如果成功安装 clang 就会有),  
-~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/cpp 中的 ~/.vim/bundle/vundle 是在.vimrc中配置时设定的: vundle#begin('~/.vim/bundle/vundle/')  
+~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/cpp 中的
+~/.vim/bundle/vundle 是在.vimrc中配置时设定的: 
+vundle#begin('~/.vim/bundle/vundle/')  
 成功安装 YCM 后, ~/.vim/bundle/vundle/ 下就会有 YouCompleteMe 目录,我们就可以找到 YouCompleteMe/third_party/ycmd/cpp  这个路径
 
 cmake执行完毕后,当前 ycm_build 中会产生很多个文件,其中有个文件就是 Makefile  
