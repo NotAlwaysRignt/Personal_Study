@@ -34,12 +34,15 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 ```
-**需要注意的是,在 vundle#begin('~/.vim/bundle/vundle/') 的括号中的'~/.vim/bundle/vundle/'是自己设定的路径,之后vundle安装的插件都会被安装到这个目录下,我自己在~/.vim/bundle/下创建了 vundle目录,并指向它**
+**需要注意的是**  
+vundle#begin('~/.vim/bundle/vundle/') 的括号中的 
+'~/.vim/bundle/vundle/'
+**是自己设定的路径,之后vundle安装的插件都会被安装到这个目录下,我自己在~/.vim/bundle/下创建了 vundle目录,并指向它**
 
 完成上述配置后,终端输入 vim 回车,输入 :PluginInstall,如果看到页面弹出要安装插件列表,并显示  
 prececcing 'VundleVim/Vundle.vim'  
 说明正在安装,安装完毕后插件旁会有一个 + 号,如下图
-![](img/YCM_Install.png)
+![](img/YCM_Install_success.png)
 说明 vundle 安装成功,已经可以正常使用了  
 
 ### 配置文件如何写
