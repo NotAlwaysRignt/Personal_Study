@@ -76,9 +76,10 @@ let g:ycm_server_log_level = 'debug'
 #### 设置 .ycm_extra_conf.py,非常重要的一步!
 安装完成后,我们打开 vim,就可以看见 The ycmd server SHUT DOWN (restart with :YcmRestartServer) 的错误提示没有了,并且也支持基本的补全功能,但还是没有完成安装,启动 vim 时,会有如下提示:
 No .ycm_extra_conf.py file ...(省略)  
-这是一个配置文件,要使用完整的 YCM 补全功能我们需要在 .vimrc 中指定它所处的路径
+这是一个配置文件,要使用的 YCM 语义补全功能我们必须指定它的路径,可在 .vimrc 中全局设置  
 
-我们可以自己编写这个文件,但这样是比较麻烦的,安装好 YCM 好,YCM 提供了一个足够满足需求的 .ycm_extra_conf.py
+##### 使用默认的 .ycm_extra_conf.py
+我们可以自己编写这个文件,但这样是比较麻烦的,安装好 YCM 后,YCM 提供了一个足够满足需求的 .ycm_extra_conf.py  
 这个文件在 YouCompleteMe 插件目录里,找到 YouCompleteMe 目录,因为安装 vundle 时我的 .vimrc 设置了  
 call vundle#begin('~/.vim/bundle/vundle/')  ,所以 YouCompleteMe 在 ~/.vim/bundle/vundle/ 下
 
@@ -95,29 +96,57 @@ let g:ycm_global_ycm_extra_conf='~/.vim/bundle/vundle/YouCompleteMe/third_party/
 至此 YouCompleteMe 就已经初步安装完毕了!
 
 #### 关于 .ycm_extra_conf.py file
-这个文件的内容决定了我们能不能很好地使用 YCM 的语义分析补全功能 
-除了上面提到的 .ycm_extra_conf.py, 我们可以在 YouCompleteMe/third_party/ycmd/cpp/ycm 下找到这个文件,只不过这个文件还需要修改才能满足我们的需求,官网中 **C-family Semantic Completion** 章节的 **Option 2: Provide the flags manually** 部分就提供了
-.ycm_extra_conf.py 的示例链接,我们也可以到网上去查找一些有用的配置文件
+YCM会寻找当前打开的文件的同级目录下或上级目录中的ycm_extra_conf.py这个文件，找到后会加载为Python模块，且只加载一次,我们也可以在 .vimrc中全局设置  
 
-如果要自己配置这个py文件,不妨把官网的示例文件下载下来我们要让 YCM 去寻找补全的片段,关键就在于 flags 的键值 
+##### 最佳的获取方式
+> You could also consider using YCM-Generator to generate the ycm_extra_conf.py file.
+官网给了我们一个软件的地址,使用它可以 自动生成 .ycm_extra_conf.py    
+https://github.com/rdnetto/YCM-Generator 
+我们可以按照里面的安装步骤来生成 .ycm_extra_conf.py  
+
+这里介绍如何使用vim的 vundle插件管理器 安装 YCM-Generator 
+首先我们要用vundle 安装 YCM-Generator这个插件,在 ~/.vimrc 配置文件中的 **vundle 配置部分**(不是任意处)添加:  
+Plugin 'rdnetto/YCM-Generator'  
+启动 vim,然后执行 :PluginInstall  
+安装很快就完成,随便打开一个目录(.ycm_extra_conf.py 将会生成在此路径下),在当前路径下执行 vim 
+然后 :YcmGenerateConfig  
+稍等一小会,就会根据当前的系统生成 .ycm_extra_conf.py 并存放在当前路径下(当前路径指,假如你在/home/mypath 路径下运行 vim,:YcmGenerateConfig,则.ycm_extra_conf.py 会生成在/home/mypath下,注意是隐藏文件,用ls -A可以查看)
+因为这个 .ycm_extra_conf.py 是针对当前系统生成的,建议使用此方式获取 .ycm_extra_conf.py
+然后我们可以在 ~/.vimrc 中
+设置
+let g:ycm_global_ycm_extra_conf='.ycm_extra_conf.py的绝对路径'
+
+#####  其它获取方式
+除了上面提到的 .ycm_extra_conf.py, 我们可以在 YouCompleteMe/third_party/ycmd/cpp/ycm 下找到这个文件,只不过这个文件还需要修改才能满足我们的需求,官网中 **C-family Semantic Completion** 章节的 **Option 2: Provide the flags manually** 部分也提供了
+.ycm_extra_conf.py 的示例链接,可以下载下来并修改,我们还可以到网上去查找一些有用的配置文件
+
+如果要自己配置这个py文件,不妨把官网的示例文件copy下来,在flags(一个[]变量)里面添加如下内容(系统文件用-isyetem，第三方文件用 -I)：
 ```py
-    return {
-    'flags': final_flags,
-    'do_cache': True
-    }
+'-isystem',  
+'/usr/include',  
+'-isystem',  
+'/usr/include/c++/',  
+'-isystem',  
+'/usr/include/x86_64-linux-gnu/c++' 
 ```
-我们需要在列表中添加开头flags变量里添加:
-'-isystem',
-'/usr/include',
-'-isystem',
-'/usr/include/c++/4.9.2',
-'-isystem',
-'/usr/include',
-'/usr/include/x86_64-linux-gnu/c++',
-注意 '/usr/include/c++/4.9.2' 中 c++里面
+如果要让其对C++标准库补全生效，还要把配置文件中的这几行（从try到pass这4行）注释掉：
+```python
+# NOTE: This is just for YouCompleteMe; it's highly likely that your project  
+# does NOT need to remove the stdlib flag. DO NOT USE THIS IN YOUR  
+# ycm_extra_conf IF YOU'RE NOT 100% SURE YOU NEED IT.  
+try:  
+  final_flags.remove( '-stdlib=libc++' )  
+except ValueError:  
+  pass 
+```
+
+ 最好先把YCM作者提供的模板备份一下再做改动，然后将改动好的文件就放在原来的位置，作为全局的ycm_extra_conf.py，这样平时写个小Cpp的程序就不需要再单独创建一个。要使之生效，需要在.vimrc里面设置YCM相应的选项，此选项会在下面配置部分详细说明。对于特定的工程，将其拷贝到工程文件夹下，然后在这基础上再修改。不用担心工程文件夹下的 .ycm_extra_conf.py 会和全局的冲突，因为开启vim之后，ycm会现在工程文件夹下搜索该文件，此处的配置文件优先级最高  
+
+针对Qt5的补全的conf:  http://jesrui.sdf-eu.org/ycm-config-for-qt5.html
+  
 
 
-#### 有可能需要的步骤   
+#### 有可能需要的步骤(编译ycm_core)  
 .ycm_extra_conf.py 中有以下一句:  
 import ycm_core  
 ycm_core 可能要我们去编译完成
@@ -130,7 +159,7 @@ cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBclang=ON -DEXTERNAL_LIBCLANG_PATH=/usr
 
 执行前确保 /usr/local/lib/ 确实有 libclang.so 文件(如果成功安装 clang 就会有),  
 ~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/cpp 中的
-~/.vim/bundle/vundle 是在.vimrc中配置时设定的: 
+~/.vim/bundle/vundle 是在.vimrc中配置时设定的:  
 vundle#begin('~/.vim/bundle/vundle/')  
 成功安装 YCM 后, ~/.vim/bundle/vundle/ 下就会有 YouCompleteMe 目录,我们就可以找到 YouCompleteMe/third_party/ycmd/cpp  这个路径
 
