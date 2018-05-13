@@ -1,3 +1,37 @@
+### 非常有必要的配置  
+#### 输入字母时自动补全
+默认的 YCM 配置并不完美,比如它只在输入'.','->','::' 才会进行语义分析,比如我们输入 printf,它是不会提示的,除非我们以前输入过,但输入过才会提示显然也不能让我们满意,解决这个问题,可以添加以下配置
+```bash
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ }
+```
+['re!\w{2}'] 的意思是,使用正则表达式,当我们输入两个连续的字母时,就会启动补全提示  
+
+#### 关闭预览窗口
+另外还有一个很不喜欢的功能,就是补全时还会弹出一些预览窗口,说明函数功能,这些窗口很多时候不会有有用的信息,禁用掉它可以设置  
+```bash  
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+```
+关于一些常用配置可以参考这篇文章:  
+https://zhuanlan.zhihu.com/p/33046090  
+
+#### 跳转到定义或声明
+YCM 自带了跳转到定义或声明的功能,使用方法,输入:
+:YcmCompleter GoToDefinition (跳转到定义)  
+:YcmCompleter GoToDeclaration (跳转到声明)  
+YcmCompleter GoToDefinitionElseDeclaration  (跳转到定义,不能跳转则跳转到声明)  
+**上面的跳转除了可以进入函数或变量的定义或声明以外,YCM 也支持文件的跳转,当光标在 include 里的文件名上时执行跳转就可进入文件,非常强大!**  
+虽然可以在输入时用 Tab补全,但是还是不方便.所以建议使用快捷键映射
+  
+map gd :YcmCompleter GoToDefinitionElseDeclaration&lt;CR&gt;  
+即把 :YcmCompleter GoToDefinitionElseDeclaration 映射到快捷键 gd,这样可以很方便地查看函数
+当跳转到文件时,如果想跳转回来  
+ctrl o (跳转回前一个位置)
+
+### 其它参考配置
 ```bash
 " 自动补全配置
 set completeopt=longest,menu    "让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)

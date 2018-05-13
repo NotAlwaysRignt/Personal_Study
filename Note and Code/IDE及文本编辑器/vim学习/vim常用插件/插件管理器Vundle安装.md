@@ -8,12 +8,14 @@ https://github.com/VundleVim/Vundle.vim
 **安装 vundle 需要先安装好 git**  
 vundle 进行插件的安装和管理时会去调用 git 到github中进行插件的下载,所以要使用 vundle 必须安装好git
 
-### 下载并安装vundle  
+### 使用 pathogen 下载并安装vundle  
+vundle 不一定要用 pathogen 安装,可以参考官网的具体操作,但这里还是建议先下载 pathogen 并安装(参考另一篇文章,pathogen安装非常容易), 再用 pathogen 安装 vundle, 因为 pathogen 作为 vim 的另一款插件管理器,不仅安装插件非常方便,许多 vim 插件也推荐用 pathogen 安装,因此一般 vundle 和 pathogen 建议都安装  
+
 ```bash
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```
 
-其中~/.vim/bundle/ 我们的安装路径,如果没有这个路径,我们要手动用mkdir 创建.vim 和 bundle 这个目录,这两个目录在 vim 中会很常用到  
+其中~/.vim/bundle/ 我们的安装路径,如果没有这个路径,我们要手动用mkdir 创建.vim 和 bundle 这个目录(pathogen默认到 ~/.vim/bundle/ 寻找插件),这两个目录在 vim 中会很常用到  
 
 #### 编写配置文件 .vimrc
 我们编辑 ~/.vimrc (如果没有,则创建它,vim在运行时会自动去读取 ~/.vimrc 里的配置)  

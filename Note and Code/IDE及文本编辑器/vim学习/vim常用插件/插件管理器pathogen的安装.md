@@ -1,20 +1,21 @@
-vim会自动到～/.vim下找文件加载
+### 确保有 .vimrc 文件 以及 .vim 目录
+vim会自动到～/.vim 下找文件加载
 也会自动到～/.vimrc中加载配置
 这两个是隐藏文件，如果没有，可以自己创建，创建后vim就会自动到此处找配置
 
 我的ubuntu安装时有vim但没有.vim，于是自己创建了.vim和.vimrc文件
 创建后它们会自动被vim加载
 
-pathogen的安装：
+### pathogen的安装：
 
 在.vim文件夹下创建autoload文件夹(vim会自动到.vim的autoload中找配置)
 下载pathogen.vim   
 并拷贝到
 autoload文件夹中
 于此我们完成了pathogen的安装
-
-python-mode的安装
-在.vim中创建bundle文件夹
+之后我们还要**在.vim中创建名为 bundle 的文件夹(pathogen 会自动到bundle下寻找插件)**,以后要下载插件,可以直接到 github 直接把插件 git clone 到 bundle 目录里,非常简单且易管理
+### 示例:使用pathogen 安装python-mode
+确认已经在.vim中创建了名为 bundle 的文件夹
 进入bundle文件夹，打开终端
 git clone https://github.com/klen/python-mode.git
 于是bundle文件夹下就会有python-mode文件夹

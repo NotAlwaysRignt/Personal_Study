@@ -26,8 +26,9 @@ sudo apt-get install build-essential cmake
 sudo apt-get install build-essential cmake3
 ```
 
-#### 安装好 LLVM-Clang 3.3 和 Clang 标准库
-YCM 作C语言家族的语义分析和补全需要 clang 库的支持,这一步不可少,clang 是一款非常优秀的编译器,安装它也是很有必要的!   
+#### 安装好 LLVM-Clang 3.3 和 Clang 标准库(可选)
+YCM 要进行C语言家族的语义分析和补全需要 clang 库的支持,这一步不可少,clang 是一款非常优秀的编译器,安装它也是很有必要的!
+如果系统已经安装好了 clang,那么 YCM 可以使用系统的 clang 来进行语义分析,也可以在安装过程中让 YCM 自己去下载 clang(下面会讲) ,不过YCM下载的 clang 仅是为了 YCM 作语义分析用,并不是下载完整的clang     
 clang 的安装需要花费不少的时间,安装流程这里不再展开  
 
 ### 使用 Vundle 安装 YCM
@@ -60,12 +61,16 @@ let g:ycm_server_log_level = 'debug'
 进入 YouCompleteMe 目录  
 **ls 后看见这个目录下有一个 install.py 文件,我们要使用它来完成YCM安装**
 根据官网的说明  
-要获得 C语言家族的自动补全功能,同时支持语义分析,使用如下命令(其它语言的自动补全安装请参见官网说明)
+要获得 C语言家族的自动补全功能,同时支持语义分析,使用如下命令(其它语言如java,go等的自动补全安装请参见官网说明)
 ```bash
 ./install.py --clang-completer
 ```
-这样安装的YCM 具有 C语言家族的语义支持功能    
-如果不想要语义支持,则使用如下命令  
+上述命令中 YCM 会自己去下载供自己使用的 clang ,如果系统已经安装好了 clang,则可用以下命令  
+```bash
+./install.sh --clang-completer --system-libclang
+```
+这样安装的YCM 具有 C语言家族的语义分析功能    
+如果不想要语义分析功能(不建议),则使用如下命令  
 ```bash
 ./install.py
 ```
@@ -79,7 +84,8 @@ No .ycm_extra_conf.py file ...(省略)
 这是一个配置文件,要使用的 YCM 语义补全功能我们必须指定它的路径,可在 .vimrc 中全局设置  
 
 ##### 使用默认的 .ycm_extra_conf.py
-我们可以自己编写这个文件,但这样是比较麻烦的,安装好 YCM 后,YCM 提供了一个足够满足需求的 .ycm_extra_conf.py  
+我们可以自己编写这个文件,但这样是比较麻烦的,安装好 YCM 后,YCM 提供了一个足够满足需求的 .ycm_extra_conf.py  (如果这个办法不行,还有一个不错的办法是使用 YCM-Generator,具体操作见下文)
+
 这个文件在 YouCompleteMe 插件目录里,找到 YouCompleteMe 目录,因为安装 vundle 时我的 .vimrc 设置了  
 call vundle#begin('~/.vim/bundle/vundle/')  ,所以 YouCompleteMe 在 ~/.vim/bundle/vundle/ 下
 
@@ -94,6 +100,24 @@ let g:ycm_global_ycm_extra_conf='~/.vim/bundle/vundle/YouCompleteMe/third_party/
 ![](img/myYCMconf.png)  
 
 至此 YouCompleteMe 就已经初步安装完毕了!
+
+### 在 .vimrc 中添加一些有用的配置  
+默认的 YCM 配置并不完美,比如它只在输入'.','->','::' 才会进行语义分析,比如我们输入 printf,它是不会提示的,除非我们以前输入过,但输入过才会提示显然也不能让我们满意,解决这个问题,可以添加以下配置
+```bash
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ }
+```
+['re!\w{2}'] 的意思是,使用正则表达式,当我们输入两个连续的字母时,就会启动补全提示  
+
+另外还有一个很不喜欢的功能,就是补全时还会弹出一些预览窗口,说明函数功能,这些窗口很多时候不会有有用的信息,禁用掉它可以设置   
+```bash  
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+```
+关于一些常用配置可以参考这篇文章:  
+https://zhuanlan.zhihu.com/p/33046090  
 
 #### 关于 .ycm_extra_conf.py file
 YCM会寻找当前打开的文件的同级目录下或上级目录中的ycm_extra_conf.py这个文件，找到后会加载为Python模块，且只加载一次,我们也可以在 .vimrc中全局设置  
