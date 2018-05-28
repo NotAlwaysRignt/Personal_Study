@@ -1,9 +1,0 @@
-这里使用vim的映射配置,map的使用规则请查看其它资料  
-inoremap ' ''<ESC>i
-inoremap " ""<ESC>i
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-inoremap { {}<ESC>i
-
-以 inoremap ' ''<ESC>i 为例:
-即按下 ' 后相当于按下两次',并按下ESC键(此时进入normal模式),再按下 i 键
