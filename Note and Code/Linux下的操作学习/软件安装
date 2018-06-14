@@ -1,1 +1,0 @@
-安装其它 linux 软件也是大同小异的，基本都是 configure>make>make install 这个过程。

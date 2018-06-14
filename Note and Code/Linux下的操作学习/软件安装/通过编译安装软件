@@ -1,0 +1,11 @@
+对于需要编译的软件,特别是一些C/C++库,安装软件基本都是三步走:
+```bash
+./configure
+make
+make install
+```  
+
+解释:
+./configure是用来检测你的安装平台的目标特征的。比如它会检测你是不是有CC或GCC，并不是需要CC或GCC，它是个shell脚本。 
+make是用来编译的，它从Makefile中读取指令，然后编译。 
+make install是用来安装的，它也从Makefile中读取指令，将生成的可执行文件安装到指定的位置。 
