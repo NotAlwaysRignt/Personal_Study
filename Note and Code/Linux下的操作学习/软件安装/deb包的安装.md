@@ -1,7 +1,7 @@
 #### 使用.deb包安装软件  
 使用.deb包安装软件一般会经过如下步骤  
 ```bash
-dpkg -i  XXX.deb  　　　# XXX为要安装.deb文件 
+sudo dpkg -i  XXX.deb  　　　# XXX为要安装.deb文件 
 sudo apt-get update  #　更新源地址
 sudo apt-get upgrade  #　升级所有已经安装的package
 sudo apt-get install -f   　#　修复系统上不满足依赖的package
