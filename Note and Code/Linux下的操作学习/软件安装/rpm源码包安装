@@ -1,0 +1,38 @@
+参考链接:https://blog.csdn.net/d_o_n_g2/article/details/75581714
+
+
+
+方法一：以setarch-1.3-1.src.rpm 软件包为例（可以到CSDN http://download.csdn.net/source/215173#acomment下载）
+
+假设该文件已经存在于/usr/local/src/下。在该目录下执行rpmbuild --rebuild --clean setarch-1.3-1.src.rpm 
+
+若顺利执行成功则会在/usr/src/redhat/RPMS/i386/目录下生成setarch-1.3-1.i386.rpm这个rpm文件。
+
+接下来就是rpm的安装过程。
+
+方法二：
+
+（1）rpm –ivh setarch-1.3-1.src.rpm   执行rpm安装命令
+（2）cd /usr/src/redhat/SPECS 切换目录到/usr/src/redhat/SPECS （src.rpm包默认的解压目录）
+（3）rpmbuild –bp setarch-1.3-1e.spec 执行rpmbuild会生成源码包
+（4）cd /usr/src/redhat/BUILD/setarch-1.3-1   切换到生成的源码包
+（5）./configure 编译配置
+（6）make 编译
+（7）make install 安装
+ 
+方法三：
+（1）rpm –ivh setarch-1.3-1.src.rpm
+（2）cd /usr/src/redhat/SPECS
+（3）rpmbuild –bb setarch-1.3-1.spec 
+执行rpmbuild操作，会在/usr/src/redhat/RPMS/i386（不同的包，产生的路径不相同，可能会是i686、noarch等）下创建一个或多个的rpm包
+（4）rpm –ivh /usr/src/redhat/RPMS/i386/setarch-1.3-1.rpm
+ 
+注：当执行rpmbuild –bb setarch-1.3-1.spec 出现错误时，例：Error: Architecture is not included : i386，此错误表示该软件包不支持i386平台（默认的rpmbuild为i386平台），需指定到别的平台，指定参数为--target=i686
+rpmbuild –bb –target=i686 setarch-1.3-1.spec
+ 
+i386软件包可以在任何x86平台下使用，无论是i686还是x86_64的机器；而i686的软件包一般都对cpu进行了优化，具有向后的兼容性，不具有向前的兼容性。
+
+**如果没有sudo权限,如果要将rpm包里的软件安装到指定路径,可以加rpm --prefix选项**
+
+#### 一个齐全的rpm仓库地址
+http://rpmfind.net/

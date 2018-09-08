@@ -21,13 +21,14 @@ makefile 三要素:目标,依赖文件,执行的命令
 gcc *.cpp -o out  # *.cpp表示当前所有以.cpp为后缀的文件 
 ```  
 但在makefile 的"目标","依赖文件"中并不能直接起这个作用,如果要让\*起到这个效果,必须使用makefile的 \$(wildcard) 函数,间下面讲解
-### 常用的简写:
+### 常用的简写(自动化变量):
 ```bash
-$@ 表示目标
-$< 表示第一个依赖  
-$^ 所有依赖文件
+$@ 表示目标,在命令中是一个一个取出来的
+$< 表示第一个依赖,如果目标是以%定义的,那么此时$<将是一个文件集,每次都会与%相对应地一个个取出来  
+$^ 所有依赖文件,这是一个集合,如果有重复的会去除
 ```  
-\$^表示所有依赖,但当依赖有多个时,每个依赖会单独替代这个\$^并执行一次命令  
+自动化变量
+\$^ 表示所有依赖,但当依赖有多个时,每个依赖会单独替代这个\$^并执行一次命令  
 例子
 ```bash
 all:a.cpp b.cpp c.cpp
@@ -46,6 +47,7 @@ $(函数名称 参数1,参数2,...)
 ```bash
 $(wildcard  ./bin/*.cpp)  #  *表示任意数量个任意字符
 ```  
+这里$(wildcard  ./bin/*.cpp)取到./bin/目录下所有以cpp为后缀的文件集合
 
 #### 字符替换函数 patsubst 
 这个函数接收三个参数,举例更容易说明
@@ -65,6 +67,31 @@ $(notdir /home/code/a.cpp)  # 得到 a.cpp
 # $(addprefix 前缀,变量)
  $(addprefix /home/code/, a.cpp) # 得到/home/code/a.cpp
 ```
+
+### 静态模式
+静态模式可以用于在集合中一个个取出目标,比如我们要把一个目录下每个.c文件都分别编译成与其对应的.o文件,就可以用这种语法
+```bash
+<targets ...>: <target-pattern>: <prereq-patterns ...>
+　　<commands>
+```
+举例:将当前Makfile目录下所有.cpp文件都分别编译成对应的可执行文件
+```bash
+CC=g++
+SRCS     = $(wildcard *.cpp)  # 取到当前目录下所有cpp文件
+OBJS     = $(patsubst %.cpp, %.o, $(SRCS)) # 转换为相应的.o
+TARGETS  = $(SRCS:%.cpp=%) #相当于去除了后缀,比如a.cpp b.cpp ,则TARGETS为 a b
+
+all : $(TARGETS)
+# 这种转换与上面不同,hello 将依赖与hello.cpp
+$(TARGETS): %: %.cpp
+	$(CC)  -o $@ $<
+```
+假设目录下有 a.cpp b.cpp c.cpp 
+则会分别执行
+g++ -o a a.cpp
+g++ -o b b.cpp
+g++ -o c c.cpp
+最终在此目录下生成a b c 三个可执行文件
 
 ### 不要回显命令  
 多数时候用在 echo 上,因为 makefile 被执行时将会输出这条命令本身,以及这条命令执行后的输出,比如

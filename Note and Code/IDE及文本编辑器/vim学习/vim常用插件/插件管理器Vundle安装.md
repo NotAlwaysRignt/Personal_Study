@@ -80,4 +80,26 @@ filetype plugin indent on    " required
 
 以上内容是在官网给出的配置示例的注释中都有讲清楚,我们只需要认真阅读官网的那个例子就能懂
 
+### vundle命令
+* :BundleList -列举出列表中(.vimrc中)配置的所有插件
+* :BundleInstall -安装列表中全部插件
+* :BundleInstall! -更新列表中全部插件
+* :BundleSearch foo -查找foo插件
+* :BundleSearch! foo -刷新foo插件缓存
+* :BundleClean -清除列表中没有的插件
+* :BundleClean! -清除列表中没有的插件
+注意更新和安装相差了一个!
 
+### 离线使用vundle
+有时候我们会有离线安装vim插件的需求,因为我们可能会在开发机上安装自己的vim插件,而公司的开发机是不连网的
+这种情况下,我们只能从外部下载,再导入进来,具体做法为:在网络环境允许的条件下从github上下载到这个插件的zip包，然后解压到~/.vim/bundle/这个目录，比如你解压后的目录名为MyPlugin，然后你只需要在~/.vimrc中添加如下：
+```bash
+Plugin 'MyPlugin'
+```
+Vundle自动会从~/.vim/bundle目录下找到你这个目录，并且加载其中的插件.
+
+至于在线安装(即使用:PluginInsall安装时),以安装nerdtree为例,我们要在call vundle#begin()和call vundle#end()之间添加:
+```bash
+:PluginInstall 'scrooloose/nerdtree' 
+```
+nerdtree插件前面里还有scrooloose，这是为了生成git地址需要，(我们在github搜索时,使用"作者名/仓库名称"将可以唯一锁定一个仓库,而不会有多个选项),如果是离线加载，只需要告诉Vundle你的插件在~/.vim/bundle下的目录名即可。

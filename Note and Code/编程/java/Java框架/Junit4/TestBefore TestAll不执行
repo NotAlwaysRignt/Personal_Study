@@ -1,0 +1,4 @@
+使用Junit5时,import 了错误来源的 Test 注解,则 BeforeEach  BeforeAll 这些注解标签都不会起效果
+正确的是 import org.junit.jupiter.api.Test;
+而不是 import org.junit.Test;
+

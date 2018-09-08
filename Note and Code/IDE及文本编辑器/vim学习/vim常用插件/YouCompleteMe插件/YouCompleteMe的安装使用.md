@@ -53,6 +53,20 @@ let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 ```
 
+**当使用vundle的:IntallPlugin!更新插件时,有时也会出现The ycmd server SHUT DOWN (restart with :YcmRestartServer)的错误,这时候的解决办法**
+```bash
+# 进入.vim的YouCompleteMe所在目录
+# 使用的是vim时,这里我是用vundle安装的,而vundle又是用pathogen安装的
+~/.vim/bundle/vundle/YouCompleteMe 
+
+# 使用的是neovim 时
+cd ~/.local/share/nvim/site/plugged/YouCompleteMe 
+
+# 执行install.py
+./install.py
+
+```
+
 **接下来是安装的一个重要环节**
 我们在 .vimrc 的配置中设置了 call vundle#begin('~/.vim/bundle/vundle/')
 因此 YCM 安装到了 ~/.vim/bundle/vundle/ 下,进入查看  
