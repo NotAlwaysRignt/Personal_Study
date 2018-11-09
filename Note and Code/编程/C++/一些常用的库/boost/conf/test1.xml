@@ -1,0 +1,20 @@
+<config>
+	<file title="windows" version="8.1">
+	<!-- File Fisrt Comment -->
+	<!-- File Second Comment -->
+		<paths attr="directory">
+		<!-- Paths Comment -->
+			<pathname title="123">abc</pathname>
+			<pathname title="456">efg</pathname>
+			<pathname title="789">hij</pathname>
+		</paths>
+		<paths>
+			<pathname title="111">klm</pathname>
+			<pathname title="222">nop</pathname>
+			<pathname title="333">qrs</pathname>
+		</paths>
+
+        <md5>123456789</md5>
+        <size value="20.213">20M</size>
+	</file>
+</config>
