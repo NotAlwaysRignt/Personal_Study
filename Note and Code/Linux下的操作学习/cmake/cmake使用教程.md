@@ -5,6 +5,10 @@ cmake 是允许我们使用cmake的语言描述整个工程项目,最终生成ma
 构建 C/C++ 项目要解决的核心问题:
 ##### 编译时的依赖关系
 头文件位置, 源文件位置 ,静态库和动态库的位置
+* 头文件:`include_directories`函数
+* 源文件可以用`aux_source_directory`函数
+* 库文件`find_library` 相当于-L, `target_link_libraries` 相当于-l
+* 查找文件还可以用`FILE`函数,其中函数有一个选项支持递归地从目录查找匹配文件(如`*.txt`)
 ##### 生成目标
 生成.o文件
 生成可执行文件
