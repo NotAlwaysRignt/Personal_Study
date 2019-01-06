@@ -1,12 +1,12 @@
 ### 最佳的学习资料
 1. 进入 github 里 UltiSnips 的官网, REAME.md 中有关于其中用法的介绍,这时最权威的资料
-2. 下载插件后使用 vim 的自带文档,`:help snippet`可以看到完整的 UltiSnips 使用介绍,再比如我们想查看 UltiSnips 是如何嵌入 python 的可以用`:help UltiSnips-python` 来查看
+2. 下载插件后使用 vim 的自带文档,`:help UltiSnips`可以看到完整的 UltiSnips 使用介绍,再比如我们想查看 UltiSnips 是如何嵌入 python 的可以用`:help UltiSnips-python` 来查看
 3. 查看 UltiSnips 自带的 demo,我们可以看见 UltiSnips 已经自带了很多默认的模板,通过查看`.snippets`文件,我们可以学习它是如何定义模板的
 4. https://keelii.com/2018/08/26/vim-plugin-ultisnips-advanced-tips/ 
     是介绍 UltiSnips 的一篇不错的中文教程
-### 基本介绍
 
-```shell
+### 基本介绍
+```bash
 snippet datetime "YYYY-MM-DD hh:mm" w
 `!v strftime("%Y-%m-%d %H:%M")`
 endsnippet
@@ -31,14 +31,24 @@ endsnippet
 
 #### 定义python函数
 如果python代码很长,那么全部写到\`!p\`里会很难阅读,因此可以考虑把函数剥离出来
-```shell
+```Python
 global !p
-def insert_word()
+def insert_word():
     snip.rv = "Hello world"
 endglobal
 ```
 python函数可以写到`global !p`和`endglobal`两个代码块之间
 UltiSnips 定义了很多 内置对象,如 snip.rv 表示\`!p\`这个代码块最终表示的文本, `t[1]`表示`$1`这个占位符,`t[2]`表示`$2`这个占位符,以此类推
+
+#### Ulsnipts自带的python对象
+我们可以通过`:help UltiSnips`来查看相关python 用法,这里只介绍几个对象的用法
+###### snip.rv
+`snip.rv`,它是str类型,snip.rv的最终内容是插入到文本的内容,比如 `snip.rv="123456"  snip.rv="123"`最终插入的是"123"
+###### snip.rv
+它的类型`<class 'UltiSnips.text_objects._python_code.SnippetUtil'>`(我们可以用`snip.rv = str(type(snip)))`让它显示出来
+在网上教程中几乎没有`snip`的介绍,多数是`snip.rv`的介绍,不过我们可以在自带的 all.snippets 中的 box 和 bbox 找到它的使用,这里简单讲解其用法
+`snip = snip + "string"` 表示在新的一行嵌入"string",并且不会和原来的`snip.rv`冲突.
+这里会有一些奇怪的坑,比如在一个占位符后多次进行`snip.rv`和`snip+="str"`的赋值会出现一些冲突,这里我还没查明具体原因,最好的解决办法就是实验调试,直到达到预期
 
 #### 外部导入python
 既然支持python,则肯定支持 import,这样对于代码量较大的情况我们可以单独成`.py`文件来组织
@@ -46,7 +56,7 @@ UltiSnips 定义了很多 内置对象,如 snip.rv 表示\`!p\`这个代码块�
 一种方法是我们可以使用sys.path.append去添加路径再导入
 
 另一种方法是借助 demo,比如打开 `all.snippets`
-```shell
+```Python
 global !p
 from vimsnippets import foldmarker, make_box, get_comment_format
 endglobal
