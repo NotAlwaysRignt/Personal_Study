@@ -1,0 +1,277 @@
+[TOC]
+## 为什么要手动安装
+官网提供了一个 `install.py` 脚本来安装 YoucompleteMe,这个`install.py`封装了很多安装过程的细节,用户只要传入参数即可,但是正如官网所说,这样安装的成功率并不高
+> These instructions (using install.py) are the quickest way to install YouCompleteMe, however they may not work for everyone. If the following instructions don't work for you, check out the full installation guide.
+
+使用`install.py`还对 python 的安装有要求,必须在安装 python 时使用`--enable-shared`,否则运行不了 `install.py`.
+不过**`install.py`是非常好的安装教程**,通过阅读`install.py`,我们可以知道要让 YCM 运行起来,做了哪些编译操作,然后我们可以分别手动去做这些操作,逐步调试,直到成功安装 YCM
+
+自己到网上下载符合当前操作系统版本的clang 二进制文件,然后再去调用 YCM 的 `CMakeLists.txt`,或者对其它语言的插件进行手动安装,有时比自动安装还会更容易
+
+手动安装的过程[官网](https://github.com/Valloric/YouCompleteMe)已经有详细的讲解,但是即便按照官网的教程来,还是遇到了一些问题,这里讲解解决的办法,也会分析问题的原因
+
+## 手动安装过程(语义补全)讲解
+以下过程重点讲述到官网下载已经编译好的 clang+llvm 二进制压缩包,并通过`cmake`等命令一步步操作安装,而不用`install.py`安装
+#### 执行 ycmd/cpp/CMakeLists.txt
+通过 YouCompleteMe 的`Full Installation Guide`可以知道,我们要获得`ycm_core`这个动态库(不管任何语言的补全,ycmd 作为 server 要启动必须加载它,否则无法启动),可以手动使用`cmake`编译获取它,首先是要获取 `makefile`
+
+接着我们就可以调用`cmake`去执行`CMakeLists.txt`了,这里介绍使用自己到官网下载的二进制 clang 并进行安装
+首先根据自己的操作系统(ubuntu 16)下载对应的二进制压缩包`clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz`存放到我的目录`~/Linux_application/clang/`并解压,在`~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04/`下可以看见`bin`,`include`,`lib`等目录
+
+接着进入一个自定义创建的目录,用于存放cmake产生的各种文件,根据官网要执行以下命令,**注意官网给的命令是行不通的,我们还要做进一步的设置,下面会讲解**
+```bash
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04 . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp
+```
+`-G`后跟的参数指定生成的文件,使用`cmake --help`可以看选项,在Linux下使用`"Unix Makefiles"`即可(记得加双引号,不然 Unix Makefiles的 Unix 会被单独拿出来解析),表示`Generates standard UNIX makefiles.`
+
+`-DPATH_TO_LLVM_ROOT`指定我们下载的二进制文件存放目录,cmake的最后一个参数是`ycmd/cpp`下的 `CMakeLists.txt`,注意官网用的是`~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp`,不要一味照抄,要根据实际情况设置.本人使用`plug-vim`下载的YCM,因此YCM插件安装在`~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp`目录下
+
+**成功编译可用的`ycm_core.so`文件是YCM安装的重难点,如果成功,那么可以说完成了90%的安装**
+YoucompleteMe在启动时会通过python启动一个后台进程,名为ycmd,它是一个http server服务,我们在vim中编辑代码时,会作为client 不断把代码的信息作为 Json 串发送HTTP信息给 ycmd server
+ycmd拿到代码信息后,会将其进行编译,解析,然后将补全结果返回.可见,如果 ycmd 不能启动,那么 YCM 就用不了了,而 ycmd 要启动,必须要有可用的`ycm_core`动态链接库
+
+要获取`ycm_core`动态库文件,**关键就是要用`cmake`成功执行`YouCompleteMe/third_party/ycmd/cpp/`下的`CMakeLists.txt`并用`cmake --build`(或者 make )将其成功编译出来**
+
+事实上根据官网直接这样编译还是会有问题的,当我们执行 cmake 时会发现以下打印
+```bash
+-- Found PythonLibs: /usr/lib/x86_64-linux-gnu/libpython2.7.so (found suitable version "2.7.12", minimum required is "2.7")
+```
+说明它会编译生成python 2 版本的`ycm_core`,而我的vim是支持 python3的,如果编译 python2 的ycm_core, vim 就会无法载入`ycm_core`
+另外一个问题是,假如要指定生成 python3 版本的 ycm_core,cmake在查找python库时必须要查找编译时使用了`-fPIC`的 python3 库,否则编译`ycm_core.so`时也会失败
+
+下面分别讲解如何解决这两个问题
+#### 指定编译 python3 版本的 ycm_core
+解决这个问题的办法是传入`USE_PYTHON2`参数,设置为OFF
+这个值默认被设为了ON (在`YouCompleteMe/third_party/ycmd/cpp/CMakeLists.txt`中设置了`option( USE_PYTHON2 "If on, link to Python 2 instead of 3" ON )`)
+这个是读`CMakeLists.txt`查询得到的办法,官网的`README.md`并没有提到这个问题
+```bash
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04 -DUSE_PYTHON2=OFF . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp
+```
+发现显示的信息中提示`-- Found PythonLibs: /usr/local/lib/libpython3.6m.a (found suitable version "3.6.1", minimum required is "3.4")`
+说明将会编译 python3 版本的ycm_core,**但是这还是有问题的**
+
+#### 设置 PYTHON_LIBRARY 变量
+上面提示信息中`libpython3.6m.a`,这是一个静态库,编译`ycm_core.so`的过程需要使用动态链接,静态库显然不可以作动态链接,因此如果就此往下编译,会提示编译失败,需要一个`-fPIC`编译的库
+YoucompleteMe 中`README.md`的`FAQ`提到了这个问题并给出了解决办法
+> Use the -DPYTHON_LIBRARY= CMake flag to point it to a .so version of libpython on your machine (for instance, -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so).
+
+为什么要这样操作?我们可以在`YouCompleteMe/third_party/ycmd/cpp/CMakeLists.txt`在中得知查找 python 库使用的是`cmake`的命令是`find_package( PythonLibs 3.4 REQUIRED )`
+
+PythonLibs是 cmake自带的模块脚本,进入 cmake 的官网,在`FindPythonLibs`章节,我们可以查到,在执行`find_package`时,我们也可以手动传入变量指定 python 库和头文件的位置
+```
+PYTHON_LIBRARY             - path to the python library
+PYTHON_INCLUDE_DIR         - path to where Python.h is found
+```
+
+找到python3 的动态库可以在linux下只用locate命令
+`locate libpython | grep 'so'`
+在操作系统中我找到了其中一个符合条件的动态库存放于`/usr/lib/x86_64-linux-gnu/libpython3.5m.so`中,于是最终我们执行
+```bash
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04 -DUSE_PYTHON2=OFF -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp
+```
+发现提示信息`-- Found PythonLibs: /usr/lib/x86_64-linux-gnu/libpython3.5m.so (found suitable version "3.6.1", minimum required is "3.4")`且没有报错
+之所有3.6.1 是我用ubuntu用`apt-get`后面装上的,python3.5是系统自带的版本
+
+#### cmake --build
+如果前面的安装没有报错,成功执行 cmake 后,接下来就是执行`Makefile`了,执行如下命令
+```bash
+cmake --build . --target ycm_core --config Release
+```
+`--config Realease`是在 Windows 系统下起作用的,Linux 下会被忽略,`cmake --build .`相当于在当前目录下执行 `make`,`ycm_core`就是我们要编译的目标文件
+
+编译成功后,会提示我们生成`ycm_core.so`存放在`~/.vim/plugged/YouCompleteMe/third_party/ycmd/ycm_core.so`目录下
+**生成`ycm_core.so`后,我们可以删除网上下载的 llvm+clang 二进制文件,因为ycmd要加载的只是`ycm_core.so`**
+-----------------------------------------------------
+### 正则表达式模块优化支持(可选,建议安装)
+官网原话
+> Build the regex module for improved Unicode support and better performance with regular expressions. The procedure is similar to compiling the ycm_core library:
+
+`ycmd/third_party/cregex`目录下存放了正则表达式模块代码,是用 C 实现的,且分 python2 和 python3 版本,将其编译为动态库,相较于 YCM 使用 python 解析,可以提高正则表达式解析时的性能.同时根据作者所说,可以改善对 Unicode 编码的支持.
+**个人还是建议编译这个库,因为代码量一大,python的性能也是个问题,使用链接动态 C 库可以大大提升性能**
+`ycmd/third_party/cregex`目录下的`CMakeLists.txt`只有一百行,阅读后可知,它会调用`find_package( PythonLibs )`来查找本机的 python 库,并且区分 python2 和 python3 版本
+本人的 vim 是支持 python3 的,默认会找到 python2 的版本,解决问题的办法和编译`ycm_core`的思路一样,先用locate找到 python3 的 so 动态库,然后传递变量值`PYTHON_LIBRARY`告诉 cmake 
+```bash
+mkdir regex_build # 任意位置创建目录,名字也可以自定义,用于存放 cmake 产生的临时文件
+cd regex_build
+cmake -G "Unix Makefiles" -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/cregex
+cmake --build . --target _regex --config Release  # 相当于执行make
+
+
+思路和前面`ycm_core`是类似的,且正则表达式模块的编译没有`ycm_core`的编译那么复杂,因为主要是对 c 源码的编译,不涉及链接一些二进制库
+
+成功编译时会提示
+```bash
+[100%] Linking C shared library /home/thinker/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/cregex/regex_3/_regex.so
+[100%] Built target _regex
+```
+生成`_regex.so`文件存放在`/YouCompleteMe/third_party/ycmd/third_party/cregex/regex_3/`
+
+### .ycm_extra_conf.py 配置
+#### `.ycm_extra_conf.py`的功能
+YCM可不会解析`makefile`,它不知道我们的编译 flag 是什么样,自然也不知道我们是不是使用 -I 加载了别处的头文件,为了解决这个问题,YCM要求我们自己编写一个`.ycm_extra_conf.py`,以告诉YCM这些信息,如果YCM 找不到这个文件,那么无法提供语法补全
+
+#### `.ycm_extra_conf.py`的存放位置
+`.ycm_extra_conf.py`应该放置在哪? 先看看官网对这个文件的介绍
+> CM looks for a .ycm_extra_conf.py file in the directory of the opened file or in any directory above it in the hierarchy (recursively); when the file is found, it is loaded (only once!) as a Python module. YCM calls a Settings method in that module which should provide it with the information necessary to compile the current file. You can also provide a path to a global configuration file with the g:ycm_global_ycm_extra_conf option, which will be used as a fallback.
+
+当我们打开一个文件的时候,YCM首先会在这个文件的目录查找`.ycm_extra_conf.py`文件,如果没找到,就会向上一层目录递归查找
+YCM 也允许我们自己在`.vimrc`中设置`g:ycm_global_ycm_extra_conf`变量,让我们提供一个全局默认的`g:ycm_global_ycm_extra_conf`,当YCM 在项目目录中没有找到`.ycm_extra_conf.py`时就会选用这个全局的`.ycm_extra_conf.py`
+
+#### 一个最简单的`.ycm_extra_conf.py`
+YCM的官网提供了一个最简单的`.ycm_extra_conf.py`示例,通常情况下,我们只需要提供 flag 信息,YCM 就能够知道编译规则,并为我们提供补全提示.本人认为最重要的是头文件的信息,只要有此信息,就能够知道整个项目的编译关系
+官网给出的例子在`C-family Semantic Completion`的`Option 2: Provide the flags manually`处
+假设我们编译时候的flag是这样的`g++ -Wall -Wextra -Werror -o FILE.o FILE.cc`,那么
+```python
+# `.ycm_extra_conf.py`的内容只要这样即可
+def Settings( **kwargs ):
+  return {
+    'flags': [ '-x', 'c++', '-Wall', '-Wextra', '-Werror' ],
+  }
+```
+定义一个`setting`函数,然后返回一个字典,其中字典有一个`flags`的 key,其值就是 flag, YCM 建议我们有必要加上`-x` flag,告诉 YCM 这个项目是什么类型的项目,比如 C语言使用`-x c`,`C++`用`-x c++`
+
+`-I`是常用的功能,使用相对路径时是相对`.ycm_extra_conf.py`的路径,如`-I./include/`会查找与被加载的`.ycm_extra_conf.py`同级的`include`目录
+
+对于复杂的项目,仅仅有flags 信息显然还是不够的,`YouCompleteMe/third_party/ycmd/examples` 目录下提供了一个`.ycm_extra_conf.py`示例文件
+注意这个文件主要用作参考,实践证明用`g:ycm_global_ycm_extra_conf`指向它,已经可以满足C++ 标准库的补全了,当然也可能在自己系统上工作不起来,毕竟系统头文件的位置很可能和这个 demo 文件不同,所以还是建议重写一个修改一下,主要是修改`flags`,我们可以模仿`flags`的`-isystem`指向目录根据自己操作系统实际情况修改
+
+如果要对项目快速生成`.ycm_extra_conf.py`,可以使用`rdnetto/YCM-Generator`这个Vim插件,它的主要功能是解析当前目录中的`Makefile`,根据调用`make`命令时会用到的 flags,生成`.ycm_extra_conf.py`
+#### g:ycm_confirm_extra_conf
+YCM 会在进入文件时去加载`.ycm_extra_conf.py`,但是这可能带来一个安全问题,比如它可能加载到不是自己编写的带有恶意代码的`.ycm_extra_conf.py`(虽然这个可能性很小)
+YCM 默认设置`let g:ycm_confirm_extra_conf = 1`,意思是当搜寻到可用的`.ycm_extra_conf.py`时,会要求用户确认一次,如果不想要确认,则可以置为0
+
+#### g:ycm_extra_conf_globlist
+为了能够能够控制将指定目录下的`.ycm_extra_conf.py`载入,YCM 通过变量`g:ycm_extra_conf_globlist`设置白名单和黑名单
+这是一个列表变量,列表里每个成员都是字符串,并允许使用YCM规定的通配符
+* `*` matches everything
+* `?` matches any single character
+* `[seq]` matches any character in seq
+* `[!seq]` matches any char not in seq
+
+举例:`let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']`
+`~/dev/*`表示`~/dev/`目录下(递归地)的`.ycm_extra_conf.py`会被查找并被加载
+`!~/*`表示home目录下的所有`.ycm_extra_conf.py`都不会被加载
+列表有优先级之分,`~/dev/*`的优先级高于`!~/*`.所以结合起来就是,除了`~/dev/`目录下的`.ycm_extra_conf.py`,home目录下所有的`.ycm_extra_conf.py`都不会被加载
+
+-------------------------------------------------------
+
+## YCM安装过程如何调试
+当成功编译生成`ycm_core`以后,我们需要在启动时得到 YCM 的报错信息,才能知道YCM是否成功启动了,这里介绍获取这些信息的手段
+Vim中输入`:YcmDebugInfo`,回车得到如下调试信息 (输入`:Ycm`然后按多次`<tab>`键可以补全得到这个命令)
+```bash
+Printing YouCompleteMe debug information...
+-- Client logfile: /tmp/ycm_02xrmjzw.log
+-- Server errored, no debug info from server
+-- Server running at: http://127.0.0.1:49977
+-- Server process ID: 7991
+-- Server logfiles:
+--   /tmp/ycmd_49977_stdout_u3u23057.log
+--   /tmp/ycmd_49977_stderr_qivafm3t.log
+```
+YCM 若成功启动,则后台应该有一个`ycmd`进程启动,通过`ps -ef | grep Pid`可以查看这个`ycmd`进程是不是启动了,如果没有找到这个进程,说明ycmd 启动失败
+通过输出信息可知,错误信息被存放到了`/tmp/ycmd_49977_stderr_qivafm3t.log`目录中,我们通过这个文件就可以知道出错的问题是什么
+
+举例:
+```bash
+$ cat /tmp/ycmd_49977_stderr_qivafm3t.log
+2019-01-16 23:10:27,840 - ERROR - ycm_core library compiled for Python 2 but loaded in Python 3.
+Traceback (most recent call last):
+  File "/home/thinker/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd/server_utils.py", line 97, in CompatibleWithCurrentCore
+    ycm_core = ImportCore()
+  File "/home/thinker/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd/server_utils.py", line 89, in ImportCore
+    import ycm_core as ycm_core
+ImportError: dynamic module does not define module export function (PyInit_ycm_core)
+```
+
+如果成功启动了ycmd,在输入`:YcmDebugInfo`时,可以看到如下信息
+```bash
+Printing YouCompleteMe debug information...
+-- Client logfile: /tmp/ycm_3avqtjjf.log
+-- Server Python interpreter: /usr/local/bin/python3
+-- Server Python version: 3.6.1
+-- Server has Clang support compiled in: True
+-- Clang version: clang version 7.0.1 (tags/RELEASE_701/final)
+-- No extra configuration file found
+-- Server running at: http://127.0.0.1:44121
+-- Server process ID: 10264
+-- Server logfiles:
+--   /tmp/ycmd_44121_stdout_rnebiy78.log
+--   /tmp/ycmd_44121_stderr_mdmvvo16.log
+```
+
+根据提示信息用浏览器访问`http://127.0.0.1:44121`是时,它会返回一个json串,说明进程确实在运行
+同样我们可以根据提示信息查看运行的进程
+```bash
+ps -ef | grep 10264
+thinker  10264 10263  0 00:34 ?        00:00:00 /usr/local/bin/python3 /home/thinker/.vim/plugged/YouCompleteMe/python/ycm/../../third_party/ycmd/ycmd --port=44121 --options_file=/tmp/tmp2j_rl9zj --log=info --idle_suicide_seconds=1800 --stdout=/tmp/ycmd_44121_stdout_rnebiy78.log --stderr=/tmp/ycmd_44121_stderr_mdmvvo16.log
+```
+
+## 其它语言补全
+### GO 语义补全支持
+#### gocode/godef 支持
+要让 YCM 支持 GO 的语义补全,前提是把`ycm_core.so`编译好,放在`XXX/YouCompleteMe/third_party/ycmd`目录下,这样 ycmd server 才可以启动
+如果没有为 YCM 安装 gocode 和 godef,则只能进行 ID 补全,即对项目输入过的单词进行补全,且不能支持语义级别的补全
+YCM 对 Go 的补全和对 CPP 补全一样,我们在 VIM 中编辑时把代码信息发送给 ycmd 这个 http 服务器解析, ycmd 把补全信息返回,不过对 Go 补全时, ycmd 需要使用 Gocode 这个工具来解析 Go 代码.
+gocode 和 godef 是用于解析 Go 代码的程序,其 github 仓库分别是[mdempsky/gocode](https://github.com/mdempsky/gocode)和[rogpeppe/godef](https://github.com/rogpeppe/godef),我们在下载 YCM 插件时,也会把 gocode 和 godef 仓库的代码下载下来(YCM会把各个语言支持的工具的仓库都下载下来,不管我们用不用,因此 YCM 的插件非常大)
+由上可得,要让 YCM 支持 GO 补全,关键是让 ycmd 能够调用 gocode 和 godef
+#### 手动使 YCM 支持 Go 补全
+首先看 YCM 文档对手动安装 Go 补全的讲解
+> Go support: install Go and add it to your path. Navigate to YouCompleteMe/third_party/ycmd/third_party/gocode and run go build.
+
+
+文档(2019-1-19)似乎有些过时,目录结构和文档说的不一样.因此要弄懂手动安装的过程,可以通过阅读`YouCompleteMe/install.py`的安装方法
+
+这里**先上结论**,要支持go补全,需要如下操作
+* 修改 GOPATH,将`YouCompleteMe/third_party/ycmd/third_party/go`作为 GOPATH,如`export GOPATH=~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/go:$GOPATH`,如果不设置,会编译不通过,只要临时设置即可,编译通过后可去掉这个GOPATH
+* 分别到`ycmd/third_party/go/src/github.com/mdempsky/gocode`和`ycmd/third_party/go/src/github.com/rogpeppe/godef`下执行`go build`命令
+
+#### 从 install.py 角度了解 go 的安装步骤
+接着来讲解一下`install.py`,首先看文档说法
+> Go support: install Go and add --go-completer when calling install.py.
+
+因此只要知道`install.py`是如何处理`--go-completer`,就可以知道如何安装 go 补全.`install.py`的功能主要就是检查一下 python 版本然后调用`YouCompleteMe/third_party/ycmd/build.py`,真正的安装逻辑就是这个`build.py`这个目录,我们通过解读它可以知道 go 补全插件是被如何支持的
+
+`build.py`的源码可读性很强,顺着 go 的逻辑往下读
+```python
+if __name__ == '__main__':
+  Main()
+  
+def Main():
+  args = ParseArguments()
+  cmake = FindCmake()
+  cmake_common_args = GetCmakeCommonArgs( args )
+  # ......
+  if args.go_completer or args.gocode_completer or args.all_completers:
+    EnableGoCompleter( args )
+  # ......
+
+def EnableGoCompleter( args ):
+  go = FindExecutableOrDie( 'go', 'go is required to build gocode.' )
+
+  go_dir = p.join( DIR_OF_THIS_SCRIPT, 'third_party', 'go' )
+  os.chdir( p.join( go_dir, 'src', 'github.com', 'mdempsky', 'gocode' ) )
+  new_env = os.environ.copy()
+  new_env[ 'GOPATH' ] = go_dir
+  CheckCall( [ go, 'build' ],
+             env = new_env,
+             quiet = args.quiet,
+             status_message = 'Building gocode for go completion' )
+  os.chdir( p.join( go_dir, 'src', 'github.com', 'rogpeppe', 'godef' ) )
+  CheckCall( [ go, 'build' ],
+             env = new_env,
+             quiet = args.quiet,
+             status_message = 'Building godef for go definition' )
+
+```
+代码写得很清楚,先检查 go 是否安装,然后分别到`ycmd/third_party/go/src/github.com/mdempsky/gocode`和`ycmd/third_party/go/src/github.com/rogpeppe/godef`下执行`go build`命令
+#### 调试 Go 语义补全
+调试方法和调试`ycm_core`类似,就是查看`ycmd`输出的错误信息,输入`:YcmDebugInfo`,
+```bash
+-- Server logfiles: # 得到 YCM 打印日志的位置
+--   /tmp/ycmd_34062_stdout_g6ycmhyh.log
+--   /tmp/ycmd_34062_stderr_yfmaf46k.log
+```
+接着用 cat 查看日志就知道出错在哪里了,比如在没有编译 gocode 和 godef 时得到错误信息
+```bash
+ValueError: No semantic completer exists for filetypes: ['go']
+```

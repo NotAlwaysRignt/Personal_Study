@@ -94,67 +94,24 @@ cd ~/.local/share/nvim/site/plugged/YouCompleteMe
 
 #### 设置 .ycm_extra_conf.py,非常重要的一步!
 安装完成后,我们打开 vim,就可以看见 The ycmd server SHUT DOWN (restart with :YcmRestartServer) 的错误提示没有了,并且也支持基本的补全功能,但还是没有完成安装,启动 vim 时,会有如下提示:
-No .ycm_extra_conf.py file ...(省略)  
+`No .ycm_extra_conf.py file ...(省略)`  
 这是一个配置文件,要使用的 YCM 语义补全功能我们必须指定它的路径,可在 .vimrc 中全局设置  
 
-##### 使用默认的 .ycm_extra_conf.py
-我们可以自己编写这个文件,但这样是比较麻烦的,安装好 YCM 后,YCM 提供了一个足够满足需求的 .ycm_extra_conf.py  (如果这个办法不行,还有一个不错的办法是使用 YCM-Generator,具体操作见下文)
+##### 使用 .ycm_extra_conf.py
+对于复杂的项目, YCM 得知道 flag 才知道这个目录怎么组织的,YCM 可不会聪明到我们从别的目录引入了头文件,要知道 flag 信息,就需要`.ycm_extra_conf.py`,如果没有这个文件,那么即使是标准库的头文件,比如 `map`,`vector`,YCM也无法帮我们补全
 
-这个文件在 YouCompleteMe 插件目录里,找到 YouCompleteMe 目录,因为安装 vundle 时我的 .vimrc 设置了  
-call vundle#begin('~/.vim/bundle/vundle/')  ,所以 YouCompleteMe 在 ~/.vim/bundle/vundle/ 下
-
-继续进入目录,.ycm_extra_conf.py 就放在 YouCompleteMe/third_party/ycmd/examples 下,这是个隐藏文件,我们可以用 ls -A 命令查看它,如下图  
+**具体使用`.ycm_extra_conf.py`的写法参考官方文档**,它给了一个很简单的例子
+一个示例`.ycm_extra_conf.py` 就放在`YouCompleteMe/third_party/ycmd/examples`下,这是个隐藏文件,我们可以用 ls -A 命令查看它,如下图  
 ![](img/YCM_cpp_conf.png)
 
-找到这个文件后,进入 .vimrc 中设置 ycm_global_ycm_extra_conf 变量:  
+我们可以根据它来改写,实践证明仅仅是它也勉强能用,起码标准头文件能补全了,不过还是建议重写个并修改一下,主要是修改`flags`,我们可以模仿`flags`的`-isystem`指向目录根据自己操作系统实际情况修改,然后进入`.vimrc`中设置`ycm_global_ycm_extra_conf`变量:  
 ```bash
+#注意路径要根据实际路径修改
 let g:ycm_global_ycm_extra_conf='~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
 ```
-
 ![](img/myYCMconf.png)  
 
 至此 YouCompleteMe 就已经初步安装完毕了!
-
-### 在 .vimrc 中添加一些有用的配置  
-默认的 YCM 配置并不完美,比如它只在输入'.','->','::' 才会进行语义分析,比如我们输入 printf,它是不会提示的,除非我们以前输入过,但输入过才会提示显然也不能让我们满意,解决这个问题,可以添加以下配置
-```bash
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
-            \ }
-```
-['re!\w{2}'] 的意思是,使用正则表达式,当我们输入两个连续的字母时,就会启动补全提示  
-
-另外还有一个很不喜欢的功能,就是补全时还会弹出一些预览窗口,说明函数功能,这些窗口很多时候不会有有用的信息,禁用掉它可以设置   
-```bash  
-set completeopt=menu,menuone
-let g:ycm_add_preview_to_completeopt = 0
-```
-关于一些常用配置可以参考这篇文章:  
-https://zhuanlan.zhihu.com/p/33046090  
-
-#### 关于 .ycm_extra_conf.py file
-YCM会寻找当前打开的文件的同级目录下或上级目录中的ycm_extra_conf.py这个文件，找到后会加载为Python模块，且只加载一次,我们也可以在 .vimrc中全局设置  
-
-##### 最佳的获取方式
-> You could also consider using YCM-Generator to generate the ycm_extra_conf.py file.
-官网给了我们一个软件的地址,使用它可以 自动生成 .ycm_extra_conf.py    
-https://github.com/rdnetto/YCM-Generator 
-我们可以按照里面的安装步骤来生成 .ycm_extra_conf.py  
-
-这里介绍如何使用vim的 vundle插件管理器 安装 YCM-Generator 
-首先我们要用vundle 安装 YCM-Generator这个插件,在 ~/.vimrc 配置文件中的 **vundle 配置部分**(不是任意处)添加:  
-Plugin 'rdnetto/YCM-Generator'  
-启动 vim,然后执行 :PluginInstall  
-安装很快就完成,随便打开一个目录(.ycm_extra_conf.py 将会生成在此路径下),在当前路径下执行 vim 
-然后 :YcmGenerateConfig  
-稍等一小会,就会根据当前的系统生成 .ycm_extra_conf.py 并存放在当前路径下(当前路径指,假如你在/home/mypath 路径下运行 vim,:YcmGenerateConfig,则.ycm_extra_conf.py 会生成在/home/mypath下,注意是隐藏文件,用ls -A可以查看)
-因为这个 .ycm_extra_conf.py 是针对当前系统生成的,建议使用此方式获取 .ycm_extra_conf.py
-然后我们可以在 ~/.vimrc 中
-设置
-let g:ycm_global_ycm_extra_conf='.ycm_extra_conf.py的绝对路径'
-
-#####  其它获取方式
 除了上面提到的 .ycm_extra_conf.py, 我们可以在 YouCompleteMe/third_party/ycmd/cpp/ycm 下找到这个文件,只不过这个文件还需要修改才能满足我们的需求,官网中 **C-family Semantic Completion** 章节的 **Option 2: Provide the flags manually** 部分也提供了
 .ycm_extra_conf.py 的示例链接,可以下载下来并修改,我们还可以到网上去查找一些有用的配置文件
 
@@ -178,10 +135,36 @@ except ValueError:
   pass 
 ```
 
- 最好先把YCM作者提供的模板备份一下再做改动，然后将改动好的文件就放在原来的位置，作为全局的ycm_extra_conf.py，这样平时写个小Cpp的程序就不需要再单独创建一个。要使之生效，需要在.vimrc里面设置YCM相应的选项，此选项会在下面配置部分详细说明。对于特定的工程，将其拷贝到工程文件夹下，然后在这基础上再修改。不用担心工程文件夹下的 .ycm_extra_conf.py 会和全局的冲突，因为开启vim之后，ycm会现在工程文件夹下搜索该文件，此处的配置文件优先级最高  
+ 最好先把YCM作者提供的模板备份一下再做改动，然后将改动好的文件就放在原来的位置，作为全局的ycm_extra_conf.py，这样平时写个小Cpp的程序就不需要再单独创建一个。要使之生效，需要在.vimrc里面设置YCM相应的选项，此选项会在下面配置部分详细说明。对于特定的工程，将其拷贝到工程文件夹下，然后在这基础上再修改。不用担心工程文件夹下的`.ycm_extra_conf.py`会和全局的冲突，因为开启vim之后，ycm会先在工程文件夹下搜索该文件，此处的配置文件优先级最高  
+### 在 .vimrc 中添加一些有用的配置  
+默认的 YCM 配置并不完美,比如它只在输入'.','->','::' 才会进行语义分析,比如我们输入 printf,它是不会提示的,除非我们以前输入过,但输入过才会提示显然也不能让我们满意,解决这个问题,可以添加以下配置
+```bash
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ }
+```
+['re!\w{2}'] 的意思是,使用正则表达式,当我们输入两个连续的字母时,就会启动补全提示  
 
-针对Qt5的补全的conf:  http://jesrui.sdf-eu.org/ycm-config-for-qt5.html
-  
+另外还有一个很不喜欢的功能,就是补全时还会弹出一些预览窗口,说明函数功能,这些窗口很多时候不会有有用的信息,禁用掉它可以设置   
+```bash  
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+```
+关于一些常用配置可以参考这篇文章:  
+https://zhuanlan.zhihu.com/p/33046090  
+
+#### 关于 .ycm_extra_conf.py file
+YCM会寻找当前打开的文件的同级目录下或上级目录中的ycm_extra_conf.py这个文件，找到后会加载为Python模块，且只加载一次,我们也可以在 .vimrc中全局设置  
+
+##### 最佳的获取方式
+如果要针对某个具体项目写,可以使用`rdnetto/YCM-Generator`这个 vim 插件,它的主要功能是解析当前目录中的`Makefile`,根据调用`make`命令时会用到的 flags,生成`.ycm_extra_conf.py`
+用法:随便打开一个目录,执行 vim ,然后调用`:YcmGenerateConfig`,`.ycm_extra_conf.py` 将会生成在此路径下
+详见官网
+然后我们可以在 ~/.vimrc 中设置
+`let g:ycm_global_ycm_extra_conf='.ycm_extra_conf.py的绝对路径'`
+
+#####  其它获取方式
 
 
 #### 有可能需要的步骤(编译ycm_core)  
