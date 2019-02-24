@@ -1,0 +1,97 @@
+[TOC]
+这里介绍 Vue 的常用指令,设计思想,及其相应的使用场景
+
+### Vue 实例 
+使用思路和区别:
+vue 实例需要指定 HTML的 id 或 class ,使其成为 Vue的一个作用域,Vue 只对作用域内的标签进行词法解析,即 vue 的 指令,语法等只有在作用域内才会起作用
+
+### Vue component
+vue 实例指定了 vue 生效的范围, vue component 则可以使得在 vue 生效的范围进行划分,形成一个个组件,vue component 分为全局组件和局部组件
+全局组件在所有 vue 作用域中生效,局部组件只在特定的 vue 实例内生效
+
+vue 组件表现为一个个自定义名称的 HTML 标签,比如我们可以写一个名为component的实例,然后用`<component><component/>`把这个实例写到 HTML 中,vue 会对其进行渲染
+
+### slot
+Vue 采用对自定义标签来渲染的方式来使用 component.比如一个定义了一个hello 插件,那么使用时就用`<hello></hello>`标签渲染
+slot 是对 component 的补充,我们可以在标签内部添加内容,
+```xml
+<hello>
+<div id="part1">Part1</div>
+<h3>Hello</h3>
+<div id ="part2">Part2</div>
+</hello>
+```
+有了 slot 就可以对 component 标签里的内容再做进一步的操作了,这让组件里的内容展示更加丰富
+
+### v-on
+`v-on:`简写为`@`,这个命令作用是事件的绑定,比如鼠标点击,滚轮,按键等,因此凡是涉及用户操作的都可以考虑用这个指令
+
+### v-bind
+v-bind 用于绑定数据和元素 attribute,它可以将数据绑定到标签的 attr 上,也可以将 attr 绑定到指定的标签如
+`v-bind:`可简写为`:`
+
+v-bind 的主要场景有两个
+1. 属性数据需要切换,比如`a`标签的`attr`,`img`标签的`src`均可以通过数据绑定来实现动态变换
+2. CSS 样式绑定,比如对于激活和非激活状态下要呈现不同的样式,举例:`<a v-bind:class="{active:isActive}"></a>`键名`active`是自定义的class,我们可以先写好`.active`的样式,当数据`isActive`为true时,`.active`才会生效
+
+### v-model
+v-model 主要用于各种输入框,如`<input>`内数据的操纵
+
+### props
+##### props 概念
+props 即 properties, property 和 attribute 都是 HTML 中的概念,中文翻译都是属性,区别如下:
+* property是一个DOM属性,是js对象,它不会被浏览器渲染
+* attribute 是HTML标签上的特性,值只能够是字符串
+如`<input type="button" myprop="property">`.type 就是attribute,浏览器会对其进行解析,而 myprop 是property,其名字是自定义的,浏览器不会对其进行渲染
+
+##### props 使用场景
+props 在Vue 中用于父子组件的通信,父子组件的关系可以总结为 props down, events up。父组件通过 props 向下传递数据给子组件，子组件通过 events 给父组件发送消息。
+
+简单的说,就是声明了props 后,就可以用property的方式把数据传到组件里进行渲染,比如:
+```js
+Vue.component('blog-post', {
+  props: ['title'],
+  template: '<h3>{{ title }}</h3>'
+})
+```
+声明了title这个property,那么就可以通过赋值title这个property来传递数据
+`<blog-post title="My journey with Vue"></blog-post>`
+效果:
+<h3>My journey with Vue</h3>
+
+上面属于静态数据绑定,我们把静态数据`"My journey with Vue"`给传递给title,而实际更多时候数据是动态的,是一个变量
+
+```js
+new Vue({
+  el: '#blog-post-demo',
+  data: {
+    posts: [
+      { id: 1, title: 'My journey with Vue' },
+      { id: 2, title: 'Blogging with Vue' },
+      { id: 3, title: 'Why Vue is so fun' }
+    ]
+  }
+})
+```
+```html
+<blog-post
+  v-for="post in posts"
+  v-bind:key="post.id"
+  v-bind:title="post.title"
+></blog-post>
+```
+父组件的data就可以通过property的方式赋值给 title,而 title又在子组件被渲染
+这个关系有点绕,总结一下就是字组件里 property 是在{{}}被渲染的,并要在 props 中声明,而父组件里要传递数据则要在HTML 中给 property 赋值
+
+### slot
+slot 是对 component 的扩充，vue 中定义好 component 后会对相应的 XML 标签做渲染,而 slot 则是能够进一步操作这些 component 标签中的内容.
+使用场景: slot 使得 component 的复用性更强,开发者在编写 component 时可以将易变的部分作为 slot
+
+### vue-router
+vue 的路由用于单页应用中 url 的跳转，但是这种 url 跳转不会触发整个页面的更新，而是对部分视图进行渲染
+
+### vuex
+vuex 的使用说明官网已经说得很清楚了, vuex 用于多组件共享状态(数据)的场景
+当多个视图依赖于同一状态,或来自不同视图的行为需要变更同一状态时,就可以使用 vuex
+可见,vuex通常用于较为复杂的网页,简单的网页不需要 vuex
+

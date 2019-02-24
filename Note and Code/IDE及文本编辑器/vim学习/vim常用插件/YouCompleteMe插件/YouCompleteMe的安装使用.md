@@ -109,81 +109,9 @@ cd ~/.local/share/nvim/site/plugged/YouCompleteMe
 #注意路径要根据实际路径修改
 let g:ycm_global_ycm_extra_conf='~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
 ```
-![](img/myYCMconf.png)  
+
+`.ycm_extra_conf.py`的详解见自己写的另一篇 github 文章 
 
 至此 YouCompleteMe 就已经初步安装完毕了!
-除了上面提到的 .ycm_extra_conf.py, 我们可以在 YouCompleteMe/third_party/ycmd/cpp/ycm 下找到这个文件,只不过这个文件还需要修改才能满足我们的需求,官网中 **C-family Semantic Completion** 章节的 **Option 2: Provide the flags manually** 部分也提供了
-.ycm_extra_conf.py 的示例链接,可以下载下来并修改,我们还可以到网上去查找一些有用的配置文件
-
-如果要自己配置这个py文件,不妨把官网的示例文件copy下来,在flags(一个[]变量)里面添加如下内容(系统文件用-isyetem，第三方文件用 -I)：
-```py
-'-isystem',  
-'/usr/include',  
-'-isystem',  
-'/usr/include/c++/',  
-'-isystem',  
-'/usr/include/x86_64-linux-gnu/c++' 
-```
-如果要让其对C++标准库补全生效，还要把配置文件中的这几行（从try到pass这4行）注释掉：
-```python
-# NOTE: This is just for YouCompleteMe; it's highly likely that your project  
-# does NOT need to remove the stdlib flag. DO NOT USE THIS IN YOUR  
-# ycm_extra_conf IF YOU'RE NOT 100% SURE YOU NEED IT.  
-try:  
-  final_flags.remove( '-stdlib=libc++' )  
-except ValueError:  
-  pass 
-```
-
- 最好先把YCM作者提供的模板备份一下再做改动，然后将改动好的文件就放在原来的位置，作为全局的ycm_extra_conf.py，这样平时写个小Cpp的程序就不需要再单独创建一个。要使之生效，需要在.vimrc里面设置YCM相应的选项，此选项会在下面配置部分详细说明。对于特定的工程，将其拷贝到工程文件夹下，然后在这基础上再修改。不用担心工程文件夹下的`.ycm_extra_conf.py`会和全局的冲突，因为开启vim之后，ycm会先在工程文件夹下搜索该文件，此处的配置文件优先级最高  
-### 在 .vimrc 中添加一些有用的配置  
-默认的 YCM 配置并不完美,比如它只在输入'.','->','::' 才会进行语义分析,比如我们输入 printf,它是不会提示的,除非我们以前输入过,但输入过才会提示显然也不能让我们满意,解决这个问题,可以添加以下配置
-```bash
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
-            \ }
-```
-['re!\w{2}'] 的意思是,使用正则表达式,当我们输入两个连续的字母时,就会启动补全提示  
-
-另外还有一个很不喜欢的功能,就是补全时还会弹出一些预览窗口,说明函数功能,这些窗口很多时候不会有有用的信息,禁用掉它可以设置   
-```bash  
-set completeopt=menu,menuone
-let g:ycm_add_preview_to_completeopt = 0
-```
-关于一些常用配置可以参考这篇文章:  
-https://zhuanlan.zhihu.com/p/33046090  
-
 #### 关于 .ycm_extra_conf.py file
 YCM会寻找当前打开的文件的同级目录下或上级目录中的ycm_extra_conf.py这个文件，找到后会加载为Python模块，且只加载一次,我们也可以在 .vimrc中全局设置  
-
-##### 最佳的获取方式
-如果要针对某个具体项目写,可以使用`rdnetto/YCM-Generator`这个 vim 插件,它的主要功能是解析当前目录中的`Makefile`,根据调用`make`命令时会用到的 flags,生成`.ycm_extra_conf.py`
-用法:随便打开一个目录,执行 vim ,然后调用`:YcmGenerateConfig`,`.ycm_extra_conf.py` 将会生成在此路径下
-详见官网
-然后我们可以在 ~/.vimrc 中设置
-`let g:ycm_global_ycm_extra_conf='.ycm_extra_conf.py的绝对路径'`
-
-#####  其它获取方式
-
-
-#### 有可能需要的步骤(编译ycm_core)  
-.ycm_extra_conf.py 中有以下一句:  
-import ycm_core  
-ycm_core 可能要我们去编译完成
-随便在某一个路径下创建一个 ycm_build 目录,为了便于管理我创建在了 ~/.vim/bundle/vundle/YouCompleteMe 下  
-
-执行编译命令 
-```bash
-cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBclang=ON -DEXTERNAL_LIBCLANG_PATH=/usr/local/lib/libclang.so . ~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/cpp
-```
-
-执行前确保 /usr/local/lib/ 确实有 libclang.so 文件(如果成功安装 clang 就会有),  
-~/.vim/bundle/vundle/YouCompleteMe/third_party/ycmd/cpp 中的  
-~/.vim/bundle/vundle 是在.vimrc中配置时设定的:  
-
-vundle#begin('~/.vim/bundle/vundle/')  
-成功安装 YCM 后, ~/.vim/bundle/vundle/ 下就会有 YouCompleteMe 目录,我们就可以找到 YouCompleteMe/third_party/ycmd/cpp  这个路径
-
-cmake执行完毕后,当前 ycm_build 中会产生很多个文件,其中有个文件就是 Makefile  
-执行  make ycm_core   等待编译完成

@@ -52,13 +52,34 @@ ctrl o (跳转回前一个位置)
 YCM 默认会显示诊断信息,如果不需要,可以使用`let g:ycm_show_diagnostics_ui = 0`关闭
 我们可以使用其它插件来做检查
 
-#### `.ycm_extra_conf.py`相关配置
-个人建议使用`g:ycm_extra_conf_globlist`配置一个全局的的`.ycm_extra_conf.py`,对于多用户使用一台机器的情况,设置只允许加载本用户目录下的`.ycm_extra_conf.py`
+#### 设置白名单
+YCM 默认打开任意文件时都会尝试对其进行解析和语义补全,但会带来一个问题,比如我们打开一个很大的txt 文件时, YCM 也会进行分析,浪费计算资源
+为了解决这个问题,YCM为我们提供选项设置白名单或黑名单
+设置白名单可使用 `g:ycm_filetype_whitelist`,默认值`let g:ycm_filetype_whitelist = {'*': 1}`
+设置黑名单可使用`g:ycm_filetype_blacklist`
 
-然后使用`g:ycm_confirm_extra_conf = 0`禁止 YCM 询问是否加载`.ycm_extra_conf.py`
-关于`.ycm_extra_conf.py`的作用及详细配置见下文说明
+个人建议使用白名单,只对我们需要补全的文件类型进行语义分析
 
-如果要针对某个具体项目写,可以使用`rdnetto/YCM-Generator`这个 vim 插件,它会解析 makefile 文件生成 flag,因此需要依赖`makefile`
+`g:ycm_filetype_whitelist`是一个 map 类型变量,**key是vim的filetype字符串**值为1或0,1表示使用语义补全
+注意filetype是vim的一种变量,不是文件的后缀,比如`.py`类型的文件,其 filetype 是`python`而不是 py,我们可以进入一个`.py`文件,然后输入`:set filetype`来查看文件类型
+
+举例:
+```bash
+let g:ycm_filetype_whitelist = {
+			\ "c":1,
+			\ "cpp":1,
+			\ "objc":1,
+			\ "cc":1,
+			\ "go":1,
+			\ "javascript":1,
+			\ "python":1,
+			\ "java":1,
+			\ "sh":1,
+			\ "zsh":1,
+			\ "zimbu":1,
+			\ }
+```
+
 ### 其它配置说明
 ```bash
 " 自动补全配置
@@ -99,7 +120,9 @@ nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR> " 跳转到�
 
 ### .ycm_extra_conf.py 配置
 #### `.ycm_extra_conf.py`的功能
-YCM可不会解析`makefile`,它不知道我们的编译 flag 是什么样,自然也不知道我们是不是使用 -I 加载了别处的头文件,为了解决这个问题,YCM要求我们自己编写一个`.ycm_extra_conf.py`,以告诉YCM这些信息,如果YCM 找不到这个文件,那么无法提供语法补全
+对C/C++项目,YCM可不会解析`makefile`,它不知道我们的编译 flag 是什么样,不知道我们是不是使用 -I 加载了别处的头文件,为了解决这个问题,YCM要求我们自己编写一个`.ycm_extra_conf.py`,以告诉YCM这些信息,如果YCM 找不到这个文件,那么无法提供语法补全
+
+对于 python,如果我们使用了虚拟环境,我们需要告诉 YCM python虚拟环境的路径,这样才能找到通过虚拟环境下载的 package,提供补全信息
 
 #### `.ycm_extra_conf.py`的存放位置
 `.ycm_extra_conf.py`应该放置在哪? 先看看官网对这个文件的介绍
@@ -111,14 +134,15 @@ YCM 也允许我们自己在`.vimrc`中设置`g:ycm_global_ycm_extra_conf`变量
 #### 一个最简单的`.ycm_extra_conf.py`
 YCM的官网提供了一个最简单的`.ycm_extra_conf.py`示例,通常情况下,我们只需要提供 flag 信息,YCM 就能够知道编译规则,并为我们提供补全提示.本人认为最重要的是头文件的信息,只要有此信息,就能够知道整个项目的编译关系
 官网给出的例子在`C-family Semantic Completion`的`Option 2: Provide the flags manually`处
-假设我们编译时候的flag是这样的`g++ -Wall -Wextra -Werror -o FILE.o FILE.cc`,那么
+假设我们编译时候的flag是这样的`g++ -Wall -Wextra -Werror -o FILE.o FILE.cc`
 ```python
-# `.ycm_extra_conf.py`的内容只要这样即可
+# `.ycm_extra_conf.py`的简单示例
 def Settings( **kwargs ):
   return {
     'flags': [ '-x', 'c++', '-Wall', '-Wextra', '-Werror' ],
   }
 ```
+**这是一个 C++ 项目的`.ycm_extra_conf.py`,对于python,有所不同**,详细见官网
 定义一个`setting`函数,然后返回一个字典,其中字典有一个`flags`的 key,其值就是 flag, YCM 建议我们有必要加上`-x` flag,告诉 YCM 这个项目是什么类型的项目,比如 C语言使用`-x c`,`C++`用`-x c++`
 
 `-I`是常用的功能,使用相对路径时是相对`.ycm_extra_conf.py`的路径,如`-I./include/`会查找与被加载的`.ycm_extra_conf.py`同级的`include`目录
@@ -149,4 +173,3 @@ YCM 默认设置`let g:ycm_confirm_extra_conf = 1`,意思是当搜寻到可用�
 `~/dev/*`表示`~/dev/`目录下(递归地)的`.ycm_extra_conf.py`会被查找并被加载
 `!~/*`表示home目录下的所有`.ycm_extra_conf.py`都不会被加载
 列表有优先级之分,`~/dev/*`的优先级高于`!~/*`.所以结合起来就是,除了`~/dev/`目录下的`.ycm_extra_conf.py`,home目录下所有的`.ycm_extra_conf.py`都不会被加载
-

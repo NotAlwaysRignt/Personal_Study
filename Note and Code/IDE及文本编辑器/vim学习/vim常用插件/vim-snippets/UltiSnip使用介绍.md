@@ -1,21 +1,56 @@
-### 最佳的学习资料
-1. 进入 github 里 UltiSnips 的官网, REAME.md 中有关于其中用法的介绍,这时最权威的资料
+[TOC]
+### UltiSnips 介绍
+UltiSnips 是一个代码块引擎,我们可以通过书写少量字符串,然后通过快捷键就生成一大段特定文本,大大减小我们的书写工作
+UltiSnips 自带的模板很多,通常情况下它已经可以满足我们的要求.事实上要查看当前 UltiSnips 版本自带的模板有哪些很简单,这些模板就放在 ~/.vim 的一个 vim-snippets/UltiSnips/ 目录中, 假设 我们使用plug 插件安装了 UltiSnips 插件,默认定义的模板存放在
+```bash
+~/.vim/plugged/vim-snippets/UltiSnips/c.snippets  # c模板
+~/.vim/plugged/vim-snippets/UltiSnips/cpp.snippets  # c++模板
+......
+```
+
+### UltiSnips 的学习资料
+1. 进入 github 里 UltiSnips 的官网,`REAME.md`中有关于其中用法的介绍,这时最权威的资料
 2. 下载插件后使用 vim 的自带文档,`:help UltiSnips`可以看到完整的 UltiSnips 使用介绍,再比如我们想查看 UltiSnips 是如何嵌入 python 的可以用`:help UltiSnips-python` 来查看
-3. 查看 UltiSnips 自带的 demo,我们可以看见 UltiSnips 已经自带了很多默认的模板,通过查看`.snippets`文件,我们可以学习它是如何定义模板的
+3. 查看 UltiSnips 自带的 `.snippets`文件,通过 UltiSnips 自带的默认模板,我们可以学习它是如何定义模板的
 4. https://keelii.com/2018/08/26/vim-plugin-ultisnips-advanced-tips/ 
     是介绍 UltiSnips 的一篇不错的中文教程
 
-### 基本介绍
+### 语法介绍
+先看一个简单的例子
 ```bash
 snippet datetime "YYYY-MM-DD hh:mm" w
 `!v strftime("%Y-%m-%d %H:%M")`
 endsnippet
 ```
-
-`snippet` 和 `endsnippet`够整了一个 snippet 块, `datetime` 是触发渲染模板的块,后面`"YYYY-MM-DD hh:mm"`是注释,它没有实际作用, w 是 片段参数
+`snippet` 和 `endsnippet`构成了一个 snippet 块, `datetime` 是触发渲染模板的关键字,后面`"YYYY-MM-DD hh:mm"`是注释,它没有实际作用, w 是 片段参数
 \`!v\`表示执行 vim-script,后面`strftime("%Y-%m-%d %H:%M")`是vim的内置函数,其它的还有 \`!p\`里面嵌入的是 python 脚本
 我们输入`datetime <tab>`,然后 datetime 就会被渲染成`2018-12-10 20:52`
-#### 代码片段的参数
+
+```bash
+# ~/.vim/UltiSnips/markdown.snippets
+
+snippet head "Jekyll post header" b
+---
+title: ${1:title}
+layout: post
+guid: `!p
+import uuid
+if not snip.c:
+  guid = uuid.uuid4().get_hex()
+snip.rv = guid
+`
+date: `!v strftime("%Y-%m-%d %H:%M:%S")`
+tags:
+  - ${4}
+---
+
+${0}
+endsnippet
+# vim:ft=snippets:
+```
+`${n}`代表占位符,我们可以使用快捷键跳转,默认`<c-j>`跳转到下一个占位符`<c-k>`跳转到上一个占位符.具体快捷键在`.vimrc`中设置,`${1}`是触发补全时光标会停留的第一个位置, `${0}`代表 tab 最终停留的位置， b 代表 begin (snippet should be expanded only at the beginning of a line)。
+
+##### 代码片段的参数
 * b 表示触发字符应该在一行的开始
 * i 表示触发字符可以在单词内（连续展示会使用这个选项）
 * w 表示触发字符的前后必须是一个字母分界点
@@ -68,4 +103,26 @@ endglobal
 # UltiSnips 插件会自动加载这个文件夹下的文件
 mkdir ~/.vim/UltiSnips
 ```
-假如你想定义一个所有语言通用的代码块，在所有的文件类型中都能用，你可以把它定义在 all.snippets 中,.snippets的命名是有讲究的ruby.snippets 中定义的代码块只会在 rb 文件中生效；python.snippets 中定义的代码块只会在 py 文件中生效。具体命名可参照默认的.snippets文件
+Ulsnipts 会优先加载`~/.vim/UltiSnips`下的 snippets 文件,然后再加载默认的文件,如果`~/.vim/UltiSnips/`下的文件和默认的模板有冲突,则会使用优先使用我们自定义的模板
+
+#### extends 关键字
+`cpp.snippets`文件中使用了`extend c`,表示复用`c.snippets`下全部的代码块,这可以减少我们的工作量,比如`vue.snippets`就复用了 html, javascript, css 的 snippets
+
+#### snippets 和文件命名的关系
+假如你想定义一个所有语言通用的代码块，在所有的文件类型中都能用，你可以把它定义在`all.snippets`中,.snippets的命名是有讲究的,Ulsnipts 会根据 vim 属性`filetype`去找到对定的`.snippets`文件,比如当我们打开`.py`文件是,在vim 中输入`:set filetype`可以得到`filetype=python`因此,当在`.py`文件中触发补全时, Ulsnipts 会去查找`python.snippets`文件
+
+#### 自定义文件类型
+根据这个原理我们可以自定义文件类型,比如一个写一个`test.snippets`,然后我们创建一个`hello.test`文件,这时我们还不能补全,因为输入`:set filetype`时会发现`filetype`是空的,因此要在`hello.test`窗口内手动输入`:set filetype=test`,这样就可以使用`test.snippets`的补全了
+当然每次手动设置`filetype`很麻烦,我们可以修改`.vimrc`设置,比如设置`.test`后缀文件filetype为 html :`au BufRead,BufNewFile *.test set filetype=html`
+
+
+### 常用的模板
+UltiSnips 自带的模板已经足够强大,我们可以记住一些常用的模板,提高工作效率,这里为了省略篇幅不会对补全后的效果做介绍,因为补全后的内容可能也会随着版本变化而更新,自己可以打开`.snippets`文件去看补全后的效果
+##### C++
+* `inc + <tab>`会展开成 `#include <stdio.h>` 其中 stdio 被选中,可直接覆盖
+* `incc + <tab>` 会展开成 `#include <iostream>` 其中iostream 被选中,可直接覆盖
+* `once + <tab>` 这个在定义头文件时非常常用
+* `cout + <tab>` 会展开成 `std::cout<< << endl;` 
+* `main + <tab>`展开成 main 函数
+* `cla + <tab>` 展开类,并且带`#ifdef`和`#endif`结构,在头文件定义时很方便
+* `if + <tab>``for + <tab>` `fori + <tab>` `wh + <tab>` `switch + <tab>`

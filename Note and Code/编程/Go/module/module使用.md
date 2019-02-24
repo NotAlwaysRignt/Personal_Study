@@ -1,7 +1,9 @@
+[TOC]
 ### module解决的问题
 加强了不同的包的管理,相同的包可以进行版本控制,这点 dep,glide 也做到了,但并不完美,因为dep,glide要把不同的包都放到当前项目的vendor目录下,这意味着不同的包不能复用,每个项目都要保存一份,此外,每个项目依然要存放在 $GOPATH/src 目录下
 
 go mod 使得我们不再依赖 $GOPATH这个变量,项目可以放在任何文件夹下,这对开发人员是很愉快的事情,比如我有时候喜欢写一些小项目,并不想要受到条条框框的约束
+
 
 ### go mod 使用
 go mod 要在 go1.11才开始支持,ubuntu16.04直接使用`apt-get`安装的是 go1.6,版本有些过时,为了安装go1.11需要更新 apt 的仓库网址,go在 github 的官网项目介绍了要如何操作
@@ -16,6 +18,30 @@ GO111MODULE 的可以选取的值为 off, on, or auto(默认值),它们的解释
 包的管理分两种,一种是我们网上下载的开源包,还有一种是自定义包
 go modules 下载的包在GOPATH/pkg/mod中,mod目录可以存放不同版本的同一种包,这样又可以让不同的项目来这里查找,而不用每个项目都拷贝一份
 对于自定义的包,如果是与该项目紧密相关而非作为通用库的, 我个人习惯存放到当前项目目录下
+
+#### replace
+在`go.mod`文件中使用 replace 可以替换依赖包的路径,golang 官网下的一些包受网络限制无法下载, github 中存在 golang 包的镜像仓库,这个时候我们就可以用 replace 修改依赖
+我们可以直接修改`go.mod`文件,也可以使用命令行`go mod edit -replace=...`修改`go.mod`
+```bash
+module test
+
+replace (
+	golang.org/x/crypto => github.com/golang/crypto v0.0.0-20181127143415-eb0de9b17e85
+	golang.org/x/net => github.com/golang/net v0.0.0-20181114220301-adae6a3d119a
+	gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 => github.com/go-check/check v0.0.0-20161208181325-20d25e280405
+	gopkg.in/yaml.v2 v2.2.1 => github.com/go-yaml/yaml v0.0.0-20180328195020-5420a8b6744d
+)
+
+require github.com/astaxie/beego v1.11.1
+
+```
+由上面的例子可知 replace 中的语法规则是`原来的包 版本 => 替换的包 版本`,而且被替换包的版本可以忽略不写,但替换的包需要版本,如果我们想指定最新版本,可以使用 latest 来表示版本,即`old_package => new_poackage latest`
+通常我们可以先执行`go build`,如果因为网络原因会提示下载失败,提示信息中会有版本号,我们就可以把版本复制下来
+
+当我们调用`go build`时,就会自动切换依赖路径,如果没有下载则会自动下载
+
+**go 1.11 的module还在测试阶段,有时会有一些莫名奇妙的问题.**
+比如使用了 replace, 但还是会去golang官网下载,但是后面又会切到 github 上编译成功了.解决方法是把`go.mod`改一下(改完后会编译失败也没关系),让 go 重新按另一个规则编译,然后再改回来,问题就解决了......
 ### 实战例子
 关于管理开源包,网上有很多文章,这里讲解管理自定义包的例子,因为我习惯写一些小程序,自然不希望把自己随意写的代码放到一些比较重要的目录中,而喜欢自由地在一个目录里组织自己的小程序代码
 这个例子实现的功能是:我自己定义了两个包 mypack 和 mytest,就放在项目 test_mod 目录中,mypack中的pack.go 可以引用 mytest 中的 test.go 的函数

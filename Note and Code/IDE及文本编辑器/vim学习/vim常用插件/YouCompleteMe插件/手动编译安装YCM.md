@@ -109,49 +109,8 @@ cmake --build . --target _regex --config Release  # 相当于执行make
 ### .ycm_extra_conf.py 配置
 #### `.ycm_extra_conf.py`的功能
 YCM可不会解析`makefile`,它不知道我们的编译 flag 是什么样,自然也不知道我们是不是使用 -I 加载了别处的头文件,为了解决这个问题,YCM要求我们自己编写一个`.ycm_extra_conf.py`,以告诉YCM这些信息,如果YCM 找不到这个文件,那么无法提供语法补全
+具体的配置使用请见本人github的另一篇关于`.ycm_extra_conf.py`的说明
 
-#### `.ycm_extra_conf.py`的存放位置
-`.ycm_extra_conf.py`应该放置在哪? 先看看官网对这个文件的介绍
-> CM looks for a .ycm_extra_conf.py file in the directory of the opened file or in any directory above it in the hierarchy (recursively); when the file is found, it is loaded (only once!) as a Python module. YCM calls a Settings method in that module which should provide it with the information necessary to compile the current file. You can also provide a path to a global configuration file with the g:ycm_global_ycm_extra_conf option, which will be used as a fallback.
-
-当我们打开一个文件的时候,YCM首先会在这个文件的目录查找`.ycm_extra_conf.py`文件,如果没找到,就会向上一层目录递归查找
-YCM 也允许我们自己在`.vimrc`中设置`g:ycm_global_ycm_extra_conf`变量,让我们提供一个全局默认的`g:ycm_global_ycm_extra_conf`,当YCM 在项目目录中没有找到`.ycm_extra_conf.py`时就会选用这个全局的`.ycm_extra_conf.py`
-
-#### 一个最简单的`.ycm_extra_conf.py`
-YCM的官网提供了一个最简单的`.ycm_extra_conf.py`示例,通常情况下,我们只需要提供 flag 信息,YCM 就能够知道编译规则,并为我们提供补全提示.本人认为最重要的是头文件的信息,只要有此信息,就能够知道整个项目的编译关系
-官网给出的例子在`C-family Semantic Completion`的`Option 2: Provide the flags manually`处
-假设我们编译时候的flag是这样的`g++ -Wall -Wextra -Werror -o FILE.o FILE.cc`,那么
-```python
-# `.ycm_extra_conf.py`的内容只要这样即可
-def Settings( **kwargs ):
-  return {
-    'flags': [ '-x', 'c++', '-Wall', '-Wextra', '-Werror' ],
-  }
-```
-定义一个`setting`函数,然后返回一个字典,其中字典有一个`flags`的 key,其值就是 flag, YCM 建议我们有必要加上`-x` flag,告诉 YCM 这个项目是什么类型的项目,比如 C语言使用`-x c`,`C++`用`-x c++`
-
-`-I`是常用的功能,使用相对路径时是相对`.ycm_extra_conf.py`的路径,如`-I./include/`会查找与被加载的`.ycm_extra_conf.py`同级的`include`目录
-
-对于复杂的项目,仅仅有flags 信息显然还是不够的,`YouCompleteMe/third_party/ycmd/examples` 目录下提供了一个`.ycm_extra_conf.py`示例文件
-注意这个文件主要用作参考,实践证明用`g:ycm_global_ycm_extra_conf`指向它,已经可以满足C++ 标准库的补全了,当然也可能在自己系统上工作不起来,毕竟系统头文件的位置很可能和这个 demo 文件不同,所以还是建议重写一个修改一下,主要是修改`flags`,我们可以模仿`flags`的`-isystem`指向目录根据自己操作系统实际情况修改
-
-如果要对项目快速生成`.ycm_extra_conf.py`,可以使用`rdnetto/YCM-Generator`这个Vim插件,它的主要功能是解析当前目录中的`Makefile`,根据调用`make`命令时会用到的 flags,生成`.ycm_extra_conf.py`
-#### g:ycm_confirm_extra_conf
-YCM 会在进入文件时去加载`.ycm_extra_conf.py`,但是这可能带来一个安全问题,比如它可能加载到不是自己编写的带有恶意代码的`.ycm_extra_conf.py`(虽然这个可能性很小)
-YCM 默认设置`let g:ycm_confirm_extra_conf = 1`,意思是当搜寻到可用的`.ycm_extra_conf.py`时,会要求用户确认一次,如果不想要确认,则可以置为0
-
-#### g:ycm_extra_conf_globlist
-为了能够能够控制将指定目录下的`.ycm_extra_conf.py`载入,YCM 通过变量`g:ycm_extra_conf_globlist`设置白名单和黑名单
-这是一个列表变量,列表里每个成员都是字符串,并允许使用YCM规定的通配符
-* `*` matches everything
-* `?` matches any single character
-* `[seq]` matches any character in seq
-* `[!seq]` matches any char not in seq
-
-举例:`let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']`
-`~/dev/*`表示`~/dev/`目录下(递归地)的`.ycm_extra_conf.py`会被查找并被加载
-`!~/*`表示home目录下的所有`.ycm_extra_conf.py`都不会被加载
-列表有优先级之分,`~/dev/*`的优先级高于`!~/*`.所以结合起来就是,除了`~/dev/`目录下的`.ycm_extra_conf.py`,home目录下所有的`.ycm_extra_conf.py`都不会被加载
 
 -------------------------------------------------------
 
@@ -214,6 +173,7 @@ thinker  10264 10263  0 00:34 ?        00:00:00 /usr/local/bin/python3 /home/thi
 YCM 对 Go 的补全和对 CPP 补全一样,我们在 VIM 中编辑时把代码信息发送给 ycmd 这个 http 服务器解析, ycmd 把补全信息返回,不过对 Go 补全时, ycmd 需要使用 Gocode 这个工具来解析 Go 代码.
 gocode 和 godef 是用于解析 Go 代码的程序,其 github 仓库分别是[mdempsky/gocode](https://github.com/mdempsky/gocode)和[rogpeppe/godef](https://github.com/rogpeppe/godef),我们在下载 YCM 插件时,也会把 gocode 和 godef 仓库的代码下载下来(YCM会把各个语言支持的工具的仓库都下载下来,不管我们用不用,因此 YCM 的插件非常大)
 由上可得,要让 YCM 支持 GO 补全,关键是让 ycmd 能够调用 gocode 和 godef
+
 #### 手动使 YCM 支持 Go 补全
 首先看 YCM 文档对手动安装 Go 补全的讲解
 > Go support: install Go and add it to your path. Navigate to YouCompleteMe/third_party/ycmd/third_party/gocode and run go build.
@@ -221,11 +181,26 @@ gocode 和 godef 是用于解析 Go 代码的程序,其 github 仓库分别是[m
 
 文档(2019-1-19)似乎有些过时,目录结构和文档说的不一样.因此要弄懂手动安装的过程,可以通过阅读`YouCompleteMe/install.py`的安装方法
 
-这里**先上结论**,要支持go补全,需要如下操作
+`install.py`在后面讲解,这里**直接上结论**,要支持go补全,需要如下操作
 * 修改 GOPATH,将`YouCompleteMe/third_party/ycmd/third_party/go`作为 GOPATH,如`export GOPATH=~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/go:$GOPATH`,如果不设置,会编译不通过,只要临时设置即可,编译通过后可去掉这个GOPATH
 * 分别到`ycmd/third_party/go/src/github.com/mdempsky/gocode`和`ycmd/third_party/go/src/github.com/rogpeppe/godef`下执行`go build`命令
 
-#### 从 install.py 角度了解 go 的安装步骤
+#### `mdempsky/gocode`注意事项
+`mdempsky/gocode`是 YCM 默认采用的 gocode 版本,它只支持`$GOPATH`类型项目,而不支持`go module`类型项目,一个值得注意的一点是:
+对于自己编写的自定义包,需要`go install`这个包.才能对自定义的包进行补全,而第三方包因为执行`go get -u`时已经进行了`go install`,就不用了
+因此写代码的过程中,如果自定义的包也要补全,需要定时对这个包`go install`
+`stamblerre/gocode`不会有此问题
+
+#### 使用`stamblerre/gocode`
+**当前(2019-1-20)YCM的 go 补全采用的是`mdempsky/gocode`,其官方文档告诉我们,这个版本的 gocode 并不支持go module项目的补全**
+> It only works for $GOPATH projects. For a version of gocode that works with Modules, please see github.com/stamblerre/gocode.
+YCM 并没有支持`stamblerre/gocode`,根据作者 stamblerre 的说法,Go团队正在开发`golang.org/x/tools/cmd/golsp`,这将最终称为 gocode 的替代品,同时作者也在找机会将两个 gocode 项目合并.
+
+如果我们希望使用`stamblerre/gocode`,则可以使用 YCM 提供的`g:ycm_gocode_binary_path`选项,YCM 的文档并没有这个选项的解释,但是我们如果在仓库中搜索`gocode`关键字是可以找到这个选项的,默认为空字符串,如果这个值被设置,就会使用该选项指向的`gocode`可执行文件,否则默认使用 YCM 项目中下载编译的`gocode`
+
+因此我们可以手动到github上下载`stamblerre/gocode`并编译生成可执行文件,然后用`g:ycm_gocode_binary_path`指向这个可执行文件的位置,注意应该使用绝对路径,我们通过`YcmDebugInfo`中找到错误日志的位置并打开查看是否设置成功
+`stamblerre/gocode`依赖了`golang.org/x/tools`包,我们在国内因为网络不通无法下载这个包,不过 github 中有 golang.org 代码的镜像,我们可以先到 github 上用`git clone`把 `golang/tools` 下载下来.接着在`$GOPATH/src`下创建`golang.org/x`两个目录,并用`ln -s`创建`golang.org/x/tools`这个软链接指向`tools`这个github 项目,这样操作后,`stamblerre/gocode`就可以编译通过了,我们在`$GOPATH/bin`下可以找到`gocode`,在vim中就可以设置指向它
+#### 分析 install.py 源码了解 go 的安装步骤
 接着来讲解一下`install.py`,首先看文档说法
 > Go support: install Go and add --go-completer when calling install.py.
 
@@ -235,7 +210,7 @@ gocode 和 godef 是用于解析 Go 代码的程序,其 github 仓库分别是[m
 ```python
 if __name__ == '__main__':
   Main()
-  
+
 def Main():
   args = ParseArguments()
   cmake = FindCmake()
@@ -275,3 +250,18 @@ def EnableGoCompleter( args ):
 ```bash
 ValueError: No semantic completer exists for filetypes: ['go']
 ```
+
+### Python语义补全
+YCM 补全 python 基于 jedi 引擎,jedi在 YCM 通过`vim-plug`安装时也会被安装好,并且我们不需要再做额外的安装操作
+对于普通的python系统库补全,我们不再需要做设置,但是如果使用了虚拟环境,就要专门写`.ycm_extra_conf.py`文件了,官网给出了一个简单例子
+```
+def Settings( **kwargs ):
+  return {
+    'interpreter_path': '/path/to/virtual/environment/python'
+  }
+```
+官网对`/path/to/virtual/environment/python`的解释是:python虚拟环境的目录,对于windows,这个目录有一个`Script`目录,里面应该存放着 python 的可执行文件,对于其它平台,这个目录下应该有一个bin目录,python 的可执行文件存放在bin目录下
+#### 注意g:ycm_filetype_whitelist
+如果我们要用`g:ycm_filetype_whitelist`设置白名单,注意key值是vim的filetype.对于python文件对应`python`而不是`py`,这点可以打开一个`.py`文件然后使用`:set filetype`查看,如果设置错了, YCM 就不会进行补全了
+#### 获取 python 补全引擎调试信息
+打开`.py`文件,输入`:YcmDebugInfo`查看是否补全成功
