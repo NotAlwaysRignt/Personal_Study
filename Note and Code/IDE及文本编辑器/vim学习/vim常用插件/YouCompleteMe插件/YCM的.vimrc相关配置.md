@@ -4,15 +4,16 @@ YCM 的可配置项非常多,最权威的自然是官网,我们有必要认真�
 ](https://zhuanlan.zhihu.com/p/33046090)
 ### 非常有必要的配置
 
-#### 输入字母时自动补全
+#### 输入字母时自动弹出补全
 默认的 YCM 配置并不完美,比如它只在输入'.','->','::' 才会进行语义分析,比如我们输入 printf,它是不会提示的,除非我们以前输入过,但输入过才会提示显然也不能让我们满意,解决这个问题,可以添加以下配置
 ```bash
 let g:ycm_semantic_triggers =  {
             \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ 'html,vue,css,scss,less,cs,lua,javascript': ['re!\w{2}'],
             \ }
 ```
 `['re!\w{2}']` 的意思是,使用正则表达式,当我们输入两个连续的字母时,就会启动补全提示
+即便 YCM 并没有某些文件类型的语义补全,只要我们设置了这个选项,也会根据输入过的记录进行提示
 
 #### 与 Ultisnips 共存
 YCM 占用了快捷键`<tab>`和`<S-tab>`,分别表示指向补全菜单的下一项和上一项.本人习惯用 tab 做补全操作,因此对此冲突.我想把`<tab>`作为 YCM 补全的触发,而`<S-tab>`作为 Ultisnips 的代码块生成触发
@@ -173,3 +174,6 @@ YCM 默认设置`let g:ycm_confirm_extra_conf = 1`,意思是当搜寻到可用�
 `~/dev/*`表示`~/dev/`目录下(递归地)的`.ycm_extra_conf.py`会被查找并被加载
 `!~/*`表示home目录下的所有`.ycm_extra_conf.py`都不会被加载
 列表有优先级之分,`~/dev/*`的优先级高于`!~/*`.所以结合起来就是,除了`~/dev/`目录下的`.ycm_extra_conf.py`,home目录下所有的`.ycm_extra_conf.py`都不会被加载
+
+#### HTML,CSS 补全
+YCM 支持 scss,less,css 的补全,只是官网并没有特别指出,只要成功安装 YCM 即可使用,我们需要在`g:ycm_semantic_triggers`和`g:ycm_filetype_whitelist`设置支持这些文件
