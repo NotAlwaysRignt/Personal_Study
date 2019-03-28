@@ -1,5 +1,7 @@
 #include <iostream>
 #include "hook.h"
+#include "stdlib.h" //两个头文件必须包含,否则就要采用 extern "C" 的方式
+#include "unistd.h"
 #include <dlfcn.h>
 
 typedef void (*hook_free_pfn)(void* ptr);

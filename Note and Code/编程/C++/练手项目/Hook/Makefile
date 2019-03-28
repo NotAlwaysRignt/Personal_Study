@@ -1,4 +1,4 @@
-FLAGS = -g -Wall
+FLAGS = -g -Wall -D_GNU_SOURCE
 TARGET = main.out
 CC = g++
 OBJS = main.o Std.o hook.o
