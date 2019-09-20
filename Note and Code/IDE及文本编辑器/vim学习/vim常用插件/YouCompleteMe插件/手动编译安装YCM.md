@@ -10,15 +10,28 @@
 
 手动安装的过程[官网](https://github.com/Valloric/YouCompleteMe)已经有详细的讲解,但是即便按照官网的教程来,还是遇到了一些问题,这里讲解解决的办法,也会分析问题的原因
 
+### 安装前的工作
+建议手工源码编译好的python 和 vim,并确保 python可以启动, `vim --version`显示已经支持python3, YCM后面的编译也要和vim对应的python保持一致,才不会出错
+
 ## 手动安装过程(语义补全)讲解
 以下过程重点讲述到官网下载已经编译好的 clang+llvm 二进制压缩包,并通过`cmake`等命令一步步操作安装,而不用`install.py`安装
 #### 执行 ycmd/cpp/CMakeLists.txt
 通过 YouCompleteMe 的`Full Installation Guide`可以知道,我们要获得`ycm_core`这个动态库(不管任何语言的补全,ycmd 作为 server 要启动必须加载它,否则无法启动),可以手动使用`cmake`编译获取它,首先是要获取 `makefile`
 
-接着我们就可以调用`cmake`去执行`CMakeLists.txt`了,这里介绍使用自己到官网下载的二进制 clang 并进行安装
+接着我们就可以调用`cmake`去执行`CMakeLists.txt`了,这里介绍使用自己到官网下载的二进制 clang 并进行安装,对于 centos或其他上麦安的操作系统,我们一样可以下载ubuntu的版本,验证方法是下载编译号的文件后可以进入bin目录尝试执行`./clang --version`如果能够运行起来说明二进制是兼容的
 首先根据自己的操作系统(ubuntu 16)下载对应的二进制压缩包`clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz`存放到我的目录`~/Linux_application/clang/`并解压,在`~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04/`下可以看见`bin`,`include`,`lib`等目录
 
-接着进入一个自定义创建的目录,用于存放cmake产生的各种文件,根据官网要执行以下命令,**注意官网给的命令是行不通的,我们还要做进一步的设置,下面会讲解**
+接着进入一个自定义创建的目录,用于存放cmake产生的各种文件
+这里**先上结论**,最后要执行的命令格式如下:
+```bash
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04 -DUSE_PYTHON2=OFF -DPYTHON_INCLUDE_DIR=~/usr/include/python3.5m/ -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp
+```
+如果不想往下看,那么就在上面的命令上修改,注意`-DUSE_PYTHON2=OFF`说明vim支持python3,可以使用`vim --version`看是否有`+python3`,`-DPYTHON_LIBRARY`要指向python3的`libpython3.xm.so`的路径,这个取决于python的 lib 安装路径,`-DPYTHON_INCLUDE_DIR`则指向安装python的头文件的路径,不同版本文件名也会不同,如果在手动安装python时,使用`./configure --prefix=mydir`
+那么`mydir`目录下就会生成 `bin`,`include`,`lib`等目录,设置时要到下面寻找
+
+
+#### CMakeList.txt 命令详解
+根据官网,安装 YCM 需要执行以下命令,**注意官网给的命令是行不通的,我们还要做进一步的设置,后面会做讲解**
 ```bash
 cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/Linux_application/clang/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04 . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp
 ```
@@ -82,6 +95,7 @@ cmake --build . --target ycm_core --config Release
 编译成功后,会提示我们生成`ycm_core.so`存放在`~/.vim/plugged/YouCompleteMe/third_party/ycmd/ycm_core.so`目录下
 **生成`ycm_core.so`后,我们可以删除网上下载的 llvm+clang 二进制文件,因为ycmd要加载的只是`ycm_core.so`**
 -----------------------------------------------------
+
 ### 正则表达式模块优化支持(可选,建议安装)
 官网原话
 > Build the regex module for improved Unicode support and better performance with regular expressions. The procedure is similar to compiling the ycm_core library:
@@ -95,7 +109,7 @@ mkdir regex_build # 任意位置创建目录,名字也可以自定义,用于存�
 cd regex_build
 cmake -G "Unix Makefiles" -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so . ~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/cregex
 cmake --build . --target _regex --config Release  # 相当于执行make
-
+```
 
 思路和前面`ycm_core`是类似的,且正则表达式模块的编译没有`ycm_core`的编译那么复杂,因为主要是对 c 源码的编译,不涉及链接一些二进制库
 
@@ -105,6 +119,7 @@ cmake --build . --target _regex --config Release  # 相当于执行make
 [100%] Built target _regex
 ```
 生成`_regex.so`文件存放在`/YouCompleteMe/third_party/ycmd/third_party/cregex/regex_3/`
+
 
 ### .ycm_extra_conf.py 配置
 #### `.ycm_extra_conf.py`的功能
@@ -165,6 +180,36 @@ ps -ef | grep 10264
 thinker  10264 10263  0 00:34 ?        00:00:00 /usr/local/bin/python3 /home/thinker/.vim/plugged/YouCompleteMe/python/ycm/../../third_party/ycmd/ycmd --port=44121 --options_file=/tmp/tmp2j_rl9zj --log=info --idle_suicide_seconds=1800 --stdout=/tmp/ycmd_44121_stdout_rnebiy78.log --stderr=/tmp/ycmd_44121_stderr_mdmvvo16.log
 ```
 
+### 修改 YCM 源码,解决字符解码的问题
+由于系统是中文环境,安装完`Youcompleteme`进入 vim 后
+发现报错
+```bash
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xcf in position 2: invalid continuation byte
+```
+现象是command窗口一直报上述错误,而且输入字符也不会弹出补全窗口
+使用上面提到的日志查看方法,发现日志里面提示是因为异常抛出导致的错误
+```bash
+File "/home/user/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd/handlers.py", line 100, in GetCompletions
+.ComputeCandidates( request_data ) )
+
+File "/home/user/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd/completers/cpp/clang_completer.py", line 487, in BuildExtraData
+if completion_data.DocString():
+```
+没办法,只有强行去查看源码,发现completion_data.DocString()调用的还是C++库的API,它并不是python实现的,从代码的角度看,`DocString`也不涉及代码,于是我便修改了源码,将
+```python
+   if completion_data.DocString():
+      extra_data[ 'doc_string' ] = completion_data.DocString()
+```
+修改为
+```python
+  try: # 这里可能抛异常,自己补上
+    if completion_data.DocString():
+      extra_data[ 'doc_string' ] = completion_data.DocString()
+  except UnicodeDecodeError as e:
+    pass
+```
+问题就解决了
+
 ## 其它语言补全
 ### GO 语义补全支持
 #### gocode/godef 支持
@@ -174,12 +219,15 @@ YCM 对 Go 的补全和对 CPP 补全一样,我们在 VIM 中编辑时把代码�
 gocode 和 godef 是用于解析 Go 代码的程序,其 github 仓库分别是[mdempsky/gocode](https://github.com/mdempsky/gocode)和[rogpeppe/godef](https://github.com/rogpeppe/godef),我们在下载 YCM 插件时,也会把 gocode 和 godef 仓库的代码下载下来(YCM会把各个语言支持的工具的仓库都下载下来,不管我们用不用,因此 YCM 的插件非常大)
 由上可得,要让 YCM 支持 GO 补全,关键是让 ycmd 能够调用 gocode 和 godef
 
-#### 手动使 YCM 支持 Go 补全
-首先看 YCM 文档对手动安装 Go 补全的讲解
-> Go support: install Go and add it to your path. Navigate to YouCompleteMe/third_party/ycmd/third_party/gocode and run go build.
+### 手动使 YCM 支持 Go 补全
+#### gopls补全
+gopls是golang 推出的go补全工具,比gocode更加先进, 要注意的是我们要**先安装 ctags** 建议使用`univesal ctags`,这个版本比较新,运行`autogen.sh`,然后就是`./configure`三步走
+手动安装 gopls 不难,首先要安装好 go,建议使用 go.11 以上的版本,支持 go module
+然后按照官网`Full Installation Guide`讲解,进入`YouCompleteMe/third_party/ycmd/third_party/go/src/golang.org/x/tools/cmd/gopls`目录并运行`go build`即可
 
-
-文档(2019-1-19)似乎有些过时,目录结构和文档说的不一样.因此要弄懂手动安装的过程,可以通过阅读`YouCompleteMe/install.py`的安装方法
+#### gocode 补全工具安装
+目前YCM 已经不使用 gocode了,使用gocode 补全比较麻烦,因为它分支持 gopath 和 不支持 gopath 两个版本,但是如果安装了一些老版本,这里还是讲解一下踩过的坑
+要弄懂手动安装的过程,可以通过阅读`YouCompleteMe/install.py`的安装方法
 
 `install.py`在后面讲解,这里**直接上结论**,要支持go补全,需要如下操作
 * 修改 GOPATH,将`YouCompleteMe/third_party/ycmd/third_party/go`作为 GOPATH,如`export GOPATH=~/.vim/plugged/YouCompleteMe/third_party/ycmd/third_party/go:$GOPATH`,如果不设置,会编译不通过,只要临时设置即可,编译通过后可去掉这个GOPATH
