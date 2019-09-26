@@ -1,5 +1,0 @@
-VIM process 11665; vim version: 801
-VIM process 11682; vim version: 801
-VIM process 11682; vim version: 801
-VIM process 12893; vim version: 801
-VIM process 12927; vim version: 801
