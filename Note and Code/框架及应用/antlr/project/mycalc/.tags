@@ -1,0 +1,308 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/c77db55/
+ADD	parser/calc_parser.go	/^func (s *ADDContext) ADD() antlr.TerminalNode {$/;"	f	struct:parser.ADDContext	typeref:typename:antlr.TerminalNode	signature:()
+ADDContext	parser/calc_parser.go	/^type ADDContext struct {$/;"	s	package:parser
+AllExpr	parser/calc_parser.go	/^func (s *ADDContext) AllExpr() []IExprContext {$/;"	f	struct:parser.ADDContext	typeref:typename:[]IExprContext	signature:()
+AllExpr	parser/calc_parser.go	/^func (s *DECContext) AllExpr() []IExprContext {$/;"	f	struct:parser.DECContext	typeref:typename:[]IExprContext	signature:()
+AllExpr	parser/calc_parser.go	/^func (s *DIVContext) AllExpr() []IExprContext {$/;"	f	struct:parser.DIVContext	typeref:typename:[]IExprContext	signature:()
+AllExpr	parser/calc_parser.go	/^func (s *MULTContext) AllExpr() []IExprContext {$/;"	f	struct:parser.MULTContext	typeref:typename:[]IExprContext	signature:()
+BRACKETContext	parser/calc_parser.go	/^type BRACKETContext struct {$/;"	s	package:parser
+BaseCalcParserListener	parser/calcparser_base_listener.go	/^type BaseCalcParserListener struct{}$/;"	s	package:parser
+BaseCalcParserListener	test.go	/^	*parser.BaseCalcParserListener$/;"	M	struct:main.TreeCalcListener	typeref:typename:*parser.BaseCalcParserListener
+BaseLexer	parser/calc_lexer.go	/^	*antlr.BaseLexer$/;"	M	struct:parser.CalcLexer	typeref:typename:*antlr.BaseLexer
+BaseParser	parser/calc_parser.go	/^	*antlr.BaseParser$/;"	M	struct:parser.CalcParser	typeref:typename:*antlr.BaseParser
+BaseParserRuleContext	parser/calc_parser.go	/^	*antlr.BaseParserRuleContext$/;"	M	struct:parser.ExprContext	typeref:typename:*antlr.BaseParserRuleContext
+CLOSEPAREN	parser/calc_parser.go	/^func (s *BRACKETContext) CLOSEPAREN() antlr.TerminalNode {$/;"	f	struct:parser.BRACKETContext	typeref:typename:antlr.TerminalNode	signature:()
+CalcLexer	parser/calc_lexer.go	/^type CalcLexer struct {$/;"	s	package:parser
+CalcLexerADD	parser/calc_lexer.go	/^	CalcLexerADD        = 3$/;"	c	package:parser
+CalcLexerCLOSEPAREN	parser/calc_lexer.go	/^	CalcLexerCLOSEPAREN = 6$/;"	c	package:parser
+CalcLexerDEC	parser/calc_lexer.go	/^	CalcLexerDEC        = 4$/;"	c	package:parser
+CalcLexerDIV	parser/calc_lexer.go	/^	CalcLexerDIV        = 2$/;"	c	package:parser
+CalcLexerINT	parser/calc_lexer.go	/^	CalcLexerINT        = 7$/;"	c	package:parser
+CalcLexerMULT	parser/calc_lexer.go	/^	CalcLexerMULT       = 1$/;"	c	package:parser
+CalcLexerOPENPAREN	parser/calc_lexer.go	/^	CalcLexerOPENPAREN  = 5$/;"	c	package:parser
+CalcLexerWS	parser/calc_lexer.go	/^	CalcLexerWS         = 8$/;"	c	package:parser
+CalcParser	parser/calc_parser.go	/^type CalcParser struct {$/;"	s	package:parser
+CalcParserADD	parser/calc_parser.go	/^	CalcParserADD        = 3$/;"	c	package:parser
+CalcParserCLOSEPAREN	parser/calc_parser.go	/^	CalcParserCLOSEPAREN = 6$/;"	c	package:parser
+CalcParserDEC	parser/calc_parser.go	/^	CalcParserDEC        = 4$/;"	c	package:parser
+CalcParserDIV	parser/calc_parser.go	/^	CalcParserDIV        = 2$/;"	c	package:parser
+CalcParserEOF	parser/calc_parser.go	/^	CalcParserEOF        = antlr.TokenEOF$/;"	c	package:parser
+CalcParserINT	parser/calc_parser.go	/^	CalcParserINT        = 7$/;"	c	package:parser
+CalcParserListener	parser/calcparser_listener.go	/^type CalcParserListener interface {$/;"	i	package:parser	inherits:antlr.ParseTreeListener
+CalcParserMULT	parser/calc_parser.go	/^	CalcParserMULT       = 1$/;"	c	package:parser
+CalcParserOPENPAREN	parser/calc_parser.go	/^	CalcParserOPENPAREN  = 5$/;"	c	package:parser
+CalcParserRULE_expr	parser/calc_parser.go	/^const CalcParserRULE_expr = 0$/;"	c	package:parser
+CalcParserWS	parser/calc_parser.go	/^	CalcParserWS         = 8$/;"	c	package:parser
+CopyFrom	parser/calc_parser.go	/^func (s *ExprContext) CopyFrom(ctx *ExprContext) {$/;"	f	struct:parser.ExprContext	signature:(ctx *ExprContext)
+DEC	parser/calc_parser.go	/^func (s *DECContext) DEC() antlr.TerminalNode {$/;"	f	struct:parser.DECContext	typeref:typename:antlr.TerminalNode	signature:()
+DECContext	parser/calc_parser.go	/^type DECContext struct {$/;"	s	package:parser
+DIV	parser/calc_parser.go	/^func (s *DIVContext) DIV() antlr.TerminalNode {$/;"	f	struct:parser.DIVContext	typeref:typename:antlr.TerminalNode	signature:()
+DIVContext	parser/calc_parser.go	/^type DIVContext struct {$/;"	s	package:parser
+EnterADD	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterADD(ctx *ADDContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *ADDContext)
+EnterADD	parser/calcparser_listener.go	/^	EnterADD(c *ADDContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *ADDContext)
+EnterBRACKET	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterBRACKET(ctx *BRACKETContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *BRACKETContext)
+EnterBRACKET	parser/calcparser_listener.go	/^	EnterBRACKET(c *BRACKETContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *BRACKETContext)
+EnterDEC	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterDEC(ctx *DECContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DECContext)
+EnterDEC	parser/calcparser_listener.go	/^	EnterDEC(c *DECContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DECContext)
+EnterDIV	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterDIV(ctx *DIVContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DIVContext)
+EnterDIV	parser/calcparser_listener.go	/^	EnterDIV(c *DIVContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DIVContext)
+EnterEveryRule	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx antlr.ParserRuleContext)
+EnterEveryRule	test.go	/^func (this *TreeCalcListener) EnterEveryRule(ctx antlr.ParserRuleContext) {$/;"	f	struct:main.TreeCalcListener	signature:(ctx antlr.ParserRuleContext)
+EnterINT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterINT(ctx *INTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *INTContext)
+EnterINT	parser/calcparser_listener.go	/^	EnterINT(c *INTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *INTContext)
+EnterMULT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterMULT(ctx *MULTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *MULTContext)
+EnterMULT	parser/calcparser_listener.go	/^	EnterMULT(c *MULTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *MULTContext)
+EnterRule	parser/calc_parser.go	/^func (s *ADDContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.ADDContext	signature:(listener antlr.ParseTreeListener)
+EnterRule	parser/calc_parser.go	/^func (s *BRACKETContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.BRACKETContext	signature:(listener antlr.ParseTreeListener)
+EnterRule	parser/calc_parser.go	/^func (s *DECContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DECContext	signature:(listener antlr.ParseTreeListener)
+EnterRule	parser/calc_parser.go	/^func (s *DIVContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DIVContext	signature:(listener antlr.ParseTreeListener)
+EnterRule	parser/calc_parser.go	/^func (s *INTContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.INTContext	signature:(listener antlr.ParseTreeListener)
+EnterRule	parser/calc_parser.go	/^func (s *MULTContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.MULTContext	signature:(listener antlr.ParseTreeListener)
+ExitADD	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitADD(ctx *ADDContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *ADDContext)
+ExitADD	parser/calcparser_listener.go	/^	ExitADD(c *ADDContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *ADDContext)
+ExitBRACKET	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitBRACKET(ctx *BRACKETContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *BRACKETContext)
+ExitBRACKET	parser/calcparser_listener.go	/^	ExitBRACKET(c *BRACKETContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *BRACKETContext)
+ExitDEC	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitDEC(ctx *DECContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DECContext)
+ExitDEC	parser/calcparser_listener.go	/^	ExitDEC(c *DECContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DECContext)
+ExitDIV	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitDIV(ctx *DIVContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DIVContext)
+ExitDIV	parser/calcparser_listener.go	/^	ExitDIV(c *DIVContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DIVContext)
+ExitEveryRule	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx antlr.ParserRuleContext)
+ExitINT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitINT(ctx *INTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *INTContext)
+ExitINT	parser/calcparser_listener.go	/^	ExitINT(c *INTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *INTContext)
+ExitMULT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitMULT(ctx *MULTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *MULTContext)
+ExitMULT	parser/calcparser_listener.go	/^	ExitMULT(c *MULTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *MULTContext)
+ExitRule	parser/calc_parser.go	/^func (s *ADDContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.ADDContext	signature:(listener antlr.ParseTreeListener)
+ExitRule	parser/calc_parser.go	/^func (s *BRACKETContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.BRACKETContext	signature:(listener antlr.ParseTreeListener)
+ExitRule	parser/calc_parser.go	/^func (s *DECContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DECContext	signature:(listener antlr.ParseTreeListener)
+ExitRule	parser/calc_parser.go	/^func (s *DIVContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DIVContext	signature:(listener antlr.ParseTreeListener)
+ExitRule	parser/calc_parser.go	/^func (s *INTContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.INTContext	signature:(listener antlr.ParseTreeListener)
+ExitRule	parser/calc_parser.go	/^func (s *MULTContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.MULTContext	signature:(listener antlr.ParseTreeListener)
+Expr	parser/calc_parser.go	/^func (p *CalcParser) Expr() (localctx IExprContext) {$/;"	f	struct:parser.CalcParser	typeref:typename:(localctx IExprContext)	signature:()
+Expr	parser/calc_parser.go	/^func (s *ADDContext) Expr(i int) IExprContext {$/;"	f	struct:parser.ADDContext	typeref:typename:IExprContext	signature:(i int)
+Expr	parser/calc_parser.go	/^func (s *BRACKETContext) Expr() IExprContext {$/;"	f	struct:parser.BRACKETContext	typeref:typename:IExprContext	signature:()
+Expr	parser/calc_parser.go	/^func (s *DECContext) Expr(i int) IExprContext {$/;"	f	struct:parser.DECContext	typeref:typename:IExprContext	signature:(i int)
+Expr	parser/calc_parser.go	/^func (s *DIVContext) Expr(i int) IExprContext {$/;"	f	struct:parser.DIVContext	typeref:typename:IExprContext	signature:(i int)
+Expr	parser/calc_parser.go	/^func (s *MULTContext) Expr(i int) IExprContext {$/;"	f	struct:parser.MULTContext	typeref:typename:IExprContext	signature:(i int)
+ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.ADDContext	typeref:typename:*ExprContext
+ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.BRACKETContext	typeref:typename:*ExprContext
+ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.DECContext	typeref:typename:*ExprContext
+ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.DIVContext	typeref:typename:*ExprContext
+ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.INTContext	typeref:typename:*ExprContext
+ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.MULTContext	typeref:typename:*ExprContext
+ExprContext	parser/calc_parser.go	/^type ExprContext struct {$/;"	s	package:parser
+Expr_Sempred	parser/calc_parser.go	/^func (p *CalcParser) Expr_Sempred(localctx antlr.RuleContext, predIndex int) bool {$/;"	f	struct:parser.CalcParser	typeref:typename:bool	signature:(localctx antlr.RuleContext, predIndex int)
+GetParser	parser/calc_parser.go	/^	GetParser() antlr.Parser$/;"	n	interface:parser.IExprContext	typeref:typename:antlr.Parser	signature:()
+GetParser	parser/calc_parser.go	/^func (s *ExprContext) GetParser() antlr.Parser { return s.parser }$/;"	f	struct:parser.ExprContext	typeref:typename:antlr.Parser	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *ADDContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.ADDContext	typeref:typename:antlr.RuleContext	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *BRACKETContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.BRACKETContext	typeref:typename:antlr.RuleContext	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *DECContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.DECContext	typeref:typename:antlr.RuleContext	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *DIVContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.DIVContext	typeref:typename:antlr.RuleContext	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *ExprContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.ExprContext	typeref:typename:antlr.RuleContext	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *INTContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.INTContext	typeref:typename:antlr.RuleContext	signature:()
+GetRuleContext	parser/calc_parser.go	/^func (s *MULTContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.MULTContext	typeref:typename:antlr.RuleContext	signature:()
+IExprContext	parser/calc_parser.go	/^type IExprContext interface {$/;"	i	package:parser	inherits:antlr.ParserRuleContext
+INT	parser/calc_parser.go	/^func (s *INTContext) INT() antlr.TerminalNode {$/;"	f	struct:parser.INTContext	typeref:typename:antlr.TerminalNode	signature:()
+INTContext	parser/calc_parser.go	/^type INTContext struct {$/;"	s	package:parser
+IsExprContext	parser/calc_parser.go	/^	IsExprContext()$/;"	n	interface:parser.IExprContext	signature:()
+IsExprContext	parser/calc_parser.go	/^func (*ExprContext) IsExprContext() {}$/;"	f	struct:parser.ExprContext	signature:()
+MULT	parser/calc_parser.go	/^func (s *MULTContext) MULT() antlr.TerminalNode {$/;"	f	struct:parser.MULTContext	typeref:typename:antlr.TerminalNode	signature:()
+MULTContext	parser/calc_parser.go	/^type MULTContext struct {$/;"	s	package:parser
+NewADDContext	parser/calc_parser.go	/^func NewADDContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ADDContext {$/;"	f	package:parser	typeref:typename:*ADDContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+NewBRACKETContext	parser/calc_parser.go	/^func NewBRACKETContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *BRACKETContext {$/;"	f	package:parser	typeref:typename:*BRACKETContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+NewCalcLexer	parser/calc_lexer.go	/^func NewCalcLexer(input antlr.CharStream) *CalcLexer {$/;"	f	package:parser	typeref:typename:*CalcLexer	signature:(input antlr.CharStream)
+NewCalcParser	parser/calc_parser.go	/^func NewCalcParser(input antlr.TokenStream) *CalcParser {$/;"	f	package:parser	typeref:typename:*CalcParser	signature:(input antlr.TokenStream)
+NewDECContext	parser/calc_parser.go	/^func NewDECContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *DECContext {$/;"	f	package:parser	typeref:typename:*DECContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+NewDIVContext	parser/calc_parser.go	/^func NewDIVContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *DIVContext {$/;"	f	package:parser	typeref:typename:*DIVContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+NewEmptyExprContext	parser/calc_parser.go	/^func NewEmptyExprContext() *ExprContext {$/;"	f	package:parser	typeref:typename:*ExprContext	signature:()
+NewExprContext	parser/calc_parser.go	/^func NewExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Exp/;"	f	package:parser	typeref:typename:*ExprContext	signature:(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int)
+NewINTContext	parser/calc_parser.go	/^func NewINTContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *INTContext {$/;"	f	package:parser	typeref:typename:*INTContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+NewMULTContext	parser/calc_parser.go	/^func NewMULTContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *MULTContext {$/;"	f	package:parser	typeref:typename:*MULTContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+NewTreeCalcListener	test.go	/^func NewTreeCalcListener() *TreeCalcListener {$/;"	f	package:main	typeref:typename:*TreeCalcListener	signature:()
+OPENPAREN	parser/calc_parser.go	/^func (s *BRACKETContext) OPENPAREN() antlr.TerminalNode {$/;"	f	struct:parser.BRACKETContext	typeref:typename:antlr.TerminalNode	signature:()
+Sempred	parser/calc_parser.go	/^func (p *CalcParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {$/;"	f	struct:parser.CalcParser	typeref:typename:bool	signature:(localctx antlr.RuleContext, ruleIndex, predIndex int)
+ToStringTree	parser/calc_parser.go	/^func (s *ExprContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {$/;"	f	struct:parser.ExprContext	typeref:typename:string	signature:(ruleNames []string, recog antlr.Recognizer)
+TreeCalcListener	test.go	/^type TreeCalcListener struct {$/;"	s	package:main
+VisitErrorNode	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) VisitErrorNode(node antlr.ErrorNode) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(node antlr.ErrorNode)
+VisitTerminal	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) VisitTerminal(node antlr.TerminalNode) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(node antlr.TerminalNode)
+channelNames	parser/calc_lexer.go	/^	channelNames []string$/;"	m	struct:parser.CalcLexer	typeref:typename:[]string
+decisionToDFA	parser/calc_parser.go	/^var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))$/;"	v	package:parser
+deserializedATN	parser/calc_parser.go	/^var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)$/;"	v	package:parser
+deserializer	parser/calc_parser.go	/^var deserializer = antlr.NewATNDeserializer(nil)$/;"	v	package:parser
+expr	parser/calc_parser.go	/^func (p *CalcParser) expr(_p int) (localctx IExprContext) {$/;"	f	struct:parser.CalcParser	typeref:typename:(localctx IExprContext)	signature:(_p int)
+init	parser/calc_lexer.go	/^func init() {$/;"	f	package:parser	signature:()
+init	parser/calc_parser.go	/^func init() {$/;"	f	package:parser	signature:()
+lexerAtn	parser/calc_lexer.go	/^var lexerAtn = lexerDeserializer.DeserializeFromUInt16(serializedLexerAtn)$/;"	v	package:parser
+lexerChannelNames	parser/calc_lexer.go	/^var lexerChannelNames = []string{$/;"	v	package:parser
+lexerDecisionToDFA	parser/calc_lexer.go	/^var lexerDecisionToDFA = make([]*antlr.DFA, len(lexerAtn.DecisionToState))$/;"	v	package:parser
+lexerDeserializer	parser/calc_lexer.go	/^var lexerDeserializer = antlr.NewATNDeserializer(nil)$/;"	v	package:parser
+lexerLiteralNames	parser/calc_lexer.go	/^var lexerLiteralNames = []string{$/;"	v	package:parser
+lexerModeNames	parser/calc_lexer.go	/^var lexerModeNames = []string{$/;"	v	package:parser
+lexerRuleNames	parser/calc_lexer.go	/^var lexerRuleNames = []string{$/;"	v	package:parser
+lexerSymbolicNames	parser/calc_lexer.go	/^var lexerSymbolicNames = []string{$/;"	v	package:parser
+literalNames	parser/calc_parser.go	/^var literalNames = []string{$/;"	v	package:parser
+main	test.go	/^func main() {$/;"	f	package:main	signature:()
+main	test.go	/^package main$/;"	p
+main.NewTreeCalcListener	test.go	/^func NewTreeCalcListener() *TreeCalcListener {$/;"	f	package:main	typeref:typename:*TreeCalcListener	signature:()
+main.TreeCalcListener	test.go	/^type TreeCalcListener struct {$/;"	s	package:main
+main.TreeCalcListener.BaseCalcParserListener	test.go	/^	*parser.BaseCalcParserListener$/;"	M	struct:main.TreeCalcListener	typeref:typename:*parser.BaseCalcParserListener
+main.TreeCalcListener.EnterEveryRule	test.go	/^func (this *TreeCalcListener) EnterEveryRule(ctx antlr.ParserRuleContext) {$/;"	f	struct:main.TreeCalcListener	signature:(ctx antlr.ParserRuleContext)
+main.main	test.go	/^func main() {$/;"	f	package:main	signature:()
+modeNames	parser/calc_lexer.go	/^	modeNames    []string$/;"	m	struct:parser.CalcLexer	typeref:typename:[]string
+parser	parser/calc_lexer.go	/^package parser$/;"	p
+parser	parser/calc_parser.go	/^	parser antlr.Parser$/;"	m	struct:parser.ExprContext	typeref:typename:antlr.Parser
+parser	parser/calc_parser.go	/^package parser \/\/ CalcParser$/;"	p
+parser	parser/calcparser_base_listener.go	/^package parser \/\/ CalcParser$/;"	p
+parser	parser/calcparser_listener.go	/^package parser \/\/ CalcParser$/;"	p
+parser.ADDContext	parser/calc_parser.go	/^type ADDContext struct {$/;"	s	package:parser
+parser.ADDContext.ADD	parser/calc_parser.go	/^func (s *ADDContext) ADD() antlr.TerminalNode {$/;"	f	struct:parser.ADDContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.ADDContext.AllExpr	parser/calc_parser.go	/^func (s *ADDContext) AllExpr() []IExprContext {$/;"	f	struct:parser.ADDContext	typeref:typename:[]IExprContext	signature:()
+parser.ADDContext.EnterRule	parser/calc_parser.go	/^func (s *ADDContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.ADDContext	signature:(listener antlr.ParseTreeListener)
+parser.ADDContext.ExitRule	parser/calc_parser.go	/^func (s *ADDContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.ADDContext	signature:(listener antlr.ParseTreeListener)
+parser.ADDContext.Expr	parser/calc_parser.go	/^func (s *ADDContext) Expr(i int) IExprContext {$/;"	f	struct:parser.ADDContext	typeref:typename:IExprContext	signature:(i int)
+parser.ADDContext.ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.ADDContext	typeref:typename:*ExprContext
+parser.ADDContext.GetRuleContext	parser/calc_parser.go	/^func (s *ADDContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.ADDContext	typeref:typename:antlr.RuleContext	signature:()
+parser.BRACKETContext	parser/calc_parser.go	/^type BRACKETContext struct {$/;"	s	package:parser
+parser.BRACKETContext.CLOSEPAREN	parser/calc_parser.go	/^func (s *BRACKETContext) CLOSEPAREN() antlr.TerminalNode {$/;"	f	struct:parser.BRACKETContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.BRACKETContext.EnterRule	parser/calc_parser.go	/^func (s *BRACKETContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.BRACKETContext	signature:(listener antlr.ParseTreeListener)
+parser.BRACKETContext.ExitRule	parser/calc_parser.go	/^func (s *BRACKETContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.BRACKETContext	signature:(listener antlr.ParseTreeListener)
+parser.BRACKETContext.Expr	parser/calc_parser.go	/^func (s *BRACKETContext) Expr() IExprContext {$/;"	f	struct:parser.BRACKETContext	typeref:typename:IExprContext	signature:()
+parser.BRACKETContext.ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.BRACKETContext	typeref:typename:*ExprContext
+parser.BRACKETContext.GetRuleContext	parser/calc_parser.go	/^func (s *BRACKETContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.BRACKETContext	typeref:typename:antlr.RuleContext	signature:()
+parser.BRACKETContext.OPENPAREN	parser/calc_parser.go	/^func (s *BRACKETContext) OPENPAREN() antlr.TerminalNode {$/;"	f	struct:parser.BRACKETContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.BaseCalcParserListener	parser/calcparser_base_listener.go	/^type BaseCalcParserListener struct{}$/;"	s	package:parser
+parser.BaseCalcParserListener.EnterADD	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterADD(ctx *ADDContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *ADDContext)
+parser.BaseCalcParserListener.EnterBRACKET	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterBRACKET(ctx *BRACKETContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *BRACKETContext)
+parser.BaseCalcParserListener.EnterDEC	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterDEC(ctx *DECContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DECContext)
+parser.BaseCalcParserListener.EnterDIV	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterDIV(ctx *DIVContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DIVContext)
+parser.BaseCalcParserListener.EnterEveryRule	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx antlr.ParserRuleContext)
+parser.BaseCalcParserListener.EnterINT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterINT(ctx *INTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *INTContext)
+parser.BaseCalcParserListener.EnterMULT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) EnterMULT(ctx *MULTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *MULTContext)
+parser.BaseCalcParserListener.ExitADD	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitADD(ctx *ADDContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *ADDContext)
+parser.BaseCalcParserListener.ExitBRACKET	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitBRACKET(ctx *BRACKETContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *BRACKETContext)
+parser.BaseCalcParserListener.ExitDEC	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitDEC(ctx *DECContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DECContext)
+parser.BaseCalcParserListener.ExitDIV	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitDIV(ctx *DIVContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *DIVContext)
+parser.BaseCalcParserListener.ExitEveryRule	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx antlr.ParserRuleContext)
+parser.BaseCalcParserListener.ExitINT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitINT(ctx *INTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *INTContext)
+parser.BaseCalcParserListener.ExitMULT	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) ExitMULT(ctx *MULTContext) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(ctx *MULTContext)
+parser.BaseCalcParserListener.VisitErrorNode	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) VisitErrorNode(node antlr.ErrorNode) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(node antlr.ErrorNode)
+parser.BaseCalcParserListener.VisitTerminal	parser/calcparser_base_listener.go	/^func (s *BaseCalcParserListener) VisitTerminal(node antlr.TerminalNode) {}$/;"	f	struct:parser.BaseCalcParserListener	signature:(node antlr.TerminalNode)
+parser.CalcLexer	parser/calc_lexer.go	/^type CalcLexer struct {$/;"	s	package:parser
+parser.CalcLexer.BaseLexer	parser/calc_lexer.go	/^	*antlr.BaseLexer$/;"	M	struct:parser.CalcLexer	typeref:typename:*antlr.BaseLexer
+parser.CalcLexer.channelNames	parser/calc_lexer.go	/^	channelNames []string$/;"	m	struct:parser.CalcLexer	typeref:typename:[]string
+parser.CalcLexer.modeNames	parser/calc_lexer.go	/^	modeNames    []string$/;"	m	struct:parser.CalcLexer	typeref:typename:[]string
+parser.CalcLexerADD	parser/calc_lexer.go	/^	CalcLexerADD        = 3$/;"	c	package:parser
+parser.CalcLexerCLOSEPAREN	parser/calc_lexer.go	/^	CalcLexerCLOSEPAREN = 6$/;"	c	package:parser
+parser.CalcLexerDEC	parser/calc_lexer.go	/^	CalcLexerDEC        = 4$/;"	c	package:parser
+parser.CalcLexerDIV	parser/calc_lexer.go	/^	CalcLexerDIV        = 2$/;"	c	package:parser
+parser.CalcLexerINT	parser/calc_lexer.go	/^	CalcLexerINT        = 7$/;"	c	package:parser
+parser.CalcLexerMULT	parser/calc_lexer.go	/^	CalcLexerMULT       = 1$/;"	c	package:parser
+parser.CalcLexerOPENPAREN	parser/calc_lexer.go	/^	CalcLexerOPENPAREN  = 5$/;"	c	package:parser
+parser.CalcLexerWS	parser/calc_lexer.go	/^	CalcLexerWS         = 8$/;"	c	package:parser
+parser.CalcParser	parser/calc_parser.go	/^type CalcParser struct {$/;"	s	package:parser
+parser.CalcParser.BaseParser	parser/calc_parser.go	/^	*antlr.BaseParser$/;"	M	struct:parser.CalcParser	typeref:typename:*antlr.BaseParser
+parser.CalcParser.Expr	parser/calc_parser.go	/^func (p *CalcParser) Expr() (localctx IExprContext) {$/;"	f	struct:parser.CalcParser	typeref:typename:(localctx IExprContext)	signature:()
+parser.CalcParser.Expr_Sempred	parser/calc_parser.go	/^func (p *CalcParser) Expr_Sempred(localctx antlr.RuleContext, predIndex int) bool {$/;"	f	struct:parser.CalcParser	typeref:typename:bool	signature:(localctx antlr.RuleContext, predIndex int)
+parser.CalcParser.Sempred	parser/calc_parser.go	/^func (p *CalcParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {$/;"	f	struct:parser.CalcParser	typeref:typename:bool	signature:(localctx antlr.RuleContext, ruleIndex, predIndex int)
+parser.CalcParser.expr	parser/calc_parser.go	/^func (p *CalcParser) expr(_p int) (localctx IExprContext) {$/;"	f	struct:parser.CalcParser	typeref:typename:(localctx IExprContext)	signature:(_p int)
+parser.CalcParserADD	parser/calc_parser.go	/^	CalcParserADD        = 3$/;"	c	package:parser
+parser.CalcParserCLOSEPAREN	parser/calc_parser.go	/^	CalcParserCLOSEPAREN = 6$/;"	c	package:parser
+parser.CalcParserDEC	parser/calc_parser.go	/^	CalcParserDEC        = 4$/;"	c	package:parser
+parser.CalcParserDIV	parser/calc_parser.go	/^	CalcParserDIV        = 2$/;"	c	package:parser
+parser.CalcParserEOF	parser/calc_parser.go	/^	CalcParserEOF        = antlr.TokenEOF$/;"	c	package:parser
+parser.CalcParserINT	parser/calc_parser.go	/^	CalcParserINT        = 7$/;"	c	package:parser
+parser.CalcParserListener	parser/calcparser_listener.go	/^type CalcParserListener interface {$/;"	i	package:parser	inherits:antlr.ParseTreeListener
+parser.CalcParserListener.EnterADD	parser/calcparser_listener.go	/^	EnterADD(c *ADDContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *ADDContext)
+parser.CalcParserListener.EnterBRACKET	parser/calcparser_listener.go	/^	EnterBRACKET(c *BRACKETContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *BRACKETContext)
+parser.CalcParserListener.EnterDEC	parser/calcparser_listener.go	/^	EnterDEC(c *DECContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DECContext)
+parser.CalcParserListener.EnterDIV	parser/calcparser_listener.go	/^	EnterDIV(c *DIVContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DIVContext)
+parser.CalcParserListener.EnterINT	parser/calcparser_listener.go	/^	EnterINT(c *INTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *INTContext)
+parser.CalcParserListener.EnterMULT	parser/calcparser_listener.go	/^	EnterMULT(c *MULTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *MULTContext)
+parser.CalcParserListener.ExitADD	parser/calcparser_listener.go	/^	ExitADD(c *ADDContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *ADDContext)
+parser.CalcParserListener.ExitBRACKET	parser/calcparser_listener.go	/^	ExitBRACKET(c *BRACKETContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *BRACKETContext)
+parser.CalcParserListener.ExitDEC	parser/calcparser_listener.go	/^	ExitDEC(c *DECContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DECContext)
+parser.CalcParserListener.ExitDIV	parser/calcparser_listener.go	/^	ExitDIV(c *DIVContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *DIVContext)
+parser.CalcParserListener.ExitINT	parser/calcparser_listener.go	/^	ExitINT(c *INTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *INTContext)
+parser.CalcParserListener.ExitMULT	parser/calcparser_listener.go	/^	ExitMULT(c *MULTContext)$/;"	n	interface:parser.CalcParserListener	signature:(c *MULTContext)
+parser.CalcParserMULT	parser/calc_parser.go	/^	CalcParserMULT       = 1$/;"	c	package:parser
+parser.CalcParserOPENPAREN	parser/calc_parser.go	/^	CalcParserOPENPAREN  = 5$/;"	c	package:parser
+parser.CalcParserRULE_expr	parser/calc_parser.go	/^const CalcParserRULE_expr = 0$/;"	c	package:parser
+parser.CalcParserWS	parser/calc_parser.go	/^	CalcParserWS         = 8$/;"	c	package:parser
+parser.DECContext	parser/calc_parser.go	/^type DECContext struct {$/;"	s	package:parser
+parser.DECContext.AllExpr	parser/calc_parser.go	/^func (s *DECContext) AllExpr() []IExprContext {$/;"	f	struct:parser.DECContext	typeref:typename:[]IExprContext	signature:()
+parser.DECContext.DEC	parser/calc_parser.go	/^func (s *DECContext) DEC() antlr.TerminalNode {$/;"	f	struct:parser.DECContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.DECContext.EnterRule	parser/calc_parser.go	/^func (s *DECContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DECContext	signature:(listener antlr.ParseTreeListener)
+parser.DECContext.ExitRule	parser/calc_parser.go	/^func (s *DECContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DECContext	signature:(listener antlr.ParseTreeListener)
+parser.DECContext.Expr	parser/calc_parser.go	/^func (s *DECContext) Expr(i int) IExprContext {$/;"	f	struct:parser.DECContext	typeref:typename:IExprContext	signature:(i int)
+parser.DECContext.ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.DECContext	typeref:typename:*ExprContext
+parser.DECContext.GetRuleContext	parser/calc_parser.go	/^func (s *DECContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.DECContext	typeref:typename:antlr.RuleContext	signature:()
+parser.DIVContext	parser/calc_parser.go	/^type DIVContext struct {$/;"	s	package:parser
+parser.DIVContext.AllExpr	parser/calc_parser.go	/^func (s *DIVContext) AllExpr() []IExprContext {$/;"	f	struct:parser.DIVContext	typeref:typename:[]IExprContext	signature:()
+parser.DIVContext.DIV	parser/calc_parser.go	/^func (s *DIVContext) DIV() antlr.TerminalNode {$/;"	f	struct:parser.DIVContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.DIVContext.EnterRule	parser/calc_parser.go	/^func (s *DIVContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DIVContext	signature:(listener antlr.ParseTreeListener)
+parser.DIVContext.ExitRule	parser/calc_parser.go	/^func (s *DIVContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.DIVContext	signature:(listener antlr.ParseTreeListener)
+parser.DIVContext.Expr	parser/calc_parser.go	/^func (s *DIVContext) Expr(i int) IExprContext {$/;"	f	struct:parser.DIVContext	typeref:typename:IExprContext	signature:(i int)
+parser.DIVContext.ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.DIVContext	typeref:typename:*ExprContext
+parser.DIVContext.GetRuleContext	parser/calc_parser.go	/^func (s *DIVContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.DIVContext	typeref:typename:antlr.RuleContext	signature:()
+parser.ExprContext	parser/calc_parser.go	/^type ExprContext struct {$/;"	s	package:parser
+parser.ExprContext.BaseParserRuleContext	parser/calc_parser.go	/^	*antlr.BaseParserRuleContext$/;"	M	struct:parser.ExprContext	typeref:typename:*antlr.BaseParserRuleContext
+parser.ExprContext.CopyFrom	parser/calc_parser.go	/^func (s *ExprContext) CopyFrom(ctx *ExprContext) {$/;"	f	struct:parser.ExprContext	signature:(ctx *ExprContext)
+parser.ExprContext.GetParser	parser/calc_parser.go	/^func (s *ExprContext) GetParser() antlr.Parser { return s.parser }$/;"	f	struct:parser.ExprContext	typeref:typename:antlr.Parser	signature:()
+parser.ExprContext.GetRuleContext	parser/calc_parser.go	/^func (s *ExprContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.ExprContext	typeref:typename:antlr.RuleContext	signature:()
+parser.ExprContext.IsExprContext	parser/calc_parser.go	/^func (*ExprContext) IsExprContext() {}$/;"	f	struct:parser.ExprContext	signature:()
+parser.ExprContext.ToStringTree	parser/calc_parser.go	/^func (s *ExprContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {$/;"	f	struct:parser.ExprContext	typeref:typename:string	signature:(ruleNames []string, recog antlr.Recognizer)
+parser.ExprContext.parser	parser/calc_parser.go	/^	parser antlr.Parser$/;"	m	struct:parser.ExprContext	typeref:typename:antlr.Parser
+parser.IExprContext	parser/calc_parser.go	/^type IExprContext interface {$/;"	i	package:parser	inherits:antlr.ParserRuleContext
+parser.IExprContext.GetParser	parser/calc_parser.go	/^	GetParser() antlr.Parser$/;"	n	interface:parser.IExprContext	typeref:typename:antlr.Parser	signature:()
+parser.IExprContext.IsExprContext	parser/calc_parser.go	/^	IsExprContext()$/;"	n	interface:parser.IExprContext	signature:()
+parser.INTContext	parser/calc_parser.go	/^type INTContext struct {$/;"	s	package:parser
+parser.INTContext.EnterRule	parser/calc_parser.go	/^func (s *INTContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.INTContext	signature:(listener antlr.ParseTreeListener)
+parser.INTContext.ExitRule	parser/calc_parser.go	/^func (s *INTContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.INTContext	signature:(listener antlr.ParseTreeListener)
+parser.INTContext.ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.INTContext	typeref:typename:*ExprContext
+parser.INTContext.GetRuleContext	parser/calc_parser.go	/^func (s *INTContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.INTContext	typeref:typename:antlr.RuleContext	signature:()
+parser.INTContext.INT	parser/calc_parser.go	/^func (s *INTContext) INT() antlr.TerminalNode {$/;"	f	struct:parser.INTContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.MULTContext	parser/calc_parser.go	/^type MULTContext struct {$/;"	s	package:parser
+parser.MULTContext.AllExpr	parser/calc_parser.go	/^func (s *MULTContext) AllExpr() []IExprContext {$/;"	f	struct:parser.MULTContext	typeref:typename:[]IExprContext	signature:()
+parser.MULTContext.EnterRule	parser/calc_parser.go	/^func (s *MULTContext) EnterRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.MULTContext	signature:(listener antlr.ParseTreeListener)
+parser.MULTContext.ExitRule	parser/calc_parser.go	/^func (s *MULTContext) ExitRule(listener antlr.ParseTreeListener) {$/;"	f	struct:parser.MULTContext	signature:(listener antlr.ParseTreeListener)
+parser.MULTContext.Expr	parser/calc_parser.go	/^func (s *MULTContext) Expr(i int) IExprContext {$/;"	f	struct:parser.MULTContext	typeref:typename:IExprContext	signature:(i int)
+parser.MULTContext.ExprContext	parser/calc_parser.go	/^	*ExprContext$/;"	M	struct:parser.MULTContext	typeref:typename:*ExprContext
+parser.MULTContext.GetRuleContext	parser/calc_parser.go	/^func (s *MULTContext) GetRuleContext() antlr.RuleContext {$/;"	f	struct:parser.MULTContext	typeref:typename:antlr.RuleContext	signature:()
+parser.MULTContext.MULT	parser/calc_parser.go	/^func (s *MULTContext) MULT() antlr.TerminalNode {$/;"	f	struct:parser.MULTContext	typeref:typename:antlr.TerminalNode	signature:()
+parser.NewADDContext	parser/calc_parser.go	/^func NewADDContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ADDContext {$/;"	f	package:parser	typeref:typename:*ADDContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+parser.NewBRACKETContext	parser/calc_parser.go	/^func NewBRACKETContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *BRACKETContext {$/;"	f	package:parser	typeref:typename:*BRACKETContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+parser.NewCalcLexer	parser/calc_lexer.go	/^func NewCalcLexer(input antlr.CharStream) *CalcLexer {$/;"	f	package:parser	typeref:typename:*CalcLexer	signature:(input antlr.CharStream)
+parser.NewCalcParser	parser/calc_parser.go	/^func NewCalcParser(input antlr.TokenStream) *CalcParser {$/;"	f	package:parser	typeref:typename:*CalcParser	signature:(input antlr.TokenStream)
+parser.NewDECContext	parser/calc_parser.go	/^func NewDECContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *DECContext {$/;"	f	package:parser	typeref:typename:*DECContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+parser.NewDIVContext	parser/calc_parser.go	/^func NewDIVContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *DIVContext {$/;"	f	package:parser	typeref:typename:*DIVContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+parser.NewEmptyExprContext	parser/calc_parser.go	/^func NewEmptyExprContext() *ExprContext {$/;"	f	package:parser	typeref:typename:*ExprContext	signature:()
+parser.NewExprContext	parser/calc_parser.go	/^func NewExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Exp/;"	f	package:parser	typeref:typename:*ExprContext	signature:(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int)
+parser.NewINTContext	parser/calc_parser.go	/^func NewINTContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *INTContext {$/;"	f	package:parser	typeref:typename:*INTContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+parser.NewMULTContext	parser/calc_parser.go	/^func NewMULTContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *MULTContext {$/;"	f	package:parser	typeref:typename:*MULTContext	signature:(parser antlr.Parser, ctx antlr.ParserRuleContext)
+parser.decisionToDFA	parser/calc_parser.go	/^var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))$/;"	v	package:parser
+parser.deserializedATN	parser/calc_parser.go	/^var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)$/;"	v	package:parser
+parser.deserializer	parser/calc_parser.go	/^var deserializer = antlr.NewATNDeserializer(nil)$/;"	v	package:parser
+parser.init	parser/calc_lexer.go	/^func init() {$/;"	f	package:parser	signature:()
+parser.init	parser/calc_parser.go	/^func init() {$/;"	f	package:parser	signature:()
+parser.lexerAtn	parser/calc_lexer.go	/^var lexerAtn = lexerDeserializer.DeserializeFromUInt16(serializedLexerAtn)$/;"	v	package:parser
+parser.lexerChannelNames	parser/calc_lexer.go	/^var lexerChannelNames = []string{$/;"	v	package:parser
+parser.lexerDecisionToDFA	parser/calc_lexer.go	/^var lexerDecisionToDFA = make([]*antlr.DFA, len(lexerAtn.DecisionToState))$/;"	v	package:parser
+parser.lexerDeserializer	parser/calc_lexer.go	/^var lexerDeserializer = antlr.NewATNDeserializer(nil)$/;"	v	package:parser
+parser.lexerLiteralNames	parser/calc_lexer.go	/^var lexerLiteralNames = []string{$/;"	v	package:parser
+parser.lexerModeNames	parser/calc_lexer.go	/^var lexerModeNames = []string{$/;"	v	package:parser
+parser.lexerRuleNames	parser/calc_lexer.go	/^var lexerRuleNames = []string{$/;"	v	package:parser
+parser.lexerSymbolicNames	parser/calc_lexer.go	/^var lexerSymbolicNames = []string{$/;"	v	package:parser
+parser.literalNames	parser/calc_parser.go	/^var literalNames = []string{$/;"	v	package:parser
+parser.parserATN	parser/calc_parser.go	/^var parserATN = []uint16{$/;"	v	package:parser
+parser.ruleNames	parser/calc_parser.go	/^var ruleNames = []string{$/;"	v	package:parser
+parser.serializedLexerAtn	parser/calc_lexer.go	/^var serializedLexerAtn = []uint16{$/;"	v	package:parser
+parser.symbolicNames	parser/calc_parser.go	/^var symbolicNames = []string{$/;"	v	package:parser
+parserATN	parser/calc_parser.go	/^var parserATN = []uint16{$/;"	v	package:parser
+ruleNames	parser/calc_parser.go	/^var ruleNames = []string{$/;"	v	package:parser
+serializedLexerAtn	parser/calc_lexer.go	/^var serializedLexerAtn = []uint16{$/;"	v	package:parser
+symbolicNames	parser/calc_parser.go	/^var symbolicNames = []string{$/;"	v	package:parser

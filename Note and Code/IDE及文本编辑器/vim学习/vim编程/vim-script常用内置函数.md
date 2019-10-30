@@ -11,6 +11,9 @@ exec "Async Run python3 $(VIM_FILEPATH)"
 exec "call FcuntionOfOtherPlugin()"
 ```
 
+### expand 函数
+expand 函数提供了一个获取当前窗口内各种属性的功能,如文件名,光标下的单词等,距离`expand('<cword>')`可以获得当前光标下的单词,详细见`:help expand(`
+
 ### 处理单行
 #### line ("expr")
 返回值是一个整数。这个函数功能时返回一个行号。如果你后面的参数expr是"."的话，则返回当前光标所在的位置。如果extr是"$"则返回当前缓冲区最后一行的行号。如果extr的值是一个标签名,则返回你对应的标签所在的行号。
