@@ -24,13 +24,15 @@ vscode 有NerdTree 的插件，安装后修改快捷键`Ctrl-N`为自己习惯�
 ### 快捷键
 vim的快捷键，包括其他插件的快捷键，会与系统快捷键冲突，这里如果发现不符合预期，需要在快捷键设置里找到对应快捷键，检查冲突，对不需要的快捷键解绑
 需要关注的快捷键有，vim的`Ctrl-W`会与系统冲突，优先改为用vim的
-
-
-### 搜索
-vscode集成了各种模糊搜索，我们不需要像vim一样去装`leaderf`了
 #### 文件
 vscode `Ctrl-P`是系统默认的文件搜索，已经足够我们使用
 注意，本人习惯在vim的`normal`模式下，使用`\f`作为打开文件搜索的快捷键，这里修改快捷键后，需要在快捷键设置中，修改`When`的条件，点击右键再点击`Change When Expression`，输入`editorTextFocus && vim.active && vim.mode == 'Normal'`，否则在insert模式下`\`会输入不了
+#### 跳转
+本人习惯使用 `ctrl-]`跳转定义（安装vim后会支持），并用`ctrl-o`返回跳转，这里需要在快捷键中修改 `ctrl-o` 对应指令为`Go Back`
+
+### 搜索
+vscode集成了各种模糊搜索，我们不需要像vim一样去装`leaderf`了
+
 #### word 搜索
 但是我们想纯靠键盘来使用其Search功能，则需要定制化快捷键，打开快捷键配置`Keyboard Shortcuts`,tab右侧有一个编辑`keybindings.json`选项，我们可以修改json来设置自定义快捷键
 下面是我自定义的快捷键选项，它在vim normal 模式下，会快速选中当前光标对应的单词，然后选取输出到 vscode 的search 框中
